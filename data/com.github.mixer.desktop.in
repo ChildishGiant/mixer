@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Name
+Comment=Comment
+GenericName=GenericName
+Exec=com.github.mixer %U
+Icon=com.github.mixer
+Terminal=false
+Categories=Utility;GTK;Development;
+Keywords=Develop
