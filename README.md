@@ -35,7 +35,7 @@ cd mixer
 meson build --prefix=/usr
 # cd to build, install and run
 cd build
-sudo ninja install && mixer
+sudo ninja install && com.github.mixer
 ```
 
 ## Generating pot file
@@ -45,8 +45,8 @@ sudo ninja install && mixer
 cd build
 
 # generates pot file
-ninja mixer-pot
+ninja com.github.mixer-pot
 
 # to regenerate and propagate changes to every po file
-ninja mixer-update-po
+ninja com.github.mixer-update-po
 ```

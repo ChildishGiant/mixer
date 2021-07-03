@@ -1,0 +1,62 @@
+# Language en-us translations for com.github.mixer package.
+# Copyright (C) 2021 THE com.github.mixer'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.mixer package.
+# Automatically generated, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.mixer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-03 02:58+0100\n"
+"PO-Revision-Date: 2021-06-30 04:33+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en-us\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. If no apps are using audio
+#: src/Application.vala:63
+msgid "No apps"
+msgstr ""
+
+#: src/Application.vala:88
+msgid "Volume:"
+msgstr ""
+
+#: src/Application.vala:91
+msgid "Balance:"
+msgstr ""
+
+#: src/Application.vala:99
+msgid "Left"
+msgstr ""
+
+#: src/Application.vala:100
+msgid "Centre"
+msgstr ""
+
+#: src/Application.vala:101
+msgid "Right"
+msgstr ""
+
+#. print(volume_switch.margin_left.to_string()+"!!!");
+#. print(apps[0].index + "\n");
+#. print(apps.length.to_string());
+#. print(apps[i].index);
+#. if (volume_switch.active) {
+#. //  "pacmd set-sink-input-mute "+ apps[i].index +" true"
+#. Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ apps[i].index +" true");
+#. print("True");
+#. } else {
+#. Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ apps[i].index +" false");
+#. print("False");
+#. }
+#. Make the switch disable the sliders
+#. If the app's in mono
+#. Disable inputs on balance slider
+#. Give it a tooltip explaining this
+#: src/Application.vala:140
+msgid "This app is using mono audio"
+msgstr ""

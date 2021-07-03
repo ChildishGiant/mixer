@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=Name
+Name=Mixer
 Comment=Comment
-GenericName=GenericName
+GenericName=Volume mixer
 Exec=com.github.mixer %U
 Icon=com.github.mixer
 Terminal=false
-Categories=Utility;GTK;Development;
-Keywords=Develop
+Categories=Utility;AudioVideo;
+Keywords=Sound;Audio
