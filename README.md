@@ -1,14 +1,23 @@
 # Mixer
 
+**Mixer is currently in development. Features may be missing and bugs are bound to happen. Proceed with caution.**
+
 A simple volume mixer for Elementary OS!
 
-(maybe adds a screenshot, people loves screenshots!)
+<p align="center">
+<img width="250" src="data/icons/com.github.mixer.svg" alt="Logo">
+<br>
+<img width="400" src="docs/light.png" alt="Light mode">
+<img width="400" src="docs/dark.png" alt="Dark mode">
+</p>
 
 ## Get it from the elementary OS AppCenter!
 
-[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/mixer)
+<!-- [![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/mixer)
 
-This app is available on the elementary OS AppCenter.
+This app is available on the elementary OS AppCenter. -->
+
+Not just yet
 
 # Install it from source
 
