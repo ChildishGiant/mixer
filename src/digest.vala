@@ -5,7 +5,7 @@ public class Response : GLib.Object {
     public int volume;
     public float balance;
     public bool muted;
-    public string icon;
+    public string icon = "application-default-icon"; // Or should it be application-x-executable?
     public string name;
     public bool is_mono;
 
@@ -93,8 +93,6 @@ public static Response[] digester () {
 
         } catch (SpawnError e) {
             error ("Error: %s\n", e.message);
-            Response[] empty = {};
-            return empty;
         }
 
     }
