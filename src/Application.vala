@@ -28,6 +28,51 @@ public class Application : Gtk.Application {
 
     private Gtk.Grid[] rows;
 
+    private int[] balance_volume (double balance, double volume) {
+        debug("Balance: %s", balance.to_string());
+        debug("Volume: %s", volume.to_string());
+
+        double l;
+        double r;
+
+        if (balance < 0) {
+            l = (100*balance)+100;
+            r = 100;
+        } else if (balance > 0) {
+            l = 100;
+            r = (-100*balance)+100;
+
+        }else {
+            l = 100;
+            r = 100;
+        };
+
+        int new_l = (int)(l*volume/100);
+        int new_r = (int)(r*volume/100);
+
+        return {new_l, new_r};
+    }
+
+    private void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
+        var volumes = balance_volume(balance_scale.get_value(), volume_scale.get_value());
+
+        string percentages;
+
+        //  If the app is mono, only set one channel
+        if (app.is_mono) {
+            percentages = int.max(volumes[1], volumes[0]).to_string() + "%";
+        } else {
+            percentages = volumes[1].to_string() + "% " + volumes[0].to_string() + "%";
+        }
+
+        try {
+
+            Process.spawn_command_line_sync("pactl set-sink-input-volume " + app.index + " " + percentages);
+        } catch (SpawnError e) {
+            error ("Error: %s\n", e.message);
+        }
+    }
+
     public Application () {
         Object (
             application_id: "com.github.childishgiant.mixer",
@@ -60,13 +105,22 @@ public class Application : Gtk.Application {
 
         //  If no apps are using audio
         if (apps.length == 0) {
-            var label = new Gtk.Label (_("No apps"));
-            label.expand = true;
-            grid.add(label);
+            //  var label = new Gtk.Label (_("No apps"));
+            //  label.expand = true;
+            var no_apps = new Granite.Widgets.AlertView (
+                _("No Apps"),
+                //  _("There are no apps playing anything. You might want to add one to start listening to anything."),
+                _("There are no apps playing anything. Currently you need to restart to get the app to appear."),
+                "preferences-desktop-sound"
+            );
+            no_apps.show_all ();
+            grid.add(no_apps);
         }
 
         else {
             for (int i = 0; i < apps.length; i++) {
+
+                var app = apps[i];
 
                 var item_grid = new Gtk.Grid () {
                     column_spacing = 6,
@@ -75,15 +129,15 @@ public class Application : Gtk.Application {
                     valign = Gtk.Align.CENTER
                 };
 
-                var icon = new Gtk.Image.from_icon_name (apps[i].icon, Gtk.IconSize.DND);
+                var icon = new Gtk.Image.from_icon_name (app.icon, Gtk.IconSize.DND);
                 icon.valign = Gtk.Align.START;
-                var name_label = new Gtk.Label (apps[i].name.to_string());
+                var name_label = new Gtk.Label (app.name.to_string());
 
                 var volume_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 5);
                 volume_scale.adjustment.page_increment = 5;
                 volume_scale.draw_value = false;
                 volume_scale.hexpand = true;
-                volume_scale.set_value(apps[i].volume);
+                volume_scale.set_value(app.volume);
 
                 var volume_label = new Gtk.Label (_("Volume:"));
                 volume_label.halign = Gtk.Align.END;
@@ -99,30 +153,29 @@ public class Application : Gtk.Application {
                 balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
                 balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
                 balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
-                balance_scale.set_value(apps[i].balance);
+                balance_scale.set_value(app.balance);
+
+                //  Make the volume slider function
+                volume_scale.value_changed.connect (() => {
+                    set_volume(app, balance_scale, volume_scale);
+                });
 
                 //  Create mute switch
                 var volume_switch = new Gtk.Switch() {
                     valign = Gtk.Align.CENTER,
-                    active = !apps[i].muted
+                    active = !app.muted
                 };
 
-                //  TODO: Make the mute switch function
-                //  volume_switch.notify["active"].connect (() => {
-                    //  print(volume_switch.margin_left.to_string()+"!!!");
-                    //  print(i.to_string() + "\n");
-                    //  print(apps[0].index + "\n");
-                    //  print(apps.length.to_string());
-                    //  print(apps[i].index);
-                    //  if (volume_switch.active) {
-                    //      //  "pacmd set-sink-input-mute "+ apps[i].index +" true"
-                    //      Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ apps[i].index +" true");
-                    //      print("True");
-                    //  } else {
-                    //      Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ apps[i].index +" false");
-                    //      print("False");
-                    //  }
-                //  });
+                //  Make the mute switch function
+                volume_switch.notify["active"].connect (() => {
+                    if (volume_switch.active) {
+                        Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ app.index +" false");
+                        debug("Unmuting %s", app.index);
+                    } else {
+                        Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ app.index +" true");
+                        debug("Muting %s", app.index);
+                    }
+                });
 
 
                 //  Make the switch disable the sliders
@@ -137,6 +190,11 @@ public class Application : Gtk.Application {
                 } else {
                     //  If not, make the switch toggle its input
                     volume_switch.bind_property ("active", balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
+
+                    //  Make the balance slider function
+                    balance_scale.value_changed.connect (() => {
+                        set_volume(app, balance_scale, volume_scale);
+                    });
                 }
 
                 //  Add row

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.childishgiant.mixer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-07 20:52+0100\n"
+"POT-Creation-Date: 2021-07-04 22:24+0100\n"
 "PO-Revision-Date: 2021-07-04 22:23+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,34 +17,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. If no apps are using audio
-#: src/Application.vala:108
+#: src/Application.vala:73
 msgid "No apps"
 msgstr ""
 
-#: src/Application.vala:135
+#: src/Application.vala:98
 msgid "Volume:"
 msgstr ""
 
-#: src/Application.vala:138
+#: src/Application.vala:101
 msgid "Balance:"
 msgstr ""
 
-#: src/Application.vala:146
+#: src/Application.vala:109
 msgid "Left"
 msgstr ""
 
-#: src/Application.vala:147
+#: src/Application.vala:110
 msgid "Centre"
-msgstr "Center"
+msgstr ""
 
-#: src/Application.vala:148
+#: src/Application.vala:111
 msgid "Right"
 msgstr ""
 
+#. TODO: Make the mute switch function
+#. volume_switch.notify["active"].connect (() => {
+#. print(volume_switch.margin_left.to_string()+"!!!");
+#. print(i.to_string() + "\n");
+#. print(apps[0].index + "\n");
+#. print(apps.length.to_string());
+#. print(apps[i].index);
+#. if (volume_switch.active) {
+#. //  "pacmd set-sink-input-mute "+ apps[i].index +" true"
+#. Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ apps[i].index +" true");
+#. print("True");
+#. } else {
+#. Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ apps[i].index +" false");
+#. print("False");
+#. }
+#. });
 #. Make the switch disable the sliders
 #. If the app's in mono
 #. Disable inputs on balance slider
 #. Give it a tooltip explaining this
-#: src/Application.vala:182
+#: src/Application.vala:146
 msgid "This app is using mono audio"
 msgstr ""

@@ -18,8 +18,7 @@ add_project_arguments (
 dependencies = [
     dependency ('glib-2.0'),
     dependency ('gtk+-3.0'),
-    dependency('granite'),
-    # dependency ('libpulse')
+    dependency ('granite')
 ]
 
 subdir ('src')
