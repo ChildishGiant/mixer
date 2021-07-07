@@ -5,7 +5,7 @@
 A simple volume mixer for Elementary OS!
 
 <p align="center">
-<img width="250" src="data/icons/com.github.mixer.svg" alt="Logo">
+<img width="250" src="data/icons/com.github.childishgiant.mixer.svg" alt="Logo">
 <br>
 <img width="400" src="docs/light.png" alt="Light mode">
 <img width="400" src="docs/dark.png" alt="Dark mode">
@@ -44,7 +44,7 @@ cd mixer
 meson build --prefix=/usr
 # cd to build, install and run
 cd build
-sudo ninja install && com.github.mixer
+sudo ninja install && com.github.childishgiant.mixer
 ```
 
 ## Generating pot file
@@ -54,8 +54,8 @@ sudo ninja install && com.github.mixer
 cd build
 
 # generates pot file
-ninja com.github.mixer-pot
+ninja com.github.childishgiant.mixer-pot
 
 # to regenerate and propagate changes to every po file
-ninja com.github.mixer-update-po
+ninja com.github.childishgiant.mixer-update-po
 ```

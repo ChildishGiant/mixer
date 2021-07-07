@@ -30,7 +30,7 @@ public class Application : Gtk.Application {
 
     public Application () {
         Object (
-            application_id: "com.github.mixer",
+            application_id: "com.github.childishgiant.mixer",
             flags: ApplicationFlags.FLAGS_NONE
         );
     }

@@ -1,6 +1,6 @@
 # Project name, programming language and version
 project (
-    'com.github.mixer',
+    'com.github.childishgiant.mixer',
     'vala', 'c',
     version: '0.0.1'
 )
