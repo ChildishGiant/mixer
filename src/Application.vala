@@ -21,13 +21,11 @@
 
 public class Application : Gtk.Application {
 
-    //  pacmd list-sink-inputs
-    //  pactl set-sink-input-volume id volume
-    //  pacmd set-sink-input-mute toggle
     //  pactl subscribe
 
-    private Gtk.Grid[] rows;
+    private Gtk.Grid grid;
 
+    //  Takes balance and volume, outputs left and right volumes
     private int[] balance_volume (double balance, double volume) {
         debug("Balance: %s", balance.to_string());
         debug("Volume: %s", volume.to_string());
@@ -53,6 +51,15 @@ public class Application : Gtk.Application {
         return {new_l, new_r};
     }
 
+    //  Runs a synchronous command without output
+    private void run_command (string command) {
+        try {
+            Process.spawn_command_line_sync(command);
+        } catch (SpawnError e) {
+            error ("Error: %s\n", e.message);
+        }
+    }
+
     private void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
         var volumes = balance_volume(balance_scale.get_value(), volume_scale.get_value());
 
@@ -65,12 +72,7 @@ public class Application : Gtk.Application {
             percentages = volumes[1].to_string() + "% " + volumes[0].to_string() + "%";
         }
 
-        try {
-
-            Process.spawn_command_line_sync("pactl set-sink-input-volume " + app.index + " " + percentages);
-        } catch (SpawnError e) {
-            error ("Error: %s\n", e.message);
-        }
+        run_command("pactl set-sink-input-volume " + app.index + " " + percentages);
     }
 
     public Application () {
@@ -80,33 +82,18 @@ public class Application : Gtk.Application {
         );
     }
 
-    protected override void activate () {
+    private void populate (Gtk.ApplicationWindow main_window) {
 
-        Response[] apps = digester();
+        //  Clear all existing rows
+        var children = grid.get_children ();
+        foreach (Gtk.Widget element in children) {
+            grid.remove (element);
+        }
 
-        var quit_action = new SimpleAction ("quit", null);
-
-        add_action (quit_action);
-        set_accels_for_action ("app.quit",  {"<Control>q", "<Control>w"});
-
-        var main_window = new Gtk.ApplicationWindow (this);
-        main_window.default_height = 250;
-        main_window.default_width = 500;
-        main_window.title = "Mixer";
-
-
-        var grid = new Gtk.Grid () {
-            column_spacing = 6,
-            row_spacing = 6,
-            margin = 6,
-            halign = Gtk.Align.FILL
-        };
-
+        var apps = digester();
 
         //  If no apps are using audio
         if (apps.length == 0) {
-            //  var label = new Gtk.Label (_("No apps"));
-            //  label.expand = true;
             var no_apps = new Granite.Widgets.AlertView (
                 _("No Apps"),
                 //  _("There are no apps playing anything. You might want to add one to start listening to anything."),
@@ -169,10 +156,10 @@ public class Application : Gtk.Application {
                 //  Make the mute switch function
                 volume_switch.notify["active"].connect (() => {
                     if (volume_switch.active) {
-                        Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ app.index +" false");
+                        run_command("pacmd set-sink-input-mute "+ app.index +" false");
                         debug("Unmuting %s", app.index);
                     } else {
-                        Process.spawn_command_line_sync("pacmd set-sink-input-mute "+ app.index +" true");
+                        run_command("pacmd set-sink-input-mute "+ app.index +" true");
                         debug("Muting %s", app.index);
                     }
                 });
@@ -206,8 +193,6 @@ public class Application : Gtk.Application {
                 item_grid.attach (balance_label, 1, 1);
                 item_grid.attach (balance_scale, 2, 1, 2);
 
-                //  Add the row to the list
-                rows += item_grid;
                 //  Add the row to the main app grid
                 grid.attach(item_grid, 0, i*2);
 
@@ -220,8 +205,47 @@ public class Application : Gtk.Application {
             };
         }
 
-        main_window.add (grid);
         main_window.show_all ();
+
+    }
+
+    protected override void activate () {
+
+        var main_window = new Gtk.ApplicationWindow (this) {
+            default_height = 250,
+            default_width = 500,
+            title = "Mixer"
+        };
+
+        grid = new Gtk.Grid () {
+            column_spacing = 6,
+            row_spacing = 6,
+            margin = 6,
+            halign = Gtk.Align.FILL
+        };
+
+        var button = new Gtk.Button.from_icon_name ("system-reboot-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+
+        button.clicked.connect (() => {
+            populate(main_window);
+        });
+
+        var headerbar = new Gtk.HeaderBar () {
+            has_subtitle = false,
+            show_close_button = true
+        };
+
+        headerbar.pack_end(button);
+
+        main_window.set_titlebar (headerbar);
+        main_window.add (grid);
+
+        populate(main_window);
+
+        var quit_action = new SimpleAction ("quit", null);
+
+        add_action (quit_action);
+        set_accels_for_action ("app.quit",  {"<Control>q", "<Control>w"});
 
         quit_action.activate.connect (() => {
             main_window.destroy ();
