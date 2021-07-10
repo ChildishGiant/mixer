@@ -232,7 +232,8 @@ public class Application : Gtk.Application {
 
         var headerbar = new Gtk.HeaderBar () {
             has_subtitle = false,
-            show_close_button = true
+            show_close_button = true,
+            title = "Mixer"
         };
 
         headerbar.pack_end(button);
