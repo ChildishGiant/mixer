@@ -4,16 +4,16 @@
   <id>com.github.childishgiant.mixer</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
-  <name>Your App's Name</name>
-  <summary>A Catchy Tagline</summary>
+  <name>Mixer</name>
+  <summary>Change the volume of apps</summary>
   <description>
-    <p>A quick summary of your app's main selling points and features. Just a couple sentences per paragraph is best.</p>
+    <p>A simple volume mixer for Elementary OS.</p>
   </description>
   <provides>
     <binary>com.github.childishgiant.mixer</binary>
   </provides>
   <developer_name>Allie Law</developer_name>
-  <url type="homepage"></url>
+  <url type="homepage">http://github.com/childishgiant/mixer</url>
   <url type="bugtracker">http://github.com/childishgiant/mixer/issues</url>
   <url type="help">http://github.com/childishgiant/mixer/issues</url>
   <screenshots>
@@ -34,9 +34,6 @@
     <content_attribute id="drugs-tobacco">none</content_attribute>
     <content_attribute id="sex-nudity">none</content_attribute>
     <content_attribute id="sex-themes">none</content_attribute>
-    <content_attribute id="sex-homosexuality">none</content_attribute>
-    <content_attribute id="sex-prostitution">none</content_attribute>
-    <content_attribute id="sex-adultery">none</content_attribute>
     <content_attribute id="sex-appearance">none</content_attribute>
     <content_attribute id="language-profanity">none</content_attribute>
     <content_attribute id="language-humor">none</content_attribute>
@@ -50,6 +47,6 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="0.0.1" date="2020-01-01"/>
+    <release version="0.0.1" date="2021-07-11"/>
   </releases>
 </component>

@@ -1,8 +1,6 @@
 # Mixer
 
-**Mixer is currently in development. Features may be missing and bugs are bound to happen. Proceed with caution.**
-
-A simple volume mixer for Elementary OS!
+A simple volume mixer for Elementary OS.
 
 <p align="center">
 <img width="250" src="data/icons/com.github.childishgiant.mixer.svg" alt="Logo">
@@ -29,7 +27,6 @@ Ensure you have these dependencies installed
 
 * granite
 * gtk+-3.0
-* switchboard-2.0
 
 ## Install, build and run
 

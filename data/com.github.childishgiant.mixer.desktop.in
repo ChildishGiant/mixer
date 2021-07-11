@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Mixer
-Comment=Comment
+Comment=Change the volume of apps
 GenericName=Volume mixer
 Exec=com.github.childishgiant.mixer %U
 Icon=com.github.childishgiant.mixer
