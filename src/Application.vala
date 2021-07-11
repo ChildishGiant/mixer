@@ -221,19 +221,11 @@ public class Application : Gtk.Application {
             halign = Gtk.Align.FILL
         };
 
-        var button = new Gtk.Button.from_icon_name ("system-reboot-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
-
-        button.clicked.connect (() => {
-            populate(main_window);
-        });
-
         var headerbar = new Gtk.HeaderBar () {
             has_subtitle = false,
             show_close_button = true,
             title = "Mixer"
         };
-
-        headerbar.pack_end(button);
 
         main_window.set_titlebar (headerbar);
         main_window.add (grid);
