@@ -30,7 +30,6 @@ public static Response[] digester () {
             );
 
             Response[] apps = {};
-            var test = sinks.split("\n");
             foreach(string line in sinks.split("\n")){
                 line = line.strip();
                 string[] split = line.split(" ");

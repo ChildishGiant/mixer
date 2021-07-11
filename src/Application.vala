@@ -21,8 +21,6 @@
 
 public class Application : Gtk.Application {
 
-    //  pactl subscribe
-
     private Gtk.Grid grid;
 
     //  Takes balance and volume, outputs left and right volumes
@@ -96,8 +94,7 @@ public class Application : Gtk.Application {
         if (apps.length == 0) {
             var no_apps = new Granite.Widgets.AlertView (
                 _("No Apps"),
-                //  _("There are no apps playing anything. You might want to add one to start listening to anything."),
-                _("There are no apps playing anything. Currently you need to restart to get the app to appear."),
+                _("There are no apps making any noise."),
                 "preferences-desktop-sound"
             );
             no_apps.show_all ();
@@ -252,6 +249,16 @@ public class Application : Gtk.Application {
             main_window.destroy ();
         });
 
+        var listener = new Listener("/home", "/usr/bin/pactl subscribe");
+        listener.run ();
+
+        listener.output_changed.connect ((line) => {
+            //  If the change is a sink-input
+            if (line.contains("sink-input") && (line.contains("new") || line.contains("remove"))) {
+                debug(line.strip());
+                populate(main_window);
+            }
+        });
 
     }
 
