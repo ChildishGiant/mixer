@@ -28,8 +28,6 @@ public static Sink[] get_outputs () {
 
                 switch (split[0]) {
 
-                        Sink sink = new Sink();
-
                     case "*":
                     case "index:":
                         Sink sink = new Sink();
