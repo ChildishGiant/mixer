@@ -1,6 +1,7 @@
 # Listing files to compile
 sources = files (
     'Application.vala',
-    'digest.vala',
-    'listener.vala'
+    'Digest.vala',
+    'Listener.vala',
+    'GetOutputs.vala'
 )

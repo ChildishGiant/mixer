@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.childishgiant.mixer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-11 01:13+0100\n"
+"POT-Creation-Date: 2021-07-19 22:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,38 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Application.vala:96
-msgid "No Apps"
-msgstr "No Apps"
-
 #: src/Application.vala:97
+msgid "No Apps"
+msgstr ""
+
+#: src/Application.vala:98
 msgid "There are no apps making any noise."
-msgstr "There are no apps making any noise."
+msgstr ""
 
-#: src/Application.vala:126
+#: src/Application.vala:127
 msgid "Volume:"
-msgstr "Volume:"
+msgstr ""
 
-#: src/Application.vala:129
+#: src/Application.vala:130
 msgid "Balance:"
-msgstr "Balance:"
-
-#: src/Application.vala:137
-msgid "Left"
-msgstr "Left"
+msgstr ""
 
 #: src/Application.vala:138
-msgid "Centre"
-msgstr "Centre"
+msgid "Left"
+msgstr ""
 
 #: src/Application.vala:139
+msgid "Centre"
+msgstr ""
+
+#: src/Application.vala:140
 msgid "Right"
-msgstr "Right"
+msgstr ""
 
 #. Make the switch disable the sliders
 #. If the app's in mono
 #. Disable inputs on balance slider
 #. Give it a tooltip explaining this
-#: src/Application.vala:173
+#: src/Application.vala:174
 msgid "This app is using mono audio"
-msgstr "This app is using mono audio"
+msgstr ""
+
+#. Output label
+#: src/Application.vala:186
+msgid "Output:"
+msgstr ""

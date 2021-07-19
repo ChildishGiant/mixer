@@ -42,6 +42,8 @@ meson build --prefix=/usr
 # cd to build, install and run
 cd build
 sudo ninja install && com.github.childishgiant.mixer
+# For debugging use
+sudo ninja install && G_MESSAGES_DEBUG=all com.github.childishgiant.mixer
 ```
 
 ## Generating pot file

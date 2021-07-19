@@ -89,6 +89,7 @@ public class Application : Gtk.Application {
         }
 
         var apps = digester();
+        var outputs = get_outputs();
 
         //  If no apps are using audio
         if (apps.length == 0) {
@@ -124,11 +125,11 @@ public class Application : Gtk.Application {
                 volume_scale.set_value(app.volume);
 
                 var volume_label = new Gtk.Label (_("Volume:"));
-                volume_label.halign = Gtk.Align.END;
+                volume_label.halign = Gtk.Align.START;
 
                 var balance_label = new Gtk.Label (_("Balance:"));
                 balance_label.valign = Gtk.Align.START;
-                balance_label.halign = Gtk.Align.END;
+                balance_label.halign = Gtk.Align.START;
 
                 var balance_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, -1, 1, 0.1);
                 balance_scale.adjustment.page_increment = 0.1;
@@ -145,7 +146,7 @@ public class Application : Gtk.Application {
                 });
 
                 //  Create mute switch
-                var volume_switch = new Gtk.Switch() {
+                var volume_switch = new Gtk.Switch () {
                     valign = Gtk.Align.CENTER,
                     active = !app.muted
                 };
@@ -181,14 +182,40 @@ public class Application : Gtk.Application {
                     });
                 }
 
-                //  Add row
+                //  Output label
+                var output_label = new Gtk.Label (_("Output:"));
+
+                //  Output dropdown
+                var dropdown = new Gtk.ComboBoxText ();
+
+                for (int j = 0; j < outputs.length; j++) {
+                    var sink = outputs[j];
+                    dropdown.append_text (sink.description);
+
+                    //  If this is the current output
+                    if (app.sink == sink.index) {
+                        dropdown.set_active (j);
+                    }
+                }
+
+                //  Make the dropdown function
+                dropdown.changed.connect (() => {
+                    var sink = outputs[dropdown.active];
+                    run_command("pactl move-sink-input " + app.index + " " + sink.index);
+                });
+
+                //  Add First row for app, volume slider and mute switch
                 item_grid.attach (name_label,    0, 0);
-                item_grid.attach (icon,          0, 1);
                 item_grid.attach (volume_label,  1, 0);
-                item_grid.attach (volume_scale,  2, 0, 2);
-                item_grid.attach (volume_switch, 4, 0, 1, 2);
+                item_grid.attach (volume_scale,  2, 0);
+                item_grid.attach (volume_switch, 3, 0, 1, 2);
+                //  Second row for icon and balance
+                item_grid.attach (icon,          0, 1);
                 item_grid.attach (balance_label, 1, 1);
-                item_grid.attach (balance_scale, 2, 1, 2);
+                item_grid.attach (balance_scale, 2, 1);
+                //  Third row for picking output
+                item_grid.attach (output_label,  0, 2);
+                item_grid.attach (dropdown,      1, 2, 3);
 
                 //  Add the row to the main app grid
                 grid.attach(item_grid, 0, i*2);

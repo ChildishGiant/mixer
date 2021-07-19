@@ -8,6 +8,7 @@ public class Response : GLib.Object {
     public string icon = "application-default-icon"; // Or should it be application-x-executable?
     public string name;
     public bool is_mono;
+    public string sink;
 
 }
 
@@ -23,7 +24,7 @@ public static Response[] digester () {
             //  Get a list of all apps using audio
             //  get just the info we want
             Process.spawn_command_line_sync(
-                "sh -c \"pacmd list-sink-inputs | grep -e index: -e volume: -e balance -e muted: -e 'application.icon_name = ' -e 'application.name = '\"",
+                "sh -c \"pacmd list-sink-inputs | grep -e index: -e volume: -e balance -e muted: -e 'application.icon_name = ' -e 'application.name = ' -e sink:\"",
                 out sinks,
                 out ls_stderr,
                 out ls_status
@@ -82,6 +83,9 @@ public static Response[] digester () {
                         break;
                     case "application.name":
                         apps[apps.length-1].name = line.substring(20, line.length-21);
+                        break;
+                    case "sink:":
+                        apps[apps.length-1].sink = split[1];
                         break;
                     default:
                         break;
