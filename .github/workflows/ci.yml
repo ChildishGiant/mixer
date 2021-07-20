@@ -24,6 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup
+        run: |
+          sudo apt install elementary-sdk meson ninja
+          flatpak install flathub org.flatpak.Builder
+
       - name: Flatpak Builder
         uses: bilelmoussaoui/flatpak-github-actions@v2
         with:
