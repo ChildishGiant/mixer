@@ -9,6 +9,11 @@ A simple volume mixer for Elementary OS.
 <img width="400" src="docs/dark.png" alt="Dark mode">
 </p>
 
+# Installing
+
+You can download the latest release from the [releases page](https://github.com/childishgiant/mixer/releases).
+
+
 ## Get it from the elementary OS AppCenter!
 
 <!-- [![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/mixer)
@@ -17,18 +22,21 @@ This app is available on the elementary OS AppCenter. -->
 
 Not just yet
 
-# Install it from source
+## Nightly builds
+
+Nightly builds are handled by GitHub actions and the latest one can be found on [nightly.link](https://nightly.link/ChildishGiant/mixer/workflows/ci/main/Mixer.zip)
+## Install it from source
 
 You can of course download and install this app from source.
 
-## Dependencies
+### Dependencies
 
 Ensure you have these dependencies installed
 
 * granite
 * gtk+-3.0
 
-## Install, build and run
+### Install, build and run
 
 ```bash
 # install elementary-sdk, meson and ninja
@@ -46,7 +54,7 @@ sudo ninja install && com.github.childishgiant.mixer
 sudo ninja install && G_MESSAGES_DEBUG=all com.github.childishgiant.mixer
 ```
 
-## Generating pot file
+### Generating pot file
 
 ```bash
 # after setting up meson build
