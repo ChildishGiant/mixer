@@ -38,4 +38,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Lint
-        run: io.elementary.vala-lint -d .
+        run: io.elementary.vala-lint -d ./src/

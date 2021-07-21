@@ -25,26 +25,26 @@ public class Application : Gtk.Application {
 
     //  Takes balance and volume, outputs left and right volumes
     private int[] balance_volume (double balance, double volume) {
-        debug("Balance: %s", balance.to_string());
-        debug("Volume: %s", volume.to_string());
+        debug ("Balance: %s", balance.to_string ());
+        debug ("Volume: %s", volume.to_string ());
 
         double l;
         double r;
 
         if (balance < 0) {
-            l = (100*balance)+100;
+            l = (100 * balance) + 100;
             r = 100;
         } else if (balance > 0) {
             l = 100;
-            r = (-100*balance)+100;
+            r = (-100 * balance) + 100;
 
         }else {
             l = 100;
             r = 100;
         };
 
-        int new_l = (int)(l*volume/100);
-        int new_r = (int)(r*volume/100);
+        int new_l = (int)(l * volume / 100);
+        int new_r = (int)(r * volume / 100);
 
         return {new_l, new_r};
     }
@@ -52,25 +52,25 @@ public class Application : Gtk.Application {
     //  Runs a synchronous command without output
     private void run_command (string command) {
         try {
-            Process.spawn_command_line_sync(command);
+            Process.spawn_command_line_sync (command);
         } catch (SpawnError e) {
             error ("Error: %s\n", e.message);
         }
     }
 
     private void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
-        var volumes = balance_volume(balance_scale.get_value(), volume_scale.get_value());
+        var volumes = balance_volume (balance_scale.get_value (), volume_scale.get_value ());
 
         string percentages;
 
         //  If the app is mono, only set one channel
         if (app.is_mono) {
-            percentages = int.max(volumes[1], volumes[0]).to_string() + "%";
+            percentages = int.max (volumes[1], volumes[0]).to_string () + "%";
         } else {
-            percentages = volumes[1].to_string() + "% " + volumes[0].to_string() + "%";
+            percentages = volumes[1].to_string () + "% " + volumes[0].to_string () + "%";
         }
 
-        run_command("pactl set-sink-input-volume " + app.index + " " + percentages);
+        run_command ("pactl set-sink-input-volume " + app.index + " " + percentages);
     }
 
     public Application () {
@@ -88,8 +88,8 @@ public class Application : Gtk.Application {
             grid.remove (element);
         }
 
-        var apps = digester();
-        var outputs = get_outputs();
+        var apps = digester ();
+        var outputs = get_outputs ();
 
         //  If no apps are using audio
         if (apps.length == 0) {
@@ -99,7 +99,7 @@ public class Application : Gtk.Application {
                 "preferences-desktop-sound"
             );
             no_apps.show_all ();
-            grid.add(no_apps);
+            grid.add (no_apps);
         }
 
         else {
@@ -116,13 +116,13 @@ public class Application : Gtk.Application {
 
                 var icon = new Gtk.Image.from_icon_name (app.icon, Gtk.IconSize.DND);
                 icon.valign = Gtk.Align.START;
-                var name_label = new Gtk.Label (app.name.to_string());
+                var name_label = new Gtk.Label (app.name.to_string ());
 
                 var volume_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 5);
                 volume_scale.adjustment.page_increment = 5;
                 volume_scale.draw_value = false;
                 volume_scale.hexpand = true;
-                volume_scale.set_value(app.volume);
+                volume_scale.set_value (app.volume);
 
                 var volume_label = new Gtk.Label (_("Volume:"));
                 volume_label.halign = Gtk.Align.START;
@@ -138,11 +138,11 @@ public class Application : Gtk.Application {
                 balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
                 balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
                 balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
-                balance_scale.set_value(app.balance);
+                balance_scale.set_value (app.balance);
 
                 //  Make the volume slider function
                 volume_scale.value_changed.connect (() => {
-                    set_volume(app, balance_scale, volume_scale);
+                    set_volume (app, balance_scale, volume_scale);
                 });
 
                 //  Create mute switch
@@ -154,11 +154,11 @@ public class Application : Gtk.Application {
                 //  Make the mute switch function
                 volume_switch.notify["active"].connect (() => {
                     if (volume_switch.active) {
-                        run_command("pacmd set-sink-input-mute "+ app.index +" false");
-                        debug("Unmuting %s", app.index);
+                        run_command ("pacmd set-sink-input-mute " + app.index + " false");
+                        debug ("Unmuting %s", app.index);
                     } else {
-                        run_command("pacmd set-sink-input-mute "+ app.index +" true");
-                        debug("Muting %s", app.index);
+                        run_command ("pacmd set-sink-input-mute " + app.index + " true");
+                        debug ("Muting %s", app.index);
                     }
                 });
 
@@ -167,23 +167,23 @@ public class Application : Gtk.Application {
                 volume_switch.bind_property ("active", volume_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
                 //  If the app's in mono
-                if (apps[i].is_mono){
+                if (apps[i].is_mono) {
                     //  Disable inputs on balance slider
                     balance_scale.sensitive = false;
                     //  Give it a tooltip explaining this
-                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({},_("This app is using mono audio"));
+                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _("This app is using mono audio"));
                 } else {
                     //  If not, make the switch toggle its input
                     volume_switch.bind_property ("active", balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
                     //  Make the balance slider function
                     balance_scale.value_changed.connect (() => {
-                        set_volume(app, balance_scale, volume_scale);
+                        set_volume (app, balance_scale, volume_scale);
                     });
                 }
 
                 //  Output label
-                var output_label = new Gtk.Label (_("Output:"));
+                var output_label = new Gtk.Label (_ ("Output:"));
 
                 //  Output dropdown
                 var dropdown = new Gtk.ComboBoxText ();
@@ -201,29 +201,29 @@ public class Application : Gtk.Application {
                 //  Make the dropdown function
                 dropdown.changed.connect (() => {
                     var sink = outputs[dropdown.active];
-                    run_command("pactl move-sink-input " + app.index + " " + sink.index);
+                    run_command ("pactl move-sink-input " + app.index + " " + sink.index);
                 });
 
                 //  Add First row for app, volume slider and mute switch
-                item_grid.attach (name_label,    0, 0);
-                item_grid.attach (volume_label,  1, 0);
-                item_grid.attach (volume_scale,  2, 0);
+                item_grid.attach (name_label, 0, 0);
+                item_grid.attach (volume_label, 1, 0);
+                item_grid.attach (volume_scale, 2, 0);
                 item_grid.attach (volume_switch, 3, 0, 1, 2);
                 //  Second row for icon and balance
-                item_grid.attach (icon,          0, 1);
+                item_grid.attach (icon, 0, 1);
                 item_grid.attach (balance_label, 1, 1);
                 item_grid.attach (balance_scale, 2, 1);
                 //  Third row for picking output
-                item_grid.attach (output_label,  0, 2);
-                item_grid.attach (dropdown,      1, 2, 3);
+                item_grid.attach (output_label, 0, 2);
+                item_grid.attach (dropdown, 1, 2, 3);
 
                 //  Add the row to the main app grid
-                grid.attach(item_grid, 0, i*2);
+                grid.attach (item_grid, 0, i * 2);
 
                 //  If this isn't the last element
-                if (i != apps.length-1) {
+                if (i != apps.length - 1) {
                     //  Add a seperator below the last element
-                    grid.attach(new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, (i*2)+1);
+                    grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, (i * 2) + 1);
                 }
 
             };
@@ -257,25 +257,25 @@ public class Application : Gtk.Application {
         main_window.set_titlebar (headerbar);
         main_window.add (grid);
 
-        populate(main_window);
+        populate (main_window);
 
         var quit_action = new SimpleAction ("quit", null);
 
         add_action (quit_action);
-        set_accels_for_action ("app.quit",  {"<Control>q", "<Control>w"});
+        set_accels_for_action ("app.quit", {"<Control>q", "<Control>w"});
 
         quit_action.activate.connect (() => {
             main_window.destroy ();
         });
 
-        var listener = new Listener("/home", "/usr/bin/pactl subscribe");
+        var listener = new Listener ("/home", "/usr/bin/pactl subscribe");
         listener.run ();
 
         listener.output_changed.connect ((line) => {
             //  If the change is a sink-input
-            if (line.contains("sink-input") && (line.contains("new") || line.contains("remove"))) {
-                debug(line.strip());
-                populate(main_window);
+            if (line.contains ("sink-input") && (line.contains ("new") || line.contains ("remove"))) {
+                debug (line.strip ());
+                populate (main_window);
             }
         });
 
@@ -286,4 +286,3 @@ public class Application : Gtk.Application {
         return app.run (args);
     }
 }
-
