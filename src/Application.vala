@@ -70,7 +70,7 @@ public class Application : Gtk.Application {
             percentages = volumes[1].to_string () + "% " + volumes[0].to_string () + "%";
         }
 
-        run_command ("pactl set-sink-input-volume " + app.index + " " + percentages);
+        run_command ("env LANG=C pactl set-sink-input-volume " + app.index + " " + percentages);
     }
 
     public Application () {
@@ -154,10 +154,10 @@ public class Application : Gtk.Application {
                 //  Make the mute switch function
                 volume_switch.notify["active"].connect (() => {
                     if (volume_switch.active) {
-                        run_command ("pacmd set-sink-input-mute " + app.index + " false");
+                        run_command ("env LANG=C pactl set-sink-input-mute " + app.index + " 0");
                         debug ("Unmuting %s", app.index);
                     } else {
-                        run_command ("pacmd set-sink-input-mute " + app.index + " true");
+                        run_command ("env LANG=C pactl set-sink-input-mute " + app.index + " 1");
                         debug ("Muting %s", app.index);
                     }
                 });
@@ -190,7 +190,7 @@ public class Application : Gtk.Application {
 
                 for (int j = 0; j < outputs.length; j++) {
                     var sink = outputs[j];
-                    dropdown.append_text (sink.description);
+                    dropdown.append_text ("%s - %s".printf (sink.active_port, sink.description));
 
                     //  If this is the current output
                     if (app.sink == sink.index) {
@@ -201,7 +201,7 @@ public class Application : Gtk.Application {
                 //  Make the dropdown function
                 dropdown.changed.connect (() => {
                     var sink = outputs[dropdown.active];
-                    run_command ("pactl move-sink-input " + app.index + " " + sink.index);
+                    run_command ("env LANG=C pactl move-sink-input " + app.index + " " + sink.index);
                 });
 
                 //  Add First row for app, volume slider and mute switch
@@ -269,7 +269,10 @@ public class Application : Gtk.Application {
         });
 
         var listener = new Listener ("/home", "/usr/bin/pactl subscribe");
-        listener.run ();
+
+        main_window.destroy.connect (() => {
+            listener.quit ();
+        });
 
         listener.output_changed.connect ((line) => {
             //  If the change is a sink-input
@@ -278,6 +281,8 @@ public class Application : Gtk.Application {
                 populate (main_window);
             }
         });
+
+        listener.run ();
 
     }
 
