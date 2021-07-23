@@ -1,3 +1,36 @@
+/*
+* Copyright (c) 2021 - Today Allie Law (ChildishGiant)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Allie Law <allie@cloverleaf.app>
+*/
+
+private double lerp (double a, double b, double t) {
+    return (1.0 - t) * a + b * t;
+}
+
+private double inverse_lerp (double a, double b, double v) {
+    return (v - a) / (b - a);
+}
+
+private double remap (double i_min, double i_max, double o_min, double o_max, double v) {
+    double t = inverse_lerp (i_min, i_max, v);
+    return lerp (o_min, o_max, t);
+}
 
 public class Response : GLib.Object {
 
@@ -7,7 +40,7 @@ public class Response : GLib.Object {
     public bool muted;
     public string icon = "application-default-icon"; // Or should it be application-x-executable?
     public string name;
-    public bool is_mono;
+    public bool is_mono = true;
     public string sink;
 
 }
@@ -24,10 +57,43 @@ public static Response[] digester () {
             //  Get a list of all apps using audio
             //  get just the info we want
             Process.spawn_command_line_sync (
-                "sh -c \"pacmd list-sink-inputs | grep -e index: -e volume: -e balance -e muted: -e 'application.icon_name = ' -e 'application.name = ' -e sink:\"",
+                "env LANG=C pactl list sink-inputs",
                 out sinks,
                 out ls_stderr,
                 out ls_status
+            );
+
+            Regex id_pattern = new Regex (
+                "Sink Input #(.*)",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex stereo_pattern = new Regex (
+                "Volume:.* (\\d{1,3})%.* (\\d{1,3})%",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex mono_pattern = new Regex (
+                "Volume: .* (\\d{1,3})%",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex balance_pattern = new Regex (
+                "balance (-?\\d\\.\\d\\d)",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex muted_pattern = new Regex (
+                "Mute: ([a-z]*)",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex icon_name_pattern = new Regex (
+                "application\\.icon_name = \"([a-z-\\.]*)\"",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex app_name_pattern = new Regex (
+                "application\\.name = \"([A-z-\\.]*)\"",
+                RegexCompileFlags.MULTILINE
+            );
+            Regex sink_pattern = new Regex (
+                "Sink: (\\d*)",
+                RegexCompileFlags.MULTILINE
             );
 
             Response[] apps = {};
@@ -35,66 +101,83 @@ public static Response[] digester () {
                 line = line.strip ();
                 string[] split = line.split (" ");
 
-                switch (split[0]) {
+                line = line.strip ();
 
-                    case "index:":
-                        Response app = new Response ();
-                        app.index = split[1];
-                        apps += app;
-                        break;
+                MatchInfo match_id;
+                if (id_pattern.match (line, 0, out match_id)) {
+                    Response app = new Response ();
+                    var id = match_id.fetch (1);
+                    app.index = id;
+                    apps += app;
+                }
 
-                    case "volume:":
-                        var sep = line.split ("/");
-                        var colon = line.split (":");
+                //  Match mono before stereo so that stero overrides it
+                MatchInfo match_mono;
+                if (mono_pattern.match (line, 0, out match_mono)) {
+                    var volume = match_mono.fetch (1);
+                    apps[apps.length - 1].volume = int.parse (volume);
+                }
 
-                        //  If mono
-                        if (colon[1] == " mono") {
-                            apps[apps.length - 1].is_mono = true;
-                            var stripped = sep[1].strip ();
-                            apps[apps.length - 1].volume = int.parse (stripped.substring (0, stripped.length - 1));
+                MatchInfo match_stereo;
+                if (stereo_pattern.match (line, 0, out match_stereo)) {
+                    var volumes = match_stereo.fetch_all ();
+                    apps[apps.length - 1].is_mono = false; // Mark app as stereo
+                    var left = int.parse (volumes[1]);
+                    var right = int.parse (volumes[2]);
 
-                        } else {
-                            var left = int.parse (sep[1].substring (0, sep[1].length - 1));
-                            var right = int.parse (sep[3].substring (0, sep[3].length - 1));
+                    //  Re-map volumes to 100%
+                    //  This keeps the correct balance but tops out at 100%
+                    if (left > 100 || right > 100) {
+                        debug ("Volume should be between 0 and 100, but was " +
+                        left.to_string () + " and " + right.to_string ());
+                        var max = int.max (left, right);
 
-                            //  Use the larger of the two
-                            if (left > right) {
-                                apps[apps.length - 1].volume = left;
-                            } else {
-                                apps[apps.length - 1].volume = right;
-                            }
-                        }
-                        break;
-                    case "balance":
-                        apps[apps.length - 1].balance = float.parse (split[1]);
-                        break;
-                    case "muted:":
-                        switch (split[1]) {
-                            case "no":
-                                apps[apps.length - 1].muted = false;
-                                break;
-                            default:
-                                apps[apps.length - 1].muted = true;
-                                break;
-                        }
-                        break;
-                    case "application.icon_name":
-                        apps[apps.length - 1].icon = line.substring (25, line.length - 26);
-                        break;
-                    case "application.name":
-                        apps[apps.length - 1].name = line.substring (20, line.length - 21);
-                        break;
-                    case "sink:":
-                        apps[apps.length - 1].sink = split[1];
-                        break;
-                    default:
-                        break;
+                        left = (int)remap (0.0, max, 0.0, 100.0, left);
+                        right = (int)remap (0.0, max, 0.0, 100.0, right);
+                    }
+
+                    debug ("Volume: " + left.to_string () + " " + right.to_string ());
+
+                    apps[apps.length - 1].volume = int.max (left, right);
+                }
+
+                MatchInfo match_balance;
+                if (balance_pattern.match (line, 0, out match_balance)) {
+                    var balance = match_balance.fetch (1);
+                    debug (balance);
+                    apps[apps.length - 1].balance = float.parse (balance);
+                }
+
+                MatchInfo match_muted;
+                if (muted_pattern.match (line, 0, out match_muted)) {
+                    var muted = match_muted.fetch (1);
+
+                    if (muted == "yes") {
+                        apps[apps.length - 1].muted = true;
+                    } else {
+                        apps[apps.length - 1].muted = false;
+                    }
+                }
+
+                MatchInfo match_icon_name;
+                if (icon_name_pattern.match (line, 0, out match_icon_name)) {
+                    apps[apps.length - 1].icon = match_icon_name.fetch (1);
+                }
+
+                MatchInfo match_app_name;
+                if (app_name_pattern.match (line, 0, out match_app_name)) {
+                    apps[apps.length - 1].name = match_app_name.fetch (1);
+                }
+
+                MatchInfo match_sink;
+                if (sink_pattern.match (line, 0, out match_sink)) {
+                    apps[apps.length - 1].sink = match_sink.fetch (1);
                 }
             }
 
             return apps;
 
-        } catch (SpawnError e) {
+        } catch (Error e) {
             error ("Error: %s\n", e.message);
         }
 

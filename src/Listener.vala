@@ -26,11 +26,6 @@
  */
 public class Listener : GLib.Object {
     /**
-    * Emitted when the command is finished.
-    */
-    public signal void done (int exit);
-
-    /**
     * When the output changed (std.out and std.err).
     *
     * @param text the new text
@@ -95,7 +90,7 @@ public class Listener : GLib.Object {
                 dir,
                 command.split (" "),
                 null,
-                SpawnFlags.DO_NOT_REAP_CHILD,
+                SpawnFlags.SEARCH_PATH,
                 null,
                 out pid,
                 null,
@@ -107,7 +102,7 @@ public class Listener : GLib.Object {
         }
 
         ChildWatch.add (pid, (pid, exit) => {
-            done (exit);
+            Process.close_pid (pid);
         });
 
         out_make = new GLib.IOChannel.unix_new (standard_output);
@@ -153,5 +148,17 @@ public class Listener : GLib.Object {
 
             return true;
         });
+    }
+
+    //  Kills child process
+    public void quit () {
+        debug ("Killing %s", pid.to_string ());
+        try {
+            Process.spawn_command_line_sync ("kill " + pid.to_string ());
+        } catch (SpawnError e) {
+            error ("Error: %s\n", e.message);
+        }
+        //  For some reason this doesn't work so we kill it by hand
+        //  Process.close_pid (pid);
     }
 }
