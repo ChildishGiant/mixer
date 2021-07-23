@@ -3,5 +3,6 @@ sources = files (
     'Application.vala',
     'Digest.vala',
     'Listener.vala',
-    'GetOutputs.vala'
+    'GetOutputs.vala',
+    'AlertView.vala'
 )

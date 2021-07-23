@@ -88,16 +88,21 @@ public class Application : Gtk.Application {
             grid.remove (element);
         }
 
+        main_window.get_style_context ().add_class (Granite.STYLE_CLASS_ROUNDED);
+
         var apps = digester ();
         var outputs = get_outputs ();
 
         //  If no apps are using audio
         if (apps.length == 0) {
-            var no_apps = new Granite.Widgets.AlertView (
-                _("No Apps"),
-                _("There are no apps making any noise."),
-                "preferences-desktop-sound"
-            );
+            // var no_apps = new Granite.Widgets.AlertView (
+            //     _("No Apps"),
+            //     _("There are no apps making any noise."),
+            //     "preferences-desktop-sound"
+            // );
+            // no_apps.show_all ();
+
+            var no_apps = new AlertView ();
             no_apps.show_all ();
             grid.add (no_apps);
         }
@@ -234,6 +239,13 @@ public class Application : Gtk.Application {
     }
 
     protected override void activate () {
+        var granite_settings = Granite.Settings.get_default ();
+        var gtk_settings = Gtk.Settings.get_default ();
+
+        gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+        granite_settings.notify["prefers-color-scheme"].connect (() => {
+            gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+        });
 
         var main_window = new Gtk.ApplicationWindow (this) {
             default_height = 250,
@@ -253,6 +265,7 @@ public class Application : Gtk.Application {
             show_close_button = true,
             title = "Mixer"
         };
+        headerbar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
 
         main_window.set_titlebar (headerbar);
         main_window.add (grid);
