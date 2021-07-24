@@ -235,6 +235,22 @@ public class Application : Gtk.Application {
 
     protected override void activate () {
 
+         unowned var gtk_settings = Gtk.Settings.get_default ();
+         unowned var granite_settings = Granite.Settings.get_default ();
+
+         gtk_settings.gtk_cursor_theme_name = "elementary";
+         gtk_settings.gtk_icon_theme_name = "elementary";
+
+         gtk_settings.gtk_application_prefer_dark_theme = (
+            granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK
+         );
+
+         granite_settings.notify["prefers-color-scheme"].connect (() => {
+              gtk_settings.gtk_application_prefer_dark_theme = (
+                 granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK
+             );
+         });
+
         var main_window = new Gtk.ApplicationWindow (this) {
             default_height = 250,
             default_width = 500,
