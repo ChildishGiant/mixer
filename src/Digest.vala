@@ -99,9 +99,6 @@ public static Response[] digester () {
             Response[] apps = {};
             foreach (string line in sinks.split ("\n")) {
                 line = line.strip ();
-                string[] split = line.split (" ");
-
-                line = line.strip ();
 
                 MatchInfo match_id;
                 if (id_pattern.match (line, 0, out match_id)) {
@@ -116,6 +113,7 @@ public static Response[] digester () {
                 if (mono_pattern.match (line, 0, out match_mono)) {
                     var volume = match_mono.fetch (1);
                     apps[apps.length - 1].volume = int.parse (volume);
+                    debug ("Mono: %s", volume);
                 }
 
                 MatchInfo match_stereo;
@@ -136,7 +134,7 @@ public static Response[] digester () {
                         right = (int)remap (0.0, max, 0.0, 100.0, right);
                     }
 
-                    debug ("Volume: " + left.to_string () + " " + right.to_string ());
+                    debug ("Stereo: " + left.to_string () + " " + right.to_string ());
 
                     apps[apps.length - 1].volume = int.max (left, right);
                 }
@@ -144,7 +142,7 @@ public static Response[] digester () {
                 MatchInfo match_balance;
                 if (balance_pattern.match (line, 0, out match_balance)) {
                     var balance = match_balance.fetch (1);
-                    debug (balance);
+                    debug ("Balance: %s", balance);
                     apps[apps.length - 1].balance = float.parse (balance);
                 }
 
@@ -167,6 +165,7 @@ public static Response[] digester () {
                 MatchInfo match_app_name;
                 if (app_name_pattern.match (line, 0, out match_app_name)) {
                     apps[apps.length - 1].name = match_app_name.fetch (1);
+                    debug ("App name: %s", match_app_name.fetch (1));
                 }
 
                 MatchInfo match_sink;

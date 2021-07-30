@@ -30,7 +30,7 @@ public static Sink[] get_outputs () {
             RegexCompileFlags.MULTILINE
         );
         Regex desc_pattern = new Regex (
-            "device\\.profile\\.description = \"(.*)\"",
+            "device\\.description = \"(.*)\"",
             RegexCompileFlags.MULTILINE
         );
 
