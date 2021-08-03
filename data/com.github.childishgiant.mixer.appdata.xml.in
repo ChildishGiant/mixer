@@ -7,17 +7,25 @@
   <name>Mixer</name>
   <summary>Change the volume of apps</summary>
   <description>
-    <p>A simple volume mixer for Elementary OS.</p>
+    <p>A no-frills volume mixer, with simplicity and usability at its core.</p>
+    <ul>
+      <li>Simple volume controls including balance and output selection</li>
+      <li>Individually change each audio source's values</li>
+    </ul>
   </description>
   <provides>
     <binary>com.github.childishgiant.mixer</binary>
   </provides>
   <developer_name>Allie Law</developer_name>
-  <url type="homepage">http://github.com/childishgiant/mixer</url>
-  <url type="bugtracker">http://github.com/childishgiant/mixer/issues</url>
-  <url type="help">http://github.com/childishgiant/mixer/issues</url>
+  <url type="homepage">https://github.com/childishgiant/mixer</url>
+  <url type="bugtracker">https://github.com/childishgiant/mixer/issues</url>
+  <url type="help">https://github.com/childishgiant/mixer/issues</url>
   <screenshots>
     <screenshot type="default">
+      <image>https://raw.githubusercontent.com/childishgiant/mixer/master/docs/light.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/childishgiant/mixer/master/docs/dark.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
@@ -47,6 +55,27 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="0.0.1" date="2021-07-11"/>
+    <release version="0.1.2" date="2021-07-21">
+      <description>
+        <p>Added features:</p>
+        <ul>
+          <li>Added support for Odin's dark style</li>
+          <li>Changed some backend things to be more in-line with stock apps</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.1.0" date="2021-07-21">
+      <description>
+        <p>Added features:</p>
+        <ul>
+          <li>Added a dropdown for changing which output an app uses</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.0.1" date="2021-07-11">
+      <description>
+        <p>Initial Release</p>
+      </description>
+    </release>
   </releases>
 </component>

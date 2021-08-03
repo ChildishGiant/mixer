@@ -2,7 +2,6 @@
 Ignore the skip in release numbers.
 ### Features
 
-* add dropdown for changing what output an app uses ([68d831e](https://github.com/ChildishGiant/Mixer/commit/68d831eb249d6c7b4c593cd9e4ac1807eb648edc))
 * support dark theme ([3b79be3](https://github.com/ChildishGiant/Mixer/commit/3b79be3a43b895491871f7404c1ab0388e3ae9fd))
 
 ### Misc
