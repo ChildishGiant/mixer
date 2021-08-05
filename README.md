@@ -1,6 +1,10 @@
 # Mixer
+### Change the volume of apps
 
-A simple volume mixer for Elementary OS.
+A no-frills volume mixer, with simplicity and usability at its core.
+
+* Simple volume controls including balance and output selection
+* Individually change each audio source's values
 
 <p align="center">
 <img width="250" src="data/icons/com.github.childishgiant.mixer.svg" alt="Logo">
