@@ -16,9 +16,8 @@ A no-frills volume mixer, with simplicity and usability at its core.
 
 # Installing
 
-
-[<img src="https://appcenter.elementary.io/badge.svg " height="75" />](https://appcenter.elementary.io/com.github.childishgiant.mixer)
-[<img src="https://flathub.org/assets/badges/flathub-badge-en.svg " height="75" />](https://flathub.org/apps/details/com.github.childishgiant.mixer)
+<a href="https://appcenter.elementary.io/com.github.childishgiant.mixer"><img src="https://appcenter.elementary.io/badge.svg" height="75" /></a>
+<a href="https://flathub.org/apps/details/com.github.childishgiant.mixer"><img src="https://flathub.org/assets/badges/flathub-badge-en.svg" height="75" /></a>
 
 Releases are also always available as flatpaks on the [releases page](https://github.com/childishgiant/mixer/releases).
 
