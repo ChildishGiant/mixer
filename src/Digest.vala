@@ -84,11 +84,11 @@ public static Response[] digester () {
                 RegexCompileFlags.MULTILINE
             );
             Regex icon_name_pattern = new Regex (
-                "application\\.icon_name = \"([a-z-\\.]*)\"",
+                "application\\.icon_name = \"([a-z-\\.]*)\"$",
                 RegexCompileFlags.MULTILINE
             );
             Regex app_name_pattern = new Regex (
-                "application\\.name = \"([A-z-\\.]*)\"",
+                "application\\.name = \"(.*)\"$",
                 RegexCompileFlags.MULTILINE
             );
             Regex sink_pattern = new Regex (
