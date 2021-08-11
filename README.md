@@ -16,16 +16,11 @@ A no-frills volume mixer, with simplicity and usability at its core.
 
 # Installing
 
-You can download the latest release from the [releases page](https://github.com/childishgiant/mixer/releases).
 
+[<img src="https://appcenter.elementary.io/badge.svg " height="75" />](https://appcenter.elementary.io/com.github.childishgiant.mixer)
+[<img src="https://flathub.org/assets/badges/flathub-badge-en.svg " height="75" />](https://flathub.org/apps/details/com.github.childishgiant.mixer)
 
-## Get it from the elementary OS AppCenter!
-
-<!-- [![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/mixer)
-
-This app is available on the elementary OS AppCenter. -->
-
-Not just yet
+Releases are also always available as flatpaks on the [releases page](https://github.com/childishgiant/mixer/releases).
 
 ## Nightly builds
 
@@ -45,7 +40,7 @@ Ensure you have these dependencies installed
 
 ```bash
 # install elementary-sdk, meson and ninja
-sudo apt install elementary-sdk meson ninja
+sudo apt install elementary-sdk meson ninja-build
 # clone repository
 git clone https://github.com/ChildishGiant/mixer mixer
 # cd to dir
