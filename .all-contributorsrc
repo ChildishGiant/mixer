@@ -6,6 +6,26 @@
   "commit": false,
   "contributors": [
     {
+      "login": "ChildishGiant",
+      "name": "Allie",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13716824?v=4",
+      "profile": "https://github.com/ChildishGiant",
+      "contributions": [
+        "design",
+        "code"
+      ]
+    },
+    {
+      "login": "SubhadeepJasu",
+      "name": "Subhadeep Jasu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20795161?v=4",
+      "profile": "https://github.com/SubhadeepJasu",
+      "contributions": [
+        "code"
+
+      ]
+    },
+    {
       "login": "JeysonFlores",
       "name": "Jeyson Flores",
       "avatar_url": "https://avatars.githubusercontent.com/u/68255757?v=4",
