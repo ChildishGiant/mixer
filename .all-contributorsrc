@@ -41,6 +41,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "asdffdsdaf",
+      "name": "asdf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/87440869?v=4",
+      "profile": "https://github.com/asdffdsdaf",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
