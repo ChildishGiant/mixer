@@ -53,7 +53,7 @@ sudo ninja install && com.github.childishgiant.mixer
 sudo ninja install && G_MESSAGES_DEBUG=all com.github.childishgiant.mixer
 ```
 
-### Generating pot file
+### Generating translation files
 
 ```bash
 # after setting up meson build
@@ -61,9 +61,11 @@ cd build
 
 # generates pot file
 ninja com.github.childishgiant.mixer-pot
+ninja extra-pot
 
 # to regenerate and propagate changes to every po file
 ninja com.github.childishgiant.mixer-update-po
+ninja extra-update-po
 ```
 
 ## Contributors ✨
