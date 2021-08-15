@@ -21,8 +21,8 @@ public class Mixer.MainWindow : Hdy.Window {
         default_theme.add_resource_path ("/com/github/childishgiant/mixer");
 
         var header = new Hdy.HeaderBar () {
-           show_close_button = true,
-           title = _("Mixer")
+            show_close_button = true,
+            title = _("Mixer")
         };
 
         unowned Gtk.StyleContext header_context = header.get_style_context ();
@@ -36,6 +36,17 @@ public class Mixer.MainWindow : Hdy.Window {
             halign = Gtk.Align.FILL
         };
 
+
+        var scrolled = new Gtk.ScrolledWindow (null, null) {
+            //  Disabled sideways scrolling
+            hscrollbar_policy = Gtk.PolicyType.NEVER,
+            //  Minimum show one app
+            min_content_height = 111,
+            propagate_natural_height = true
+        };
+
+        scrolled.add (grid);
+
         window_grid = new Gtk.Grid () {
             column_spacing = 0,
             row_spacing = 0,
@@ -44,7 +55,7 @@ public class Mixer.MainWindow : Hdy.Window {
         };
 
         window_grid.attach (header, 0, 0);
-        window_grid.attach (grid, 0, 1);
+        window_grid.attach (scrolled, 0, 1);
 
         var window_handle = new Hdy.WindowHandle ();
         window_handle.add (window_grid);

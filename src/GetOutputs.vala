@@ -15,7 +15,6 @@ public static Sink[] get_outputs () {
     try {
 
         //  Get a list of all sinks
-        //  get just the info we want
         Process.spawn_command_line_sync (
             "env LANG=C pactl list sinks",
             out raw_sinks
