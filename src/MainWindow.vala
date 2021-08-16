@@ -41,7 +41,7 @@ public class Mixer.MainWindow : Hdy.Window {
             //  Disabled sideways scrolling
             hscrollbar_policy = Gtk.PolicyType.NEVER,
             //  Minimum show one app
-            min_content_height = 111,
+            min_content_height = 117,
             propagate_natural_height = true
         };
 
