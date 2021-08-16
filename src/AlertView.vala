@@ -28,13 +28,13 @@ public class AlertView : Gtk.Grid {
         margin = 24;
         vexpand = true;
 
-        var title_label = new Gtk.Label ("No Apps") {
+        var title_label = new Gtk.Label (_("No Apps")) {
             hexpand = true,
             xalign = 0
         };
         title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
 
-        var description_label = new Gtk.Label ("There are no apps making any noise.") {
+        var description_label = new Gtk.Label (_("There are no apps making any noise.")) {
             hexpand = true,
             xalign = 0,
             valign = Gtk.Align.START

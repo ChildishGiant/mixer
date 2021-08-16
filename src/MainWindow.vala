@@ -21,8 +21,8 @@ public class Mixer.MainWindow : Hdy.Window {
         default_theme.add_resource_path ("/com/github/childishgiant/mixer");
 
         var header = new Hdy.HeaderBar () {
-           show_close_button = true,
-           title = _("Mixer")
+            show_close_button = true,
+            title = _("Mixer")
         };
 
         unowned Gtk.StyleContext header_context = header.get_style_context ();
