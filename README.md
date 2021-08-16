@@ -32,14 +32,16 @@ You can of course download and install this app from source.
 
 Ensure you have these dependencies installed
 
+* glib-2.0
 * granite
 * gtk+-3.0
+* libhandy-1.0
 
 ### Install, build and run
 
 ```bash
 # install elementary-sdk, meson and ninja
-sudo apt install elementary-sdk meson ninja-build
+sudo apt install elementary-sdk meson ninja-build libhandy-1-dev
 # clone repository
 git clone https://github.com/ChildishGiant/mixer mixer
 # cd to dir
