@@ -23,7 +23,7 @@ public static Response[] mockup_apps (string style) {
 
     switch (style) {
         case "screenshot":
-            var videos = new Response();
+            var videos = new Response ();
             videos.volume = 100;
             videos.balance = 0;
             videos.muted = false;
@@ -32,7 +32,7 @@ public static Response[] mockup_apps (string style) {
             videos.is_mono = false;
             videos.sink = "1";
 
-            var brave = new Response();
+            var brave = new Response ();
             brave.volume = 100;
             brave.balance = 0;
             brave.muted = true;
@@ -41,7 +41,7 @@ public static Response[] mockup_apps (string style) {
             brave.is_mono = false;
             brave.sink = "1";
 
-            var music = new Response();
+            var music = new Response ();
             music.volume = 75;
             music.muted = false;
             music.icon = "io.elementary.music";
@@ -53,13 +53,13 @@ public static Response[] mockup_apps (string style) {
 
         case "varied_lengths":
 
-            var app1 = new Response();
+            var app1 = new Response ();
             app1.name = "App 1";
 
-            var app2 = new Response();
+            var app2 = new Response ();
             app2.name = "App with a longer name";
 
-            var app3 = new Response();
+            var app3 = new Response ();
             app3.name = "App with a really long name";
 
             return {app1, app2, app3};

@@ -78,8 +78,8 @@ public class Mixer.MainWindow : Hdy.Window {
         Response[] apps;
 
         if (mockup != "") {
-            debug("Using mockup: %s", mockup);
-            apps = mockup_apps(mockup);
+            debug ("Using mockup: %s", mockup);
+            apps = mockup_apps (mockup);
         } else {
 
             apps = digester ();
