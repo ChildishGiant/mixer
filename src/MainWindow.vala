@@ -154,6 +154,8 @@ public class Mixer.MainWindow : Hdy.Window {
                 if (apps[i].is_mono) {
                     //  Disable inputs on balance slider
                     balance_scale.sensitive = false;
+                    //  Also grey out the label
+                    balance_label.sensitive = false;
                     //  Give it a tooltip explaining this
                     balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _("This app is using mono audio"));
                 } else {
