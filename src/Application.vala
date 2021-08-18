@@ -21,6 +21,10 @@
 
 public class Mixer.App : Gtk.Application {
 
+    private static string version = "0.1.3";
+    private static bool print_version = false;
+    private static string mockup = null;
+
     public App () {
         Object (
             application_id: "com.github.childishgiant.mixer",
@@ -28,8 +32,23 @@ public class Mixer.App : Gtk.Application {
         );
     }
 
+    private const OptionEntry[] OPTIONS = {
+        { "version", 'v', 0, OptionArg.NONE, ref print_version,
+            "Display version number." },
+        { "mockup", 'm', 0, OptionArg.STRING, ref mockup,
+            "Use mock applications." },
+        { null }
+    };
+
+    construct {
+        add_main_option_entries (OPTIONS);
+    }
 
     protected override void activate () {
+
+        if (print_version) {
+            stdout.printf (_("Mixer version: %s"), version + "\n");
+        }
 
         unowned var gtk_settings = Gtk.Settings.get_default ();
         unowned var granite_settings = Granite.Settings.get_default ();
@@ -52,9 +71,15 @@ public class Mixer.App : Gtk.Application {
         add_action (quit_action);
         set_accels_for_action ("app.quit", {"<Control>q", "<Control>w"});
 
+        var app_window = new MainWindow (this);
+
+        if (mockup != null) {
+            app_window.populate (mockup);
+            app_window.show_all ();
+            return;
+        }
 
         var listener = new Listener ("/home", "/usr/bin/pactl subscribe");
-        var app_window = new MainWindow (this);
 
         listener.output_changed.connect ((line) => {
             //  If the change is a sink-input

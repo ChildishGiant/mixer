@@ -66,7 +66,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
     }
 
-    public void populate () {
+    public void populate (string mockup = "") {
         //  Clear all existing rows
         var children = grid.get_children ();
 
@@ -75,7 +75,15 @@ public class Mixer.MainWindow : Hdy.Window {
             grid.remove (element);
         }
 
-        var apps = digester ();
+        Response[] apps;
+
+        if (mockup != "") {
+            debug("Using mockup: %s", mockup);
+            apps = mockup_apps(mockup);
+        } else {
+
+            apps = digester ();
+        }
         var outputs = get_outputs ();
 
         //  If no apps are using audio
