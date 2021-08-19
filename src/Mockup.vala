@@ -64,11 +64,30 @@ public static Response[] mockup_apps (string style) {
 
             return {app1, app2, app3};
 
+        case "too_many":
+
+            Response[] to_return = {};
+
+            for (var i = 0; i < 50; i++) {
+                var to_add = new Response ();
+                to_add.name = "App " + i.to_string ();
+
+                if (i % 3 == 0) {
+                    to_add.icon = "emblem-error";
+                } else
+
+                if (i % 2 == 0) {
+                    to_add.icon = "emblem-enabled";
+                } else {
+                    to_add.icon = "emblem-mixed";
+                };
+
+                to_return += to_add;
+            }
+
+            return to_return;
 
         default:
-            stdout.printf ("Unknown mockup style");
-            break;
+            return {};
     }
-
-    return {};
 }
