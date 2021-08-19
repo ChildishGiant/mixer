@@ -2,6 +2,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
     private Gtk.Grid window_grid;
     private Gtk.Grid grid;
+    private int one_app_height = 117;
 
     public MainWindow (Gtk.Application application) {
         Object (
@@ -33,6 +34,9 @@ public class Mixer.MainWindow : Hdy.Window {
             column_spacing = 6,
             row_spacing = 6,
             margin = 6,
+            //  Side margins to make scrolling easier
+            margin_left = 10,
+            margin_right = 10,
             halign = Gtk.Align.FILL
         };
 
@@ -41,7 +45,7 @@ public class Mixer.MainWindow : Hdy.Window {
             //  Disabled sideways scrolling
             hscrollbar_policy = Gtk.PolicyType.NEVER,
             //  Minimum show one app
-            min_content_height = 117,
+            min_content_height = one_app_height,
             propagate_natural_height = true
         };
 
@@ -66,7 +70,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
     }
 
-    public void populate () {
+    public void populate (string mockup = "") {
         //  Clear all existing rows
         var children = grid.get_children ();
 
@@ -75,11 +79,27 @@ public class Mixer.MainWindow : Hdy.Window {
             grid.remove (element);
         }
 
-        var apps = digester ();
+        Response[] apps;
+
+        if (mockup != "") {
+            debug ("Using mockup: %s", mockup);
+            apps = mockup_apps (mockup);
+
+            //  If the mockup is invalid
+            if (apps.length == 0) {
+                grid.add ( new Gtk.Label ("Unknown mockup: " + mockup) {
+                    vexpand = true,
+                    hexpand = true
+                } );
+            }
+        } else {
+
+            apps = digester ();
+        }
         var outputs = get_outputs ();
 
         //  If no apps are using audio
-        if (apps.length == 0) {
+        if (apps.length == 0 && mockup == "") {
 
             var no_apps = new AlertView ();
             grid.add (no_apps);
@@ -215,6 +235,11 @@ public class Mixer.MainWindow : Hdy.Window {
 
             };
         }
+
+        //  TODO Request the window size
+        //  var height = (apps.length * one_app_height);
+        //  set_default_size (-1, height) ;
+
     }
 
     //  Runs a synchronous command without output

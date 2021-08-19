@@ -5,5 +5,6 @@ sources = files (
     'Listener.vala',
     'GetOutputs.vala',
     'MainWindow.vala',
-    'AlertView.vala'
+    'AlertView.vala',
+    'Mockup.vala'
 )
