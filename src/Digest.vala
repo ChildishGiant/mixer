@@ -64,23 +64,23 @@ public static Response[] digester () {
             );
 
             Regex id_pattern = new Regex (
-                "Sink Input #(.*)",
+                "(?:Sink Input|Ziel-Eingabe) #(\\d*)",
                 RegexCompileFlags.MULTILINE
             );
             Regex stereo_pattern = new Regex (
-                "Volume:.* (\\d{1,3})%.* (\\d{1,3})%",
+                "(?:Volume|Lautstärke):.* (\\d{1,3})%.* (\\d{1,3})%",
                 RegexCompileFlags.MULTILINE
             );
             Regex mono_pattern = new Regex (
-                "Volume: .* (\\d{1,3})%",
+                "(?:Volume|Lautstärke):.* (\\d{1,3})%",
                 RegexCompileFlags.MULTILINE
             );
             Regex balance_pattern = new Regex (
-                "balance (-?\\d\\.\\d\\d)",
+                "(?:balance|Verteilung) (-?\\d\\.\\d\\d)",
                 RegexCompileFlags.MULTILINE
             );
             Regex muted_pattern = new Regex (
-                "Mute: ([a-z]*)",
+                "(?:Mute|Stumm): ([a-z]*)",
                 RegexCompileFlags.MULTILINE
             );
             Regex icon_name_pattern = new Regex (
@@ -92,7 +92,7 @@ public static Response[] digester () {
                 RegexCompileFlags.MULTILINE
             );
             Regex sink_pattern = new Regex (
-                "Sink: (\\d*)",
+                "(?:Sink|Ziel): (\\d*)",
                 RegexCompileFlags.MULTILINE
             );
 
@@ -150,7 +150,7 @@ public static Response[] digester () {
                 if (muted_pattern.match (line, 0, out match_muted)) {
                     var muted = match_muted.fetch (1);
 
-                    if (muted == "yes") {
+                    if (muted == "yes" || muted == "ja") {
                         apps[apps.length - 1].muted = true;
                     } else {
                         apps[apps.length - 1].muted = false;
