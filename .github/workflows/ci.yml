@@ -4,7 +4,20 @@ name: CI
 on: [pull_request, push]
 
 jobs:
+  pre_job:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'same_content_newer'
+
   flatpak:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Flatpak
     runs-on: ubuntu-latest
 
@@ -27,6 +40,8 @@ jobs:
           cache-key: "flatpak-builder-${{ github.sha }}"
 
   lint:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Lint
     runs-on: ubuntu-latest
 
