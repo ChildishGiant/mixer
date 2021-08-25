@@ -252,11 +252,11 @@ public class Mixer.MainWindow : Hdy.Window {
             Process.spawn_command_line_sync (command, out output, out error);
 
             if (output == "" && error == "") {
-                debug("Command %s ran successfully", command);
+                debug ("Command %s ran successfully", command);
             } else {
-                debug("Command %s failed", command);
-                debug("Output: %s", output);
-                debug("Error: %s", error);
+                debug ("Command %s failed", command);
+                debug ("Output: %s", output);
+                debug ("Error: %s", error);
             }
 
         } catch (SpawnError e) {
@@ -268,8 +268,8 @@ public class Mixer.MainWindow : Hdy.Window {
         var volumes = balance_volume (balance_scale.get_value (), volume_scale.get_value ());
 
         debug ("Setting volume for %s", app.name);
-        debug ("Balance: %s", balance_scale.get_value().to_string());
-        debug ("Volume: %s", volume_scale.get_value().to_string());
+        debug ("Balance: %s", balance_scale.get_value ().to_string ());
+        debug ("Volume: %s", volume_scale.get_value ().to_string ());
 
         string percentages;
 
