@@ -245,7 +245,20 @@ public class Mixer.MainWindow : Hdy.Window {
     //  Runs a synchronous command without output
     private void run_command (string command) {
         try {
-            Process.spawn_command_line_sync (command);
+
+            string output;
+            string error;
+
+            Process.spawn_command_line_sync (command, out output, out error);
+
+            if (output == "" && error == "") {
+                debug("Command %s ran successfully", command);
+            } else {
+                debug("Command %s failed", command);
+                debug("Output: %s", output);
+                debug("Error: %s", error);
+            }
+
         } catch (SpawnError e) {
             error ("Error: %s\n", e.message);
         }
@@ -253,6 +266,10 @@ public class Mixer.MainWindow : Hdy.Window {
 
     private void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
         var volumes = balance_volume (balance_scale.get_value (), volume_scale.get_value ());
+
+        debug ("Setting volume for %s", app.name);
+        debug ("Balance: %s", balance_scale.get_value().to_string());
+        debug ("Volume: %s", volume_scale.get_value().to_string());
 
         string percentages;
 
@@ -268,8 +285,6 @@ public class Mixer.MainWindow : Hdy.Window {
 
     //  Takes balance and volume, outputs left and right volumes
     private int[] balance_volume (double balance, double volume) {
-        debug ("Balance: %s", balance.to_string ());
-        debug ("Volume: %s", volume.to_string ());
 
         double l;
         double r;
