@@ -62,7 +62,10 @@ public static Response[] mockup_apps (string style) {
             var app3 = new Response ();
             app3.name = "App with a really long name";
 
-            return {app1, app2, app3};
+            var app4 = new Response ();
+            app4.name = "App with a far too long name that was probably just the binary name and it has a git hash in and everything";
+
+            return {app1, app2, app3, app4};
 
         case "too_many":
 

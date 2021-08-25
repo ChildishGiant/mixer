@@ -73,6 +73,9 @@ public class Mixer.App : Gtk.Application {
 
         var app_window = new MainWindow (this);
 
+        //  Set default width so the dropdown isn't squashed too much
+        app_window.set_default_size (700, -1);
+
         if (mockup != null) {
             app_window.populate (mockup);
             app_window.show_all ();
