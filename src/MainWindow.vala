@@ -110,17 +110,13 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 var app = apps[i];
 
-                // Make a grid for just this item row
-                var item_grid = new Gtk.Grid () {
-                    column_spacing = 6,
-                    row_spacing = 6,
-                    halign = Gtk.Align.FILL,
-                    valign = Gtk.Align.CENTER
-                };
-
                 var icon = new Gtk.Image.from_icon_name (app.icon, Gtk.IconSize.DND);
                 icon.valign = Gtk.Align.START;
-                var name_label = new Gtk.Label (app.name.to_string ());
+                var name_label = new Gtk.Label (app.name.to_string ()) {
+                    //  If the name's longer than 32 chars use ...
+                    max_width_chars = 32,
+                    ellipsize = Pango.EllipsizeMode.END,
+                };
 
                 var volume_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 5);
                 volume_scale.adjustment.page_increment = 5;
@@ -135,10 +131,12 @@ public class Mixer.MainWindow : Hdy.Window {
                 balance_label.valign = Gtk.Align.START;
                 balance_label.halign = Gtk.Align.START;
 
-                var balance_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, -1, 1, 0.1);
+                var balance_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, -1, 1, 0.1) {
+                    draw_value = false,
+                    has_origin = false,
+                    width_request = 150
+                };
                 balance_scale.adjustment.page_increment = 0.1;
-                balance_scale.draw_value = false;
-                balance_scale.has_origin = false;
                 balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
                 balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
                 balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
@@ -192,7 +190,17 @@ public class Mixer.MainWindow : Hdy.Window {
                 var output_label = new Gtk.Label (_ ("Output:"));
 
                 //  Output dropdown
-                var dropdown = new Gtk.ComboBoxText ();
+                var dropdown = new Gtk.ComboBoxText () {
+                    //  Minimum width
+                    width_request = 75,
+                };
+
+                dropdown.cell_area.foreach ((cell_renderer) => {
+                    var text = (Gtk.CellRendererText)cell_renderer;
+                    text.ellipsize = Pango.EllipsizeMode.END;
+                    return true;
+                });
+
 
                 for (int j = 0; j < outputs.length; j++) {
                     var sink = outputs[j];
@@ -210,29 +218,27 @@ public class Mixer.MainWindow : Hdy.Window {
                     run_command ("env LANG=C pactl move-sink-input " + app.index + " " + sink.index);
                 });
 
-                //  Add First row for app, volume slider and mute switch
-                item_grid.attach (name_label, 0, 0);
-                item_grid.attach (volume_label, 1, 0);
-                item_grid.attach (volume_scale, 2, 0);
-                item_grid.attach (volume_switch, 3, 0, 1, 2);
-                //  Second row for icon and balance
-                item_grid.attach (icon, 0, 1);
-                item_grid.attach (balance_label, 1, 1);
-                item_grid.attach (balance_scale, 2, 1);
-                //  Third row for picking output
-                item_grid.attach (output_label, 0, 2);
-                item_grid.attach (dropdown, 1, 2, 3);
+                var base_top = i * 4;
+                var separator_top = ( (i + 1) * 3 ) + i;
 
-                //  Add the row to the main app grid
-                debug ("Added %s grid", app.name);
-                grid.attach (item_grid, 0, i * 2);
+                //  Add First row for app, volume slider and mute switch
+                grid.attach (name_label, 0, base_top + 0);
+                grid.attach (volume_label, 1, base_top + 0);
+                grid.attach (volume_scale, 2, base_top + 0);
+                grid.attach (volume_switch, 3, base_top + 0, 1, 2);
+                //  Second row for icon and balance
+                grid.attach (icon, 0, base_top + 1);
+                grid.attach (balance_label, 1, base_top + 1);
+                grid.attach (balance_scale, 2, base_top + 1);
+                //  Third row for picking output
+                grid.attach (output_label, 0, base_top + 2);
+                grid.attach (dropdown, 1, base_top + 2, 3);
 
                 //  If this isn't the last element
                 if (i != apps.length - 1) {
                     //  Add a seperator below the last element
-                    grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, (i * 2) + 1);
+                    grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, separator_top, 4);
                 }
-
             };
         }
 
