@@ -1,8 +1,14 @@
+/*
+ * Copyright 2021 Allie Law <allie@cloverleaf.app>
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 public class Mixer.MainWindow : Hdy.Window {
 
     private Gtk.Grid window_grid;
     private Gtk.Grid grid;
     private int one_app_height = 117;
+    public PulseManager pulse_manager;
 
     public MainWindow (Gtk.Application application) {
         Object (
@@ -93,10 +99,12 @@ public class Mixer.MainWindow : Hdy.Window {
                 } );
             }
         } else {
-
-            apps = digester ();
+            apps = pulse_manager.get_apps ();
+            //  This is somehow running before get_apps returns
+            debug ("Got %d apps", apps.length);
         }
-        var outputs = get_outputs ();
+
+        var outputs = pulse_manager.get_outputs ();
 
         //  If no apps are using audio
         if (apps.length == 0 && mockup == "") {
@@ -156,11 +164,11 @@ public class Mixer.MainWindow : Hdy.Window {
                 //  Make the mute switch function
                 volume_switch.notify["active"].connect (() => {
                     if (volume_switch.active) {
-                        run_command ("env LANG=C pactl set-sink-input-mute " + app.index + " 0");
-                        debug ("Unmuting %s", app.index);
+                        run_command ("env LANG=C pactl set-sink-input-mute " + (string)app.index + " 0");
+                        debug ("Unmuting %s", (string)app.index);
                     } else {
-                        run_command ("env LANG=C pactl set-sink-input-mute " + app.index + " 1");
-                        debug ("Muting %s", app.index);
+                        run_command ("env LANG=C pactl set-sink-input-mute " + (string)app.index + " 1");
+                        debug ("Muting %s", (string)app.index);
                     }
                 });
 
@@ -204,7 +212,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 for (int j = 0; j < outputs.length; j++) {
                     var sink = outputs[j];
-                    dropdown.append_text ("%s - %s".printf (sink.active_port, sink.description));
+                    dropdown.append_text ("%i - %s".printf (sink.active_port, sink.description));
 
                     //  If this is the current output
                     if (app.sink == sink.index) {
@@ -215,7 +223,7 @@ public class Mixer.MainWindow : Hdy.Window {
                 //  Make the dropdown function
                 dropdown.changed.connect (() => {
                     var sink = outputs[dropdown.active];
-                    run_command ("env LANG=C pactl move-sink-input " + app.index + " " + sink.index);
+                    run_command ("env LANG=C pactl move-sink-input " + app.index.to_string () + " " + sink.index.to_string ());
                 });
 
                 var base_top = i * 4;
@@ -286,7 +294,7 @@ public class Mixer.MainWindow : Hdy.Window {
             percentages = volumes[1].to_string () + "% " + volumes[0].to_string () + "%";
         }
 
-        run_command ("env LANG=C pactl set-sink-input-volume " + app.index + " " + percentages);
+        run_command ("env LANG=C pactl set-sink-input-volume " + (string)app.index + " " + percentages);
     }
 
     //  Takes balance and volume, outputs left and right volumes

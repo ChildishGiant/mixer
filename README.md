@@ -36,12 +36,13 @@ Ensure you have these dependencies installed
 * granite
 * gtk+-3.0
 * libhandy-1.0
+* libpulse
 
 ### Install, build and run
 
 ```bash
 # install elementary-sdk, meson and ninja
-sudo apt install elementary-sdk meson ninja-build libhandy-1-dev
+sudo apt install elementary-sdk meson ninja-build libhandy-1-dev libpulse-dev
 # clone repository
 git clone https://github.com/ChildishGiant/mixer mixer
 # cd to dir

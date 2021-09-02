@@ -1,29 +1,14 @@
 /*
-* Copyright (c) 2021 - Today Allie Law (ChildishGiant)
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public
-* License along with this program; if not, write to the
-* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
-*
-* Authored by: Allie Law <allie@cloverleaf.app>
-*/
+ * Copyright 2021 Allie Law <allie@cloverleaf.app>
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 public class Mixer.App : Gtk.Application {
 
     private static string version = "0.1.3";
     private static bool print_version = false;
     private static string mockup = null;
+    public PulseManager manager;
 
     public App () {
         Object (
@@ -82,22 +67,8 @@ public class Mixer.App : Gtk.Application {
             return;
         }
 
-        var listener = new Listener ("/home", "/usr/bin/pactl subscribe");
-
-        listener.output_changed.connect ((line) => {
-            //  If the change is a sink-input
-            if (line.contains ("sink-input") && (line.contains ("new") || line.contains ("remove"))) {
-                debug (line.strip ());
-                app_window.populate ();
-                app_window.show_all ();
-            }
-        });
-
-        listener.run ();
-
-        app_window.destroy.connect (() => {
-            listener.quit ();
-        });
+        manager = new PulseManager ();
+        app_window.pulse_manager = manager;
 
         app_window.show_all ();
 
