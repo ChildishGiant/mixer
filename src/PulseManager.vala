@@ -22,6 +22,8 @@ public class PulseManager : Object {
     private bool sinks_done = true;
     private Sink[] sinks;
 
+    public signal void sinks_fetched (Sink[] sinks);
+    public signal void apps_fetched (Response[] apps);
 
     public PulseManager() {
 
@@ -90,9 +92,11 @@ public class PulseManager : Object {
 
 
         if (sink != null) {
-            //  debug("Sink info: %s", sink.proplist.to_string());
+            debug("Sink info: %s", sink.proplist.to_string());
             var sink_response = new Sink();
-            sink_response.index = (int)sink.index;
+            sink_response.index = (int)(sink.index);
+            sink_response.description = sink.description;
+            debug (sink.index.to_string());
             this.sinks += sink_response;
         }
 
@@ -120,7 +124,7 @@ public class PulseManager : Object {
         Timeout.add(5, () => {
 
             if (sink_inputs_done) {
-                /// It's done! Call a function or trigger a signal here.
+                apps_fetched (this.sink_inputs);
             }
 
             return !sink_inputs_done;
@@ -134,7 +138,11 @@ public class PulseManager : Object {
         Timeout.add(5, () => {
 
             if (sinks_done) {
-                /// It's done! Call a function or trigger a signal here.
+                for (int j = 0; j < this.sinks.length; j++) {
+                    var sink = this.sinks[j];
+                    print ("%i - %s".printf (sink.active_port, sink.description));
+                }
+                sinks_fetched (this.sinks);
             }
 
             return !sinks_done;

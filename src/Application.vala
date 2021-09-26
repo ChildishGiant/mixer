@@ -67,9 +67,6 @@ public class Mixer.App : Gtk.Application {
             return;
         }
 
-        manager = new PulseManager ();
-        app_window.pulse_manager = manager;
-
         app_window.show_all ();
 
         quit_action.activate.connect (() => {
