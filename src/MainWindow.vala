@@ -72,11 +72,15 @@ public class Mixer.MainWindow : Hdy.Window {
 
         add (window_handle);
 
-        populate ();
-
+        //  this.pulse_manager = new PulseManager ();
+        //  Timeout.add (200, () => {
+        //      populate ();
+        //      show_all ();
+        //      return false;
+        //  });
     }
 
-    public void populate (string mockup = "") {
+    public void populate (string mockup = "", Response[]? _apps = null, Sink[]? _sinks = null) {
         //  Clear all existing rows
         var children = grid.get_children ();
 
@@ -85,7 +89,7 @@ public class Mixer.MainWindow : Hdy.Window {
             grid.remove (element);
         }
 
-        Response[] apps;
+        Response[] apps = _apps;
 
         if (mockup != "") {
             debug ("Using mockup: %s", mockup);
@@ -98,13 +102,15 @@ public class Mixer.MainWindow : Hdy.Window {
                     hexpand = true
                 } );
             }
-        } else {
-            apps = pulse_manager.get_apps ();
-            //  This is somehow running before get_apps returns
+        } 
+        //  else {
+        //      apps = pulse_manager.get_apps ();
+        //      //  This is somehow running before get_apps returns
             debug ("Got %d apps", apps.length);
-        }
+        //  }
 
-        var outputs = pulse_manager.get_outputs ();
+        //  var outputs = pulse_manager.get_outputs ();
+        var outputs = _sinks;
 
         //  If no apps are using audio
         if (apps.length == 0 && mockup == "") {
@@ -253,7 +259,7 @@ public class Mixer.MainWindow : Hdy.Window {
         //  TODO Request the window size
         //  var height = (apps.length * one_app_height);
         //  set_default_size (-1, height) ;
-
+        show_all ();
     }
 
     //  Runs a synchronous command without output

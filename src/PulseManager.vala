@@ -22,6 +22,9 @@ public class PulseManager : Object {
     private bool sinks_done = true;
     private Sink[] sinks;
 
+    public signal void sinks_updated (Sink[] sinks);
+    public signal void apps_updated (Response[] apps);
+
 
     public PulseManager() {
 
@@ -120,7 +123,8 @@ public class PulseManager : Object {
         Timeout.add(5, () => {
 
             if (sink_inputs_done) {
-                /// It's done! Call a function or trigger a signal here.
+                print ("Done!!!\n");
+                apps_updated (this.sink_inputs);
             }
 
             return !sink_inputs_done;
@@ -134,7 +138,7 @@ public class PulseManager : Object {
         Timeout.add(5, () => {
 
             if (sinks_done) {
-                /// It's done! Call a function or trigger a signal here.
+                sinks_updated (this.sinks);
             }
 
             return !sinks_done;

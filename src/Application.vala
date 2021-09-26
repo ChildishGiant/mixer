@@ -9,6 +9,8 @@ public class Mixer.App : Gtk.Application {
     private static bool print_version = false;
     private static string mockup = null;
     public PulseManager manager;
+    Response[] responses;
+    Sink[] sinks;
 
     public App () {
         Object (
@@ -70,11 +72,28 @@ public class Mixer.App : Gtk.Application {
         manager = new PulseManager ();
         app_window.pulse_manager = manager;
 
-        app_window.show_all ();
+        manager.get_apps ();
+        manager.get_outputs ();
+
+        manager.sinks_updated.connect ((_sinks) => {
+            sinks = _sinks;
+            if (responses != null) {
+                app_window.populate ("", responses, sinks);
+            }
+        });
+
+        manager.apps_updated.connect ((_apps) => {
+            responses = _apps;
+            if (sinks != null) {
+                app_window.populate ("", responses, sinks);
+                app_window.show_all ();
+            }
+        });
 
         quit_action.activate.connect (() => {
             if (app_window != null) {
                 app_window.destroy ();
+                app_window.show_all ();
             }
         });
 
