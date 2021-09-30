@@ -102,11 +102,11 @@ public class Mixer.MainWindow : Hdy.Window {
                     hexpand = true
                 } );
             }
-        } 
+        }
         //  else {
         //      apps = pulse_manager.get_apps ();
         //      //  This is somehow running before get_apps returns
-            debug ("Got %d apps", apps.length);
+        debug ("Got %d apps", apps.length);
         //  }
 
         //  var outputs = pulse_manager.get_outputs ();
@@ -136,7 +136,7 @@ public class Mixer.MainWindow : Hdy.Window {
                 volume_scale.adjustment.page_increment = 5;
                 volume_scale.draw_value = false;
                 volume_scale.hexpand = true;
-                volume_scale.set_value (app.volume);
+                volume_scale.set_value (app.volume * 100);
 
                 var volume_label = new Gtk.Label (_("Volume:"));
                 volume_label.halign = Gtk.Align.START;
@@ -158,7 +158,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 //  Make the volume slider function
                 volume_scale.value_changed.connect (() => {
-                    set_volume (app, balance_scale, volume_scale);
+                    pulse_manager.set_volume (app, balance_scale, volume_scale);
                 });
 
                 //  Create mute switch
@@ -169,13 +169,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 //  Make the mute switch function
                 volume_switch.notify["active"].connect (() => {
-                    if (volume_switch.active) {
-                        run_command ("env LANG=C pactl set-sink-input-mute " + (string)app.index + " 0");
-                        debug ("Unmuting %s", (string)app.index);
-                    } else {
-                        run_command ("env LANG=C pactl set-sink-input-mute " + (string)app.index + " 1");
-                        debug ("Muting %s", (string)app.index);
-                    }
+                    pulse_manager.set_mute (app, !volume_switch.active);
                 });
 
 
@@ -196,7 +190,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                     //  Make the balance slider function
                     balance_scale.value_changed.connect (() => {
-                        set_volume (app, balance_scale, volume_scale);
+                        pulse_manager.set_volume (app, balance_scale, volume_scale);
                     });
                 }
 
@@ -218,7 +212,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 for (int j = 0; j < outputs.length; j++) {
                     var sink = outputs[j];
-                    dropdown.append_text ("%i - %s".printf (sink.active_port, sink.description));
+                    dropdown.append_text ("%s - %s".printf (sink.port_name, sink.port_description));
 
                     //  If this is the current output
                     if (app.sink == sink.index) {
@@ -228,8 +222,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 //  Make the dropdown function
                 dropdown.changed.connect (() => {
-                    var sink = outputs[dropdown.active];
-                    run_command ("env LANG=C pactl move-sink-input " + app.index.to_string () + " " + sink.index.to_string ());
+                    pulse_manager.move (app, outputs[dropdown.active]);
                 });
 
                 var base_top = i * 4;
@@ -283,49 +276,5 @@ public class Mixer.MainWindow : Hdy.Window {
             error ("Error: %s\n", e.message);
         }
     }
-
-    private void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
-        var volumes = balance_volume (balance_scale.get_value (), volume_scale.get_value ());
-
-        debug ("Setting volume for %s", app.name);
-        debug ("Balance: %s", balance_scale.get_value ().to_string ());
-        debug ("Volume: %s", volume_scale.get_value ().to_string ());
-
-        string percentages;
-
-        //  If the app is mono, only set one channel
-        if (app.is_mono) {
-            percentages = int.max (volumes[1], volumes[0]).to_string () + "%";
-        } else {
-            percentages = volumes[1].to_string () + "% " + volumes[0].to_string () + "%";
-        }
-
-        run_command ("env LANG=C pactl set-sink-input-volume " + (string)app.index + " " + percentages);
-    }
-
-    //  Takes balance and volume, outputs left and right volumes
-    private int[] balance_volume (double balance, double volume) {
-
-        double l;
-        double r;
-
-        if (balance < 0) {
-            l = (100 * balance) + 100;
-            r = 100;
-        } else if (balance > 0) {
-            l = 100;
-            r = (-100 * balance) + 100;
-
-        }else {
-            l = 100;
-            r = 100;
-        };
-
-        int new_l = (int)(l * volume / 100);
-        int new_r = (int)(r * volume / 100);
-
-        return {new_l, new_r};
-    }
-
 
 }
