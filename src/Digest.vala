@@ -26,6 +26,7 @@ public class Response : GLib.Object {
     public string name;
     public bool is_mono = true;
     public uint32 sink;
+    public PulseAudio.ChannelMap channel_map;
 
 }
 
@@ -57,11 +58,7 @@ public Response digest (PulseAudio.SinkInputInfo sink_input) {
     var left = volumes[0].sw_to_linear ();
     var right = volumes[1].sw_to_linear ();
     app.volume = double.max (left, right);
-    //  if (!app.is_mono) {
-    //  } else {
 
-    //      app.volume = volumes[0].sw_to_linear ();
-    //  }
     debug ("\t Volume: %f", app.volume);
 
     //  Set balance
@@ -80,6 +77,9 @@ public Response digest (PulseAudio.SinkInputInfo sink_input) {
 
     //  Set sink
     app.sink = sink_input.sink;
+
+    //  Set channel map
+    app.channel_map = sink_input.channel_map;
 
     return app;
 

@@ -32,7 +32,7 @@ public class PulseManager : Object {
         context = new Context (loop.get_api (), null);
         context.set_state_callback (this.cstate_cb);
         context.set_subscribe_callback (this.subscribe_cb);
-        //  this.context.subscribe(Context.SubscriptionMask.ALL);
+        context.subscribe (Context.SubscriptionMask.ALL);
         context.set_event_callback (this.on_pa_event);
 
         // Connect the context
@@ -162,62 +162,25 @@ public class PulseManager : Object {
 
     public void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
 
-        //  var volumes = balance_volume (balance_scale.get_value (), volume_scale.get_value ());
+        debug ("Setting volume and balance for %s (%i)", app.name, (int)app.index);
 
-        var balance = balance_scale.get_value ();
+        var balance = (float)balance_scale.get_value ();
         var volume = volume_scale.get_value ();
+        var cvol = CVolume ();
 
-        debug ("Setting volume for %s (%i)", app.name, (int)app.index);
-        debug ("Balance: %s", balance.to_string ());
-        debug ("Volume: %s", volume.to_string ());
+        //  Set volume
+        debug ("Volume input: %s", volume.to_string ());
+        var vol = PulseAudio.Volume.sw_from_linear (volume / 100);
+        cvol.set (app.channel_map.channels, vol);
+        debug ("Volume: %s", vol.to_string ());
 
-        //  string percentages;
-        var vol = CVolume ();
-        var map = ChannelMap ();
+        // Set balance
+        cvol.set_balance (app.channel_map, balance);
+        debug ("Balance: %s", cvol.get_balance (app.channel_map).to_string ());
 
-        //  If the app is mono, only set one channel
-        if (app.is_mono) {
-            map = map.init_mono ();
-            //  percentages = int.max (volumes[1], volumes[0]).to_string () + "%";
-        } else {
-            map = map.init_stereo ();
-            //  percentages = volumes[1].to_string () + "% " + volumes[0].to_string () + "%";
-        }
 
-        vol.set_balance (map, (float)balance_scale.get_value ());
-
-        //  vol.
-
-        context.set_sink_input_volume (app.index, vol, (c, success) => {
-            // Ran after the volume is set
-            debug ("Success: %i", success);
-            //  debug ("Volume set");
-        });
+        context.set_sink_input_volume (app.index, cvol);
     }
-
-    //  Takes balance and volume, outputs left and right volumes
-    //  private int[] balance_volume (double balance, double volume) {
-
-    //      double l;
-    //      double r;
-
-    //      if (balance < 0) {
-    //          l = (100 * balance) + 100;
-    //          r = 100;
-    //      } else if (balance > 0) {
-    //          l = 100;
-    //          r = (-100 * balance) + 100;
-
-    //      }else {
-    //          l = 100;
-    //          r = 100;
-    //      };
-
-    //      int new_l = (int)(l * volume / 100);
-    //      int new_r = (int)(r * volume / 100);
-
-    //      return {new_l, new_r};
-    //  }
 
     public void set_mute (Response app, bool mute) {
         debug ("%s %s", mute ? "Muting" : "Unmuting", app.name);
