@@ -21,7 +21,7 @@
 
 public class Mixer.App : Gtk.Application {
 
-    private static string version = "0.1.3";
+    private static string version = "0.1.4";
     private static bool print_version = false;
     private static string mockup = null;
 

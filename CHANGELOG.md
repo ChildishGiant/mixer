@@ -1,3 +1,19 @@
+## [0.1.4](https://github.com/ChildishGiant/mixer/compare/v0.1.3...v0.1.4) (2021-09-30)
+
+
+### Features
+
+* also grey out the slider label if not in use ([db61eaa](https://github.com/ChildishGiant/mixer/commit/db61eaad19cc631ed977e34c37803be4ca030a5f))
+* handle long apps more gracefully ([#28](https://github.com/ChildishGiant/mixer/issues/28)) ([73a1d07](https://github.com/ChildishGiant/mixer/commit/73a1d078113a582acc7804ab7d744b1e2fcea4c7))
+* use a scrolled window (Closes [#6](https://github.com/ChildishGiant/mixer/issues/6)) ([6bf41ed](https://github.com/ChildishGiant/mixer/commit/6bf41ed5d83dfc5c3a041348b1c5ffb17891a228))
+
+
+### Bug Fixes
+
+* :ambulance: hotfix for german systems ([#27](https://github.com/ChildishGiant/mixer/issues/27)) ([686def3](https://github.com/ChildishGiant/mixer/commit/686def3b9a6c994d728ecdb3c140648bf9707521))
+* :bug: fixed min height so that it doesn't scroll with no apps ([bf8d2f3](https://github.com/ChildishGiant/mixer/commit/bf8d2f34566cddb2a521e4d279af785cced55fae))
+* fix for app names with non-alpha characters not capturing ([de2838c](https://github.com/ChildishGiant/mixer/commit/de2838c33b266d817abd8800326be5066f0f144e)), closes [#12](https://github.com/ChildishGiant/mixer/issues/12)
+
 ## [v0.1.2](https://github.com/ChildishGiant/Mixer/compare/v0.1.0...v0.1.2) (2021-08-03)
 Ignore the skip in release numbers.
 ### Features

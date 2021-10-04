@@ -2,7 +2,7 @@
 project (
     'com.github.childishgiant.mixer',
     'vala', 'c',
-    version: '0.0.1'
+    version: '0.1.4'
 )
 
 # Translation module
