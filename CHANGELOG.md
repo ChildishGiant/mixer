@@ -3,6 +3,8 @@
 
 ### Features
 
+* Spanish translation (Thanks to @JeysonFlores)
+* Russian translation (Thanks to @asdffdsdaf)
 * also grey out the slider label if not in use ([db61eaa](https://github.com/ChildishGiant/mixer/commit/db61eaad19cc631ed977e34c37803be4ca030a5f))
 * handle long apps more gracefully ([#28](https://github.com/ChildishGiant/mixer/issues/28)) ([73a1d07](https://github.com/ChildishGiant/mixer/commit/73a1d078113a582acc7804ab7d744b1e2fcea4c7))
 * use a scrolled window (Closes [#6](https://github.com/ChildishGiant/mixer/issues/6)) ([6bf41ed](https://github.com/ChildishGiant/mixer/commit/6bf41ed5d83dfc5c3a041348b1c5ffb17891a228))
