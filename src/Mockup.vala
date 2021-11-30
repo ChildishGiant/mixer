@@ -78,3 +78,20 @@ public static Response[] mockup_apps (string style) {
             return {};
     }
 }
+
+
+public static Sink[] mockup_outputs () {
+
+
+    var sink1 = new Sink ();
+    sink1.index = 0;
+    sink1.port_description = "Ellesmere HDMI Audio [Radeon RX 470/480 / 570/580/590] Digital Stereo (HDMI 4)";
+    sink1.port_name = "HDMI/DisplayPort 4";
+
+    var sink2 = new Sink ();
+    sink2.index = 1;
+    sink2.port_description = "Family 17h (Models 00h-0fh) HD Audio Controller Analogue Stereo";
+    sink2.port_name = "Line Out";
+
+    return {sink1, sink2};
+}

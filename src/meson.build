@@ -5,5 +5,6 @@ sources = files (
     'MainWindow.vala',
     'AlertView.vala',
     'Mockup.vala',
-    'PulseManager.vala'
+    'PulseManager.vala',
+    'Util.vala'
 )

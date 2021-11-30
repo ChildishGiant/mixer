@@ -9,6 +9,9 @@ public class Mixer.MainWindow : Hdy.Window {
     private Gtk.Grid grid;
     private int one_app_height = 117;
     public PulseManager pulse_manager;
+    private uint32[] current_ids = {};
+    private int ELEMENTS_PER_ROW = 3;
+    private Gee.Map <uint32, GLib.List<int>> app_rows;
 
     public MainWindow (Gtk.Application application) {
         Object (
@@ -72,60 +75,105 @@ public class Mixer.MainWindow : Hdy.Window {
 
         add (window_handle);
 
-        //  this.pulse_manager = new PulseManager ();
-        //  Timeout.add (200, () => {
-        //      populate ();
-        //      show_all ();
-        //      return false;
-        //  });
     }
 
-    public void populate (string mockup = "", Response[]? _apps = null, Sink[]? _sinks = null) {
-        //  Clear all existing rows
-        var children = grid.get_children ();
+    public void populate (string mockup = "", Response[]? _apps = null, Sink[]? _outputs = null) {
 
-        foreach (Gtk.Widget element in children) {
-            debug ("removing %s", element.name);
-            grid.remove (element);
+        debug("Populate called");
+
+        var outputs = _outputs;
+
+        //  Do a diff between the current list of apps and the new list of apps
+        uint32[] _apps_ids = {}; // List of IDS of all the apps in this call
+
+        //  Output lists
+        uint32[] to_remove = {}; // Apps to remove from the grid
+        Response[] new_apps = {}; // Apps that are new to the app
+        uint32[] to_update = {}; // Apps that have remained
+
+        //  Add new ids to list
+        for (int i = 0; i < _apps.length; i++) {
+            debug ("Inputted app: %s (%s)", _apps[i].name, _apps[i].index.to_string());
+            _apps_ids += _apps[i].index;
+
+
+            //  If app isn't already present
+            int current_index = get_index(current_ids, (int)_apps[i].index);
+            debug("Index in existing: " + current_index.to_string());
+            if (current_index == -1) {
+                debug ("App %s is not in the grid, add it", _apps[i].name);
+                //  If it's not in the grid, add it
+                new_apps += _apps[i];
+            }
         }
 
-        Response[] apps = _apps;
+        debug ("New apps: %s", new_apps.length.to_string());
+
+        //  Iterate over existing ids
+        for (int i = 0; i < current_ids.length; i++) {
+
+            debug("Checking ID " + current_ids[i].to_string());
+
+            //  Check if the app is still in the list
+            int new_index = get_index(_apps_ids, (int)current_ids[i]);
+            if (new_index == -1) {
+                debug ("App %s not in new ids, add it to the remove list", current_ids[i].to_string ());
+                //  If not, add it to the list to remove
+                to_remove += current_ids[i];
+            } else {
+                debug ("App %s is present", current_ids[i].to_string ());
+                to_update += current_ids[i];
+            }
+        }
+
+        var total_apps = new_apps.length + to_update.length;
+
+        //  Remove all unused apps
+        for (int i = 0; i < to_remove.length; i++) {
+            debug ("Removing app %s", to_remove[i].to_string ());
+
+            var rows = app_rows[to_remove[i]];
+
+            foreach (int row in rows) {
+                grid.remove_row (row);
+            }
+        }
 
         if (mockup != "") {
             debug ("Using mockup: %s", mockup);
-            apps = mockup_apps (mockup);
+
+            new_apps = mockup_apps (mockup);
+            outputs = mockup_outputs ();
+
+            total_apps = new_apps.length;
 
             //  If the mockup is invalid
-            if (apps.length == 0) {
+            if (new_apps.length == 0) {
                 grid.add ( new Gtk.Label ("Unknown mockup: " + mockup) {
                     vexpand = true,
                     hexpand = true
                 } );
             }
         }
-        //  else {
-        //      apps = pulse_manager.get_apps ();
-        //      //  This is somehow running before get_apps returns
-        debug ("Got %d apps", apps.length);
-        //  }
-
-        //  var outputs = pulse_manager.get_outputs ();
-        var outputs = _sinks;
 
         //  If no apps are using audio
-        if (apps.length == 0 && mockup == "") {
+        if (new_apps.length == 0 && mockup == "" && to_update.length == 0) {
 
             var no_apps = new AlertView ();
             grid.add (no_apps);
         }
 
         else {
-            for (int i = 0; i < apps.length; i++) {
 
-                var app = apps[i];
+            debug(total_apps.to_string() + " apps total");
+
+            for (int i = 0; i < new_apps.length; i++) {
+
+                var app = new_apps[i];
 
                 var icon = new Gtk.Image.from_icon_name (app.icon, Gtk.IconSize.DND);
                 icon.valign = Gtk.Align.START;
+                //  TODO Maybe show the ID if there are duplicate names
                 var name_label = new Gtk.Label (app.name.to_string ()) {
                     //  If the name's longer than 32 chars use ...
                     max_width_chars = 32,
@@ -177,7 +225,7 @@ public class Mixer.MainWindow : Hdy.Window {
                 volume_switch.bind_property ("active", volume_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
                 //  If the app's in mono
-                if (apps[i].is_mono) {
+                if (app.is_mono) {
                     //  Disable inputs on balance slider
                     balance_scale.sensitive = false;
                     //  Also grey out the label
@@ -225,56 +273,72 @@ public class Mixer.MainWindow : Hdy.Window {
                     pulse_manager.move (app, outputs[dropdown.active]);
                 });
 
-                var base_top = i * 4;
-                var separator_top = ( (i + 1) * 3 ) + i;
+                //             number of apps before * how many elements per row + how many seperators there will be
+                var base_top = (i + to_update.length) * ELEMENTS_PER_ROW + (to_update.length + i - 1);
+                //  debug ("(%d + %d) * %d + (%d + %d - 1)", i, to_update.length, ELEMENTS_PER_ROW, i, total_apps);
+
+                // This list contains the numbers of the rows this app uses
+                // This is then tied to the ID of the app in the app_rows list
+                var rows = new List<int> ();
+
+                //  If this is the first new app but there are existing apps
+                if (i == 0 && to_update.length > 0) {
+
+                    //  Add a seperator above the first new app
+                    var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+                    //  Tie the seperator to the new app
+                    grid.attach (sep, 0, base_top, 4);
+                    debug ("Adding seperator at %d", base_top);
+
+                    // Add to the list of widgets this ID is tied to
+                    rows.append (base_top);
+                    base_top += 1;
+                }
 
                 //  Add First row for app, volume slider and mute switch
-                grid.attach (name_label, 0, base_top + 0);
-                grid.attach (volume_label, 1, base_top + 0);
-                grid.attach (volume_scale, 2, base_top + 0);
-                grid.attach (volume_switch, 3, base_top + 0, 1, 2);
+                rows.append (base_top);
+                grid.attach (name_label, 0, base_top );
+                grid.attach (volume_label, 1, base_top);
+                grid.attach (volume_scale, 2, base_top);
+                grid.attach (volume_switch, 3, base_top, 1, 2);
                 //  Second row for icon and balance
+                rows.append (base_top + 1);
                 grid.attach (icon, 0, base_top + 1);
                 grid.attach (balance_label, 1, base_top + 1);
                 grid.attach (balance_scale, 2, base_top + 1);
                 //  Third row for picking output
+                rows.append (base_top + 2);
                 grid.attach (output_label, 0, base_top + 2);
                 grid.attach (dropdown, 1, base_top + 2, 3);
 
                 //  If this isn't the last element
-                if (i != apps.length - 1) {
+                if (i != new_apps.length - 1 && !(i == 0 && to_update.length > 0)) {
+
+                    var separator_top = base_top + ELEMENTS_PER_ROW;
+
                     //  Add a seperator below the last element
-                    grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, separator_top, 4);
+                    var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+                    //  Add this widget to the list of widgets this ID is tied to
+                    app_rows[new_apps[i+1].index].append (separator_top);
+                    debug ("Tied seperator for %d to %d", (int)app.index, (int)new_apps[i+1].index);
+
+                    debug ("Adding seperator at %d", separator_top);
+                    grid.attach (sep, 0, separator_top, 4);
                 }
+
+                //  Add the rows to the map
+                app_rows[app.index] = rows;
             };
         }
 
-        //  TODO Request the window size
-        //  var height = (apps.length * one_app_height);
-        //  set_default_size (-1, height) ;
+        var height = (_apps_ids.length * one_app_height + ((total_apps-1) * 13) );
+        set_size_request (700, height);
+
+        //  Update the list of current apps
+        current_ids = _apps_ids;
+
+        //  Show all our hard work
         show_all ();
-    }
-
-    //  Runs a synchronous command without output
-    private void run_command (string command) {
-        try {
-
-            string output;
-            string error;
-
-            Process.spawn_command_line_sync (command, out output, out error);
-
-            if (output == "" && error == "") {
-                debug ("Command %s ran successfully", command);
-            } else {
-                debug ("Command %s failed", command);
-                debug ("Output: %s", output);
-                debug ("Error: %s", error);
-            }
-
-        } catch (SpawnError e) {
-            error ("Error: %s\n", e.message);
-        }
     }
 
 }

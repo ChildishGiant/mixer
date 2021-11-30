@@ -3,19 +3,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-private double lerp (double a, double b, double t) {
-    return (1.0 - t) * a + b * t;
-}
-
-private double inverse_lerp (double a, double b, double v) {
-    return (v - a) / (b - a);
-}
-
-private double remap (double i_min, double i_max, double o_min, double o_max, double v) {
-    double t = inverse_lerp (i_min, i_max, v);
-    return lerp (o_min, o_max, t);
-}
-
 public class Response : GLib.Object {
 
     public uint32 index;
@@ -40,6 +27,10 @@ public Response digest (PulseAudio.SinkInputInfo sink_input) {
     //  Set the index
     app.index = sink_input.index;
     debug ("Index: %d", (int)app.index);
+
+    //  Set name
+    app.name = sink_input.proplist.gets ("application.name");
+    debug ("\t Name: %s", app.name);
 
     //  Set mute state
     if (sink_input.mute == 0) {
@@ -70,10 +61,6 @@ public Response digest (PulseAudio.SinkInputInfo sink_input) {
         app.icon = sink_input.proplist.gets ("application.icon_name");
     }
     debug ("\t Icon: %s", app.icon);
-
-    //  Set name
-    app.name = sink_input.proplist.gets ("application.name");
-    debug ("\t Name: %s", app.name);
 
     //  Set sink
     app.sink = sink_input.sink;

@@ -31,8 +31,6 @@ public class PulseManager : Object {
         loop = new GLibMainLoop ();
         context = new Context (loop.get_api (), null);
         context.set_state_callback (this.cstate_cb);
-        context.set_subscribe_callback (this.subscribe_cb);
-        context.subscribe (Context.SubscriptionMask.ALL);
         context.set_event_callback (this.on_pa_event);
 
         // Connect the context
@@ -62,6 +60,10 @@ public class PulseManager : Object {
         if (state == Context.State.TERMINATED) { debug ("state TERMINATED"); }
 
         if (state == Context.State.READY) {
+
+            context.subscribe (Context.SubscriptionMask.SINK_INPUT | Context.SubscriptionMask.SINK);
+            context.set_subscribe_callback (this.subscribe_cb);
+
             this.update_all_sink_inputs ();
             this.update_all_sinks ();
         }
@@ -70,13 +72,63 @@ public class PulseManager : Object {
 
     private void subscribe_cb (Context local_context, Context.SubscriptionEventType event, uint32 id) {
 
-        debug ("Subscription id %d", (int)id);
+        //  debug ("Subscription event %s", );
 
-        //  debug (event.to_string());
+        switch (event) {
+            case Context.SubscriptionEventType.SINK:
+                debug ("Updating outputs");
+                sinks_updated (get_outputs ());
+                break;
 
+            case Context.SubscriptionEventType.CARD:
+                debug ("CARD");
+                break;
+            case Context.SubscriptionEventType.CHANGE:
+                debug ("CHANGE");
+                break;
+            case Context.SubscriptionEventType.CLIENT:
+                debug ("CLIENT");
+                break;
+            case Context.SubscriptionEventType.FACILITY_MASK:
+                debug ("FACILITY_MASK");
+                break;
+            case Context.SubscriptionEventType.MODULE:
+                debug ("MODULE");
+                break;
+            case Context.SubscriptionEventType.REMOVE:
+                debug ("REMOVE");
+                break;
+            case Context.SubscriptionEventType.SAMPLE_CACHE:
+                debug ("SAMPLE_CACHE");
+                break;
+            case Context.SubscriptionEventType.SERVER:
+                debug ("SERVER");
+                break;
+            case Context.SubscriptionEventType.SOURCE:
+                debug ("SOURCE");
+                break;
+            case Context.SubscriptionEventType.SOURCE_OUTPUT:
+                debug ("SOURCE_OUTPUT");
+                break;
+            case Context.SubscriptionEventType.TYPE_MASK:
+                debug ("TYPE_MASK");
+                break;
+
+            case Context.SubscriptionEventType.SINK_INPUT:
+            default:
+                //  Fallthrough because for some reason there's a lot of undefined events
+                get_apps ();
+
+                break;
+        }
     }
 
     private void sink_input_info_cb (Context local_context, SinkInputInfo? sink_input, int eol) {
+
+        if (eol == 1) {
+            sink_inputs_done = true;
+            return;
+        }
 
         if (sink_input != null) {
             //  Add to list of apps
@@ -84,9 +136,6 @@ public class PulseManager : Object {
             this.sink_inputs += response;
         }
 
-        if (eol == 1) {
-            sink_inputs_done = true;
-        }
     }
 
     private void sink_info_cb (Context local_context, SinkInfo? sink, int eol) {
