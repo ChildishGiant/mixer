@@ -10,7 +10,7 @@ public class Mixer.MainWindow : Hdy.Window {
     private int one_app_height = 117;
     public PulseManager pulse_manager;
     private uint32[] current_ids = {};
-    private int ELEMENTS_PER_ROW = 3;
+    private const int ELEMENTS_PER_ROW = 3;
     private Gee.Map <uint32, GLib.List<int>> app_rows;
 
     public MainWindow (Gtk.Application application) {
@@ -19,7 +19,7 @@ public class Mixer.MainWindow : Hdy.Window {
             border_width: 0,
             icon_name: "com.github.childishgiant.mixer",
             resizable: true,
-            title: _("Mixer"),
+            title: _ ("Mixer"),
             window_position: Gtk.WindowPosition.CENTER
         );
     }
@@ -32,7 +32,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
         var header = new Hdy.HeaderBar () {
             show_close_button = true,
-            title = _("Mixer")
+            title = _ ("Mixer")
         };
 
         unowned Gtk.StyleContext header_context = header.get_style_context ();
@@ -79,7 +79,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
     public void populate (string mockup = "", Response[]? _apps = null, Sink[]? _outputs = null) {
 
-        debug("Populate called");
+        debug ("Populate called");
 
         var outputs = _outputs;
 
@@ -93,13 +93,13 @@ public class Mixer.MainWindow : Hdy.Window {
 
         //  Add new ids to list
         for (int i = 0; i < _apps.length; i++) {
-            debug ("Inputted app: %s (%s)", _apps[i].name, _apps[i].index.to_string());
+            debug ("Inputted app: %s (%s)", _apps[i].name, _apps[i].index.to_string ());
             _apps_ids += _apps[i].index;
 
 
             //  If app isn't already present
-            int current_index = get_index(current_ids, (int)_apps[i].index);
-            debug("Index in existing: " + current_index.to_string());
+            int current_index = get_index (current_ids, (int)_apps[i].index);
+            debug ("Index in existing: " + current_index.to_string ());
             if (current_index == -1) {
                 debug ("App %s is not in the grid, add it", _apps[i].name);
                 //  If it's not in the grid, add it
@@ -107,15 +107,15 @@ public class Mixer.MainWindow : Hdy.Window {
             }
         }
 
-        debug ("New apps: %s", new_apps.length.to_string());
+        debug ("New apps: %s", new_apps.length.to_string ());
 
         //  Iterate over existing ids
         for (int i = 0; i < current_ids.length; i++) {
 
-            debug("Checking ID " + current_ids[i].to_string());
+            debug ("Checking ID " + current_ids[i].to_string ());
 
             //  Check if the app is still in the list
-            int new_index = get_index(_apps_ids, (int)current_ids[i]);
+            int new_index = get_index (_apps_ids, (int)current_ids[i]);
             if (new_index == -1) {
                 debug ("App %s not in new ids, add it to the remove list", current_ids[i].to_string ());
                 //  If not, add it to the list to remove
@@ -165,7 +165,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
         else {
 
-            debug(total_apps.to_string() + " apps total");
+            debug (total_apps.to_string () + " apps total");
 
             for (int i = 0; i < new_apps.length; i++) {
 
@@ -186,10 +186,10 @@ public class Mixer.MainWindow : Hdy.Window {
                 volume_scale.hexpand = true;
                 volume_scale.set_value (app.volume * 100);
 
-                var volume_label = new Gtk.Label (_("Volume:"));
+                var volume_label = new Gtk.Label (_ ("Volume:"));
                 volume_label.halign = Gtk.Align.START;
 
-                var balance_label = new Gtk.Label (_("Balance:"));
+                var balance_label = new Gtk.Label (_ ("Balance:"));
                 balance_label.valign = Gtk.Align.START;
                 balance_label.halign = Gtk.Align.START;
 
@@ -199,9 +199,9 @@ public class Mixer.MainWindow : Hdy.Window {
                     width_request = 150
                 };
                 balance_scale.adjustment.page_increment = 0.1;
-                balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
-                balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
-                balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
+                balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _ ("Left"));
+                balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _ ("Centre"));
+                balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _ ("Right"));
                 balance_scale.set_value (app.balance);
 
                 //  Make the volume slider function
@@ -231,7 +231,7 @@ public class Mixer.MainWindow : Hdy.Window {
                     //  Also grey out the label
                     balance_label.sensitive = false;
                     //  Give it a tooltip explaining this
-                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _("This app is using mono audio"));
+                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _ ("This app is using mono audio"));
                 } else {
                     //  If not, make the switch toggle its input
                     volume_switch.bind_property ("active", balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
@@ -319,8 +319,8 @@ public class Mixer.MainWindow : Hdy.Window {
                     //  Add a seperator below the last element
                     var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
                     //  Add this widget to the list of widgets this ID is tied to
-                    app_rows[new_apps[i+1].index].append (separator_top);
-                    debug ("Tied seperator for %d to %d", (int)app.index, (int)new_apps[i+1].index);
+                    app_rows[new_apps[i + 1].index].append (separator_top);
+                    debug ("Tied seperator for %d to %d", (int)app.index, (int)new_apps[i + 1].index);
 
                     debug ("Adding seperator at %d", separator_top);
                     grid.attach (sep, 0, separator_top, 4);
@@ -331,7 +331,7 @@ public class Mixer.MainWindow : Hdy.Window {
             };
         }
 
-        var height = (_apps_ids.length * one_app_height + ((total_apps-1) * 13) );
+        var height = (_apps_ids.length * one_app_height + ((total_apps - 1) * 13) );
         set_size_request (700, height);
 
         //  Update the list of current apps
