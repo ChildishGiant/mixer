@@ -1,0 +1,48 @@
+# This is the same ID that you've used in meson.build and other files
+app-id: com.github.childishgiant.mixer
+
+# Instead of manually specifying a long list of build and runtime dependencies,
+# we can use a convenient pre-made runtime and SDK. For this example, we'll be
+# using the runtime and SDK provided by elementary.
+sdk: org.freedesktop.Sdk
+runtime: io.elementary.Platform
+runtime-version: '6'
+base: io.elementary.BaseApp
+base-version: juno-20.08
+
+# This should match the exec line in your .desktop file and usually is the same
+# as your app ID
+command: com.github.childishgiant.mixer
+
+# Here we can specify the kinds of permissions our app needs to run. Since we're
+# not using hardware like webcams, making sound, or reading external files, we
+# only need permission to draw our app on screen using either X11 or Wayland.
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+  - '--socket=pulseaudio'
+
+# This section is where you list all the source code required to build your app.
+# If we had external dependencies that weren't included in our SDK, we would list
+# them here.
+modules:
+  - name: libhandy
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/GNOME/libhandy.git
+        tag: 1.5.0
+        commit: 8fa8306a79215fc6ebf2483145da98bf9b2495ab
+    config-opts:
+      - -Dglade_catalog=disabled
+      - -Dvapi=true
+      - -Dtests=false
+      - -Dexamples=false
+  - name: mixer
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/ChildishGiant/mixer.git
+        tag: {{MIXER_TAG}}
+        commit: {{MIXER_COMMIT}}

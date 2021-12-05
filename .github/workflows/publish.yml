@@ -1,0 +1,62 @@
+
+name: CI
+
+on: release
+
+jobs:
+
+  flatpak:
+    name: Flatpak
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/elementary/flatpak-platform/runtime:6
+      options: --privileged
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
+        with:
+          bundle: Mixer.flatpak
+          manifest-path: com.github.childishgiant.mixer.yml
+          run-tests: true
+
+  publish:
+    name: Publish
+    needs: flatpak
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare files
+        run: |
+          # Store the current git release tag
+          CURRENT_TAG=$(git describe --tags --abbrev=0)
+          # Store the current git commit hash
+          CURRENT_COMMIT=$(git rev-list --tags --max-count=1)
+          # Make a folder to do all this in
+          mkdir ./tmp/
+          # Copy appdata to the folder
+          cp ./data/com.github.childishgiant.mixer.appdata.xml.in ./tmp/
+          # Copy the template
+          cp flathub_template.yml ./tmp/com.github.childishgiant.mixer.yml
+          # Replace the version
+          sed -i "s/{{MIXER_TAG}}/$CURRENT_TAG/" ./tmp/com.github.childishgiant.mixer.yml
+          #  Replace the commit hash
+          sed -i "s/{{MIXER_COMMIT}}/$CURRENT_COMMIT/" ./tmp/com.github.childishgiant.mixer.yml
+
+      - name: Publish
+        uses: cpina/github-action-push-to-another-repository@v1.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.FLATPAK_PUSH_TOKEN }}
+        with:
+          source-directory: ./tmp/
+          destination-github-username: flathub
+          destination-repository-name: com.github.childishgiant.mixer
+          user-email: github-actions[bot]@users.noreply.github.com
+          user-name: github-actions[bot]
+
+
