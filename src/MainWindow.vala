@@ -7,11 +7,15 @@ public class Mixer.MainWindow : Hdy.Window {
 
     private Gtk.Grid window_grid;
     private Gtk.Grid grid;
-    private int one_app_height = 117;
+    private const int ONE_APP_HEIGHT = 117;
+    private const int SEPERATOR_HEIGHT = 13;
     public PulseManager pulse_manager;
     private uint32[] current_ids = {};
     private const int ELEMENTS_PER_ROW = 3;
-    private Gee.Map <uint32, GLib.List<int>> app_rows;
+    //  Store where each app starts in the grid
+    private Gee.HashMap <uint32, int> app_base = new Gee.HashMap<uint32, int> ();
+    // Store how many rows we have for each app
+    private Gee.HashMap <uint32, int> app_rows = new Gee.HashMap<uint32, int> ();
 
     public MainWindow (Gtk.Application application) {
         Object (
@@ -54,7 +58,7 @@ public class Mixer.MainWindow : Hdy.Window {
             //  Disabled sideways scrolling
             hscrollbar_policy = Gtk.PolicyType.NEVER,
             //  Minimum show one app
-            min_content_height = one_app_height,
+            min_content_height = ONE_APP_HEIGHT,
             propagate_natural_height = true
         };
 
@@ -107,12 +111,8 @@ public class Mixer.MainWindow : Hdy.Window {
             }
         }
 
-        debug ("New apps: %s", new_apps.length.to_string ());
-
         //  Iterate over existing ids
         for (int i = 0; i < current_ids.length; i++) {
-
-            debug ("Checking ID " + current_ids[i].to_string ());
 
             //  Check if the app is still in the list
             int new_index = get_index (_apps_ids, (int)current_ids[i]);
@@ -128,15 +128,36 @@ public class Mixer.MainWindow : Hdy.Window {
 
         var total_apps = new_apps.length + to_update.length;
 
+        debug ("New apps: %s", new_apps.length.to_string ());
+        debug ("Apps to remove: %s", to_remove.length.to_string ());
+        debug ("Apps to update: %s", to_update.length.to_string ());
+        debug ("Total apps: %s", total_apps.to_string ());
+
         //  Remove all unused apps
         for (int i = 0; i < to_remove.length; i++) {
             debug ("Removing app %s", to_remove[i].to_string ());
 
+            var base_row = app_base[to_remove[i]];
             var rows = app_rows[to_remove[i]];
 
-            foreach (int row in rows) {
-                grid.remove_row (row);
+            //  Remove all rows used by that app
+            for (int j = 0; j < rows; j++) {
+                //  Since deleting shuffles the rows about, we don't need to worry about the index
+                grid.remove_row (base_row);
             }
+
+            //  Clean up the row list
+            app_base.unset (to_remove[i]);
+            app_rows.unset (to_remove[i]);
+
+            //  Re-calculate the base row for each app
+            Gee.HashMap <uint32, int> new_app_base = new Gee.HashMap<uint32, int> ();
+
+            foreach (var row in app_base) {
+                new_app_base[row.key] = app_base[row.key] - rows;
+            }
+
+            app_base = new_app_base;
         }
 
         if (mockup != "") {
@@ -275,63 +296,47 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 //             number of apps before * how many elements per row + how many seperators there will be
                 var base_top = (i + to_update.length) * ELEMENTS_PER_ROW + (to_update.length + i - 1);
-                //  debug ("(%d + %d) * %d + (%d + %d - 1)", i, to_update.length, ELEMENTS_PER_ROW, i, total_apps);
+                //  debug ("(%d + %d) * %d + (%d + %d - 1)", i, to_update.length, ELEMENTS_PER_ROW, i, to_update.length);
 
-                // This list contains the numbers of the rows this app uses
-                // This is then tied to the ID of the app in the app_rows list
-                var rows = new List<int> ();
+                //  Store where this app starts
+                app_base[app.index] = base_top;
 
-                //  If this is the first new app but there are existing apps
-                if (i == 0 && to_update.length > 0) {
+                //  If this isn't the first app
+                if (i > 0 || to_update.length > 0) {
 
-                    //  Add a seperator above the first new app
+                    //  Add a seperator above this app
                     var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-                    //  Tie the seperator to the new app
-                    grid.attach (sep, 0, base_top, 4);
-                    debug ("Adding seperator at %d", base_top);
 
-                    // Add to the list of widgets this ID is tied to
-                    rows.append (base_top);
+                    //  Add one to the number of lines this app uses
+                    app_rows[app.index] = 1;
+
+                    debug ("Adding seperator at %d", base_top);
+                    grid.attach (sep, 0, base_top, 4);
+
+                    //  Update the base_top so the rest of this app gets added below it
                     base_top += 1;
                 }
 
                 //  Add First row for app, volume slider and mute switch
-                rows.append (base_top);
                 grid.attach (name_label, 0, base_top );
                 grid.attach (volume_label, 1, base_top);
                 grid.attach (volume_scale, 2, base_top);
                 grid.attach (volume_switch, 3, base_top, 1, 2);
                 //  Second row for icon and balance
-                rows.append (base_top + 1);
                 grid.attach (icon, 0, base_top + 1);
                 grid.attach (balance_label, 1, base_top + 1);
                 grid.attach (balance_scale, 2, base_top + 1);
                 //  Third row for picking output
-                rows.append (base_top + 2);
                 grid.attach (output_label, 0, base_top + 2);
                 grid.attach (dropdown, 1, base_top + 2, 3);
 
-                //  If this isn't the last element
-                if (i != new_apps.length - 1 && !(i == 0 && to_update.length > 0)) {
+                //  Add our row count to the map
+                app_rows[app.index] = app_rows[app.index] + ELEMENTS_PER_ROW; // += doesn't work for some reason
 
-                    var separator_top = base_top + ELEMENTS_PER_ROW;
-
-                    //  Add a seperator below the last element
-                    var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-                    //  Add this widget to the list of widgets this ID is tied to
-                    app_rows[new_apps[i + 1].index].append (separator_top);
-                    debug ("Tied seperator for %d to %d", (int)app.index, (int)new_apps[i + 1].index);
-
-                    debug ("Adding seperator at %d", separator_top);
-                    grid.attach (sep, 0, separator_top, 4);
-                }
-
-                //  Add the rows to the map
-                app_rows[app.index] = rows;
             };
         }
 
-        var height = (_apps_ids.length * one_app_height + ((total_apps - 1) * 13) );
+        var height = (_apps_ids.length * ONE_APP_HEIGHT + ((total_apps - 1) * SEPERATOR_HEIGHT) );
         set_size_request (700, height);
 
         //  Update the list of current apps
