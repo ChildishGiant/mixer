@@ -1,29 +1,16 @@
 /*
-* Copyright (c) 2021 - Today Allie Law (ChildishGiant)
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public
-* License along with this program; if not, write to the
-* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
-*
-* Authored by: Allie Law <allie@cloverleaf.app>
-*/
+ * Copyright 2021 Allie Law <allie@cloverleaf.app>
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 public class Mixer.App : Gtk.Application {
 
     private static string version = "0.1.4";
     private static bool print_version = false;
     private static string mockup = null;
+    public PulseManager manager;
+    Response[] responses;
+    Sink[] sinks;
 
     public App () {
         Object (
@@ -82,28 +69,31 @@ public class Mixer.App : Gtk.Application {
             return;
         }
 
-        var listener = new Listener ("/home", "/usr/bin/pactl subscribe");
+        manager = new PulseManager ();
+        app_window.pulse_manager = manager;
 
-        listener.output_changed.connect ((line) => {
-            //  If the change is a sink-input
-            if (line.contains ("sink-input") && (line.contains ("new") || line.contains ("remove"))) {
-                debug (line.strip ());
-                app_window.populate ();
+        manager.get_apps ();
+        manager.get_outputs ();
+
+        manager.sinks_updated.connect ((_sinks) => {
+            sinks = _sinks;
+            if (responses != null) {
+                app_window.populate ("", responses, sinks);
+            }
+        });
+
+        manager.apps_updated.connect ((_apps) => {
+            responses = _apps;
+            if (sinks != null) {
+                app_window.populate ("", responses, sinks);
                 app_window.show_all ();
             }
         });
 
-        listener.run ();
-
-        app_window.destroy.connect (() => {
-            listener.quit ();
-        });
-
-        app_window.show_all ();
-
         quit_action.activate.connect (() => {
             if (app_window != null) {
                 app_window.destroy ();
+                app_window.show_all ();
             }
         });
 

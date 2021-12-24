@@ -1,23 +1,7 @@
 /*
-* Copyright (c) 2021 - Today Allie Law (ChildishGiant)
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public
-* License along with this program; if not, write to the
-* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301 USA
-*
-* Authored by: Allie Law <allie@cloverleaf.app>
-*/
+ * Copyright 2021 Allie Law <allie@cloverleaf.app>
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 public static Response[] mockup_apps (string style) {
 
@@ -30,7 +14,7 @@ public static Response[] mockup_apps (string style) {
             videos.icon = "io.elementary.videos";
             videos.name = "Videos";
             videos.is_mono = false;
-            videos.sink = "1";
+            videos.sink = 1;
 
             var brave = new Response ();
             brave.volume = 100;
@@ -39,7 +23,7 @@ public static Response[] mockup_apps (string style) {
             brave.icon = "brave-browser";
             brave.name = "Brave";
             brave.is_mono = false;
-            brave.sink = "1";
+            brave.sink = 1;
 
             var music = new Response ();
             music.volume = 75;
@@ -47,7 +31,7 @@ public static Response[] mockup_apps (string style) {
             music.icon = "io.elementary.music";
             music.name = "Music";
             music.is_mono = true;
-            music.sink = "1";
+            music.sink = 1;
 
             return {videos, brave, music};
 
@@ -93,4 +77,21 @@ public static Response[] mockup_apps (string style) {
         default:
             return {};
     }
+}
+
+
+public static Sink[] mockup_outputs () {
+
+
+    var sink1 = new Sink ();
+    sink1.index = 0;
+    sink1.port_description = "Ellesmere HDMI Audio [Radeon RX 470/480 / 570/580/590] Digital Stereo (HDMI 4)";
+    sink1.port_name = "HDMI/DisplayPort 4";
+
+    var sink2 = new Sink ();
+    sink2.index = 1;
+    sink2.port_description = "Family 17h (Models 00h-0fh) HD Audio Controller Analogue Stereo";
+    sink2.port_name = "Line Out";
+
+    return {sink1, sink2};
 }

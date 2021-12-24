@@ -14,12 +14,20 @@ add_project_arguments (
     language: 'c'
 )
 
+add_project_arguments(
+    ['--vapidir', join_paths(meson.current_source_dir(), 'vapi')],
+    language: 'vala'
+)
+
+
 # Listing dependencies
 dependencies = [
     dependency ('glib-2.0'),
     dependency ('gtk+-3.0'),
     dependency ('granite'),
-    dependency('libhandy-1', version: '>=1.0.0')
+    dependency('libhandy-1', version: '>=1.0.0'),
+    dependency('libpulse'),
+    dependency('libpulse-mainloop-glib'),
 ]
 
 subdir ('src')

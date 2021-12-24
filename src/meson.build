@@ -2,9 +2,9 @@
 sources = files (
     'Application.vala',
     'Digest.vala',
-    'Listener.vala',
-    'GetOutputs.vala',
     'MainWindow.vala',
     'AlertView.vala',
-    'Mockup.vala'
+    'Mockup.vala',
+    'PulseManager.vala',
+    'Util.vala'
 )

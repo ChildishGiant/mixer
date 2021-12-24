@@ -1,8 +1,21 @@
+/*
+ * Copyright 2021 Allie Law <allie@cloverleaf.app>
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 public class Mixer.MainWindow : Hdy.Window {
 
     private Gtk.Grid window_grid;
     private Gtk.Grid grid;
-    private int one_app_height = 117;
+    private const int ONE_APP_HEIGHT = 117;
+    private const int SEPERATOR_HEIGHT = 13;
+    public PulseManager pulse_manager;
+    private uint32[] current_ids = {};
+    private const int ELEMENTS_PER_ROW = 3;
+    //  Store where each app starts in the grid
+    private Gee.HashMap <uint32, int> app_base = new Gee.HashMap<uint32, int> ();
+    // Store how many rows we have for each app
+    private Gee.HashMap <uint32, int> app_rows = new Gee.HashMap<uint32, int> ();
 
     public MainWindow (Gtk.Application application) {
         Object (
@@ -10,7 +23,7 @@ public class Mixer.MainWindow : Hdy.Window {
             border_width: 0,
             icon_name: "com.github.childishgiant.mixer",
             resizable: true,
-            title: _("Mixer"),
+            title: _ ("Mixer"),
             window_position: Gtk.WindowPosition.CENTER
         );
     }
@@ -23,7 +36,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
         var header = new Hdy.HeaderBar () {
             show_close_button = true,
-            title = _("Mixer")
+            title = _ ("Mixer")
         };
 
         unowned Gtk.StyleContext header_context = header.get_style_context ();
@@ -45,7 +58,7 @@ public class Mixer.MainWindow : Hdy.Window {
             //  Disabled sideways scrolling
             hscrollbar_policy = Gtk.PolicyType.NEVER,
             //  Minimum show one app
-            min_content_height = one_app_height,
+            min_content_height = ONE_APP_HEIGHT,
             propagate_natural_height = true
         };
 
@@ -66,52 +79,122 @@ public class Mixer.MainWindow : Hdy.Window {
 
         add (window_handle);
 
-        populate ();
-
     }
 
-    public void populate (string mockup = "") {
-        //  Clear all existing rows
-        var children = grid.get_children ();
+    public void populate (string mockup = "", Response[]? _apps = null, Sink[]? _outputs = null) {
 
-        foreach (Gtk.Widget element in children) {
-            debug ("removing %s", element.name);
-            grid.remove (element);
+        debug ("Populate called");
+
+        var outputs = _outputs;
+
+        //  Do a diff between the current list of apps and the new list of apps
+        uint32[] _apps_ids = {}; // List of IDS of all the apps in this call
+
+        //  Output lists
+        uint32[] to_remove = {}; // Apps to remove from the grid
+        Response[] new_apps = {}; // Apps that are new to the app
+        uint32[] to_update = {}; // Apps that have remained
+
+        //  Add new ids to list
+        for (int i = 0; i < _apps.length; i++) {
+            debug ("Inputted app: %s (%s)", _apps[i].name, _apps[i].index.to_string ());
+            _apps_ids += _apps[i].index;
+
+
+            //  If app isn't already present
+            int current_index = get_index (current_ids, (int)_apps[i].index);
+            debug ("Index in existing: " + current_index.to_string ());
+            if (current_index == -1) {
+                debug ("App %s is not in the grid, add it", _apps[i].name);
+                //  If it's not in the grid, add it
+                new_apps += _apps[i];
+            }
         }
 
-        Response[] apps;
+        //  Iterate over existing ids
+        for (int i = 0; i < current_ids.length; i++) {
+
+            //  Check if the app is still in the list
+            int new_index = get_index (_apps_ids, (int)current_ids[i]);
+            if (new_index == -1) {
+                debug ("App %s not in new ids, add it to the remove list", current_ids[i].to_string ());
+                //  If not, add it to the list to remove
+                to_remove += current_ids[i];
+            } else {
+                debug ("App %s is present", current_ids[i].to_string ());
+                to_update += current_ids[i];
+            }
+        }
+
+        var total_apps = new_apps.length + to_update.length;
+
+        debug ("New apps: %s", new_apps.length.to_string ());
+        debug ("Apps to remove: %s", to_remove.length.to_string ());
+        debug ("Apps to update: %s", to_update.length.to_string ());
+        debug ("Total apps: %s", total_apps.to_string ());
+
+        //  Remove all unused apps
+        for (int i = 0; i < to_remove.length; i++) {
+            debug ("Removing app %s", to_remove[i].to_string ());
+
+            var base_row = app_base[to_remove[i]];
+            var rows = app_rows[to_remove[i]];
+
+            //  Remove all rows used by that app
+            for (int j = 0; j < rows; j++) {
+                //  Since deleting shuffles the rows about, we don't need to worry about the index
+                grid.remove_row (base_row);
+            }
+
+            //  Clean up the row list
+            app_base.unset (to_remove[i]);
+            app_rows.unset (to_remove[i]);
+
+            //  Re-calculate the base row for each app
+            Gee.HashMap <uint32, int> new_app_base = new Gee.HashMap<uint32, int> ();
+
+            foreach (var row in app_base) {
+                new_app_base[row.key] = app_base[row.key] - rows;
+            }
+
+            app_base = new_app_base;
+        }
 
         if (mockup != "") {
             debug ("Using mockup: %s", mockup);
-            apps = mockup_apps (mockup);
+
+            new_apps = mockup_apps (mockup);
+            outputs = mockup_outputs ();
+
+            total_apps = new_apps.length;
 
             //  If the mockup is invalid
-            if (apps.length == 0) {
+            if (new_apps.length == 0) {
                 grid.add ( new Gtk.Label ("Unknown mockup: " + mockup) {
                     vexpand = true,
                     hexpand = true
                 } );
             }
-        } else {
-
-            apps = digester ();
         }
-        var outputs = get_outputs ();
 
         //  If no apps are using audio
-        if (apps.length == 0 && mockup == "") {
+        if (new_apps.length == 0 && mockup == "" && to_update.length == 0) {
 
             var no_apps = new AlertView ();
             grid.add (no_apps);
         }
 
         else {
-            for (int i = 0; i < apps.length; i++) {
 
-                var app = apps[i];
+            debug (total_apps.to_string () + " apps total");
+
+            for (int i = 0; i < new_apps.length; i++) {
+
+                var app = new_apps[i];
 
                 var icon = new Gtk.Image.from_icon_name (app.icon, Gtk.IconSize.DND);
                 icon.valign = Gtk.Align.START;
+                //  TODO Maybe show the ID if there are duplicate names
                 var name_label = new Gtk.Label (app.name.to_string ()) {
                     //  If the name's longer than 32 chars use ...
                     max_width_chars = 32,
@@ -122,12 +205,12 @@ public class Mixer.MainWindow : Hdy.Window {
                 volume_scale.adjustment.page_increment = 5;
                 volume_scale.draw_value = false;
                 volume_scale.hexpand = true;
-                volume_scale.set_value (app.volume);
+                volume_scale.set_value (app.volume * 100);
 
-                var volume_label = new Gtk.Label (_("Volume:"));
+                var volume_label = new Gtk.Label (_ ("Volume:"));
                 volume_label.halign = Gtk.Align.START;
 
-                var balance_label = new Gtk.Label (_("Balance:"));
+                var balance_label = new Gtk.Label (_ ("Balance:"));
                 balance_label.valign = Gtk.Align.START;
                 balance_label.halign = Gtk.Align.START;
 
@@ -137,14 +220,14 @@ public class Mixer.MainWindow : Hdy.Window {
                     width_request = 150
                 };
                 balance_scale.adjustment.page_increment = 0.1;
-                balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
-                balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
-                balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
+                balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _ ("Left"));
+                balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _ ("Centre"));
+                balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _ ("Right"));
                 balance_scale.set_value (app.balance);
 
                 //  Make the volume slider function
                 volume_scale.value_changed.connect (() => {
-                    set_volume (app, balance_scale, volume_scale);
+                    pulse_manager.set_volume (app, balance_scale, volume_scale);
                 });
 
                 //  Create mute switch
@@ -155,13 +238,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 //  Make the mute switch function
                 volume_switch.notify["active"].connect (() => {
-                    if (volume_switch.active) {
-                        run_command ("env LANG=C pactl set-sink-input-mute " + app.index + " 0");
-                        debug ("Unmuting %s", app.index);
-                    } else {
-                        run_command ("env LANG=C pactl set-sink-input-mute " + app.index + " 1");
-                        debug ("Muting %s", app.index);
-                    }
+                    pulse_manager.set_mute (app, !volume_switch.active);
                 });
 
 
@@ -169,20 +246,20 @@ public class Mixer.MainWindow : Hdy.Window {
                 volume_switch.bind_property ("active", volume_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
                 //  If the app's in mono
-                if (apps[i].is_mono) {
+                if (app.is_mono) {
                     //  Disable inputs on balance slider
                     balance_scale.sensitive = false;
                     //  Also grey out the label
                     balance_label.sensitive = false;
                     //  Give it a tooltip explaining this
-                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _("This app is using mono audio"));
+                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _ ("This app is using mono audio"));
                 } else {
                     //  If not, make the switch toggle its input
                     volume_switch.bind_property ("active", balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
                     //  Make the balance slider function
                     balance_scale.value_changed.connect (() => {
-                        set_volume (app, balance_scale, volume_scale);
+                        pulse_manager.set_volume (app, balance_scale, volume_scale);
                     });
                 }
 
@@ -204,7 +281,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 for (int j = 0; j < outputs.length; j++) {
                     var sink = outputs[j];
-                    dropdown.append_text ("%s - %s".printf (sink.active_port, sink.description));
+                    dropdown.append_text ("%s - %s".printf (sink.port_name, sink.port_description));
 
                     //  If this is the current output
                     if (app.sink == sink.index) {
@@ -214,18 +291,37 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 //  Make the dropdown function
                 dropdown.changed.connect (() => {
-                    var sink = outputs[dropdown.active];
-                    run_command ("env LANG=C pactl move-sink-input " + app.index + " " + sink.index);
+                    pulse_manager.move (app, outputs[dropdown.active]);
                 });
 
-                var base_top = i * 4;
-                var separator_top = ( (i + 1) * 3 ) + i;
+                //             number of apps before * how many elements per row + how many seperators there will be
+                var base_top = (i + to_update.length) * ELEMENTS_PER_ROW + (to_update.length + i - 1);
+                //  debug ("(%d + %d) * %d + (%d + %d - 1)", i, to_update.length, ELEMENTS_PER_ROW, i, to_update.length);
+
+                //  Store where this app starts
+                app_base[app.index] = base_top;
+
+                //  If this isn't the first app
+                if (i > 0 || to_update.length > 0) {
+
+                    //  Add a seperator above this app
+                    var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+
+                    //  Add one to the number of lines this app uses
+                    app_rows[app.index] = 1;
+
+                    debug ("Adding seperator at %d", base_top);
+                    grid.attach (sep, 0, base_top, 4);
+
+                    //  Update the base_top so the rest of this app gets added below it
+                    base_top += 1;
+                }
 
                 //  Add First row for app, volume slider and mute switch
-                grid.attach (name_label, 0, base_top + 0);
-                grid.attach (volume_label, 1, base_top + 0);
-                grid.attach (volume_scale, 2, base_top + 0);
-                grid.attach (volume_switch, 3, base_top + 0, 1, 2);
+                grid.attach (name_label, 0, base_top );
+                grid.attach (volume_label, 1, base_top);
+                grid.attach (volume_scale, 2, base_top);
+                grid.attach (volume_switch, 3, base_top, 1, 2);
                 //  Second row for icon and balance
                 grid.attach (icon, 0, base_top + 1);
                 grid.attach (balance_label, 1, base_top + 1);
@@ -234,84 +330,20 @@ public class Mixer.MainWindow : Hdy.Window {
                 grid.attach (output_label, 0, base_top + 2);
                 grid.attach (dropdown, 1, base_top + 2, 3);
 
-                //  If this isn't the last element
-                if (i != apps.length - 1) {
-                    //  Add a seperator below the last element
-                    grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, separator_top, 4);
-                }
+                //  Add our row count to the map
+                app_rows[app.index] = app_rows[app.index] + ELEMENTS_PER_ROW; // += doesn't work for some reason
+
             };
         }
 
-        //  TODO Request the window size
-        //  var height = (apps.length * one_app_height);
-        //  set_default_size (-1, height) ;
+        var height = (_apps_ids.length * ONE_APP_HEIGHT + ((total_apps - 1) * SEPERATOR_HEIGHT) );
+        set_size_request (700, height);
 
+        //  Update the list of current apps
+        current_ids = _apps_ids;
+
+        //  Show all our hard work
+        show_all ();
     }
-
-    //  Runs a synchronous command without output
-    private void run_command (string command) {
-        try {
-
-            string output;
-            string error;
-
-            Process.spawn_command_line_sync (command, out output, out error);
-
-            if (output == "" && error == "") {
-                debug ("Command %s ran successfully", command);
-            } else {
-                debug ("Command %s failed", command);
-                debug ("Output: %s", output);
-                debug ("Error: %s", error);
-            }
-
-        } catch (SpawnError e) {
-            error ("Error: %s\n", e.message);
-        }
-    }
-
-    private void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
-        var volumes = balance_volume (balance_scale.get_value (), volume_scale.get_value ());
-
-        debug ("Setting volume for %s", app.name);
-        debug ("Balance: %s", balance_scale.get_value ().to_string ());
-        debug ("Volume: %s", volume_scale.get_value ().to_string ());
-
-        string percentages;
-
-        //  If the app is mono, only set one channel
-        if (app.is_mono) {
-            percentages = int.max (volumes[1], volumes[0]).to_string () + "%";
-        } else {
-            percentages = volumes[1].to_string () + "% " + volumes[0].to_string () + "%";
-        }
-
-        run_command ("env LANG=C pactl set-sink-input-volume " + app.index + " " + percentages);
-    }
-
-    //  Takes balance and volume, outputs left and right volumes
-    private int[] balance_volume (double balance, double volume) {
-
-        double l;
-        double r;
-
-        if (balance < 0) {
-            l = (100 * balance) + 100;
-            r = 100;
-        } else if (balance > 0) {
-            l = 100;
-            r = (-100 * balance) + 100;
-
-        }else {
-            l = 100;
-            r = 100;
-        };
-
-        int new_l = (int)(l * volume / 100);
-        int new_r = (int)(r * volume / 100);
-
-        return {new_l, new_r};
-    }
-
 
 }
