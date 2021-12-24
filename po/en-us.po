@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.childishgiant.mixer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-16 19:23+0100\n"
+"POT-Creation-Date: 2021-12-24 21:21+0000\n"
 "PO-Revision-Date: 2021-07-19 22:05+0100\n"
 "Last-Translator: Allie Law <allie@cloverleaf.app>\n"
 "Language-Team: none\n"
@@ -16,47 +16,53 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/MainWindow.vala:12 src/MainWindow.vala:25
+#: src/MainWindow.vala:26 src/MainWindow.vala:39
 msgid "Mixer"
 msgstr "Mixer"
 
-#: src/MainWindow.vala:100
+#: src/MainWindow.vala:210
 msgid "Volume:"
 msgstr "Volume:"
 
-#: src/MainWindow.vala:103
+#: src/MainWindow.vala:213
 msgid "Balance:"
 msgstr "Balance:"
 
-#: src/MainWindow.vala:111
+#: src/MainWindow.vala:223
 msgid "Left"
 msgstr "Left"
 
-#: src/MainWindow.vala:112
+#: src/MainWindow.vala:224
 msgid "Centre"
 msgstr "Center"
 
-#: src/MainWindow.vala:113
+#: src/MainWindow.vala:225
 msgid "Right"
 msgstr "Right"
 
 #. Make the switch disable the sliders
 #. If the app's in mono
 #. Disable inputs on balance slider
+#. Also grey out the label
 #. Give it a tooltip explaining this
-#: src/MainWindow.vala:147
+#: src/MainWindow.vala:255
 msgid "This app is using mono audio"
 msgstr "This app is using mono audio"
 
 #. Output label
-#: src/MainWindow.vala:159
+#: src/MainWindow.vala:267
 msgid "Output:"
 msgstr "Output:"
 
-#: src/AlertView.vala:31
+#: src/AlertView.vala:16
 msgid "No Apps"
 msgstr "No Apps"
 
-#: src/AlertView.vala:37
+#: src/AlertView.vala:22
 msgid "There are no apps making any noise."
 msgstr "There are no apps making any noise."
+
+#: src/Application.vala:37
+#, c-format
+msgid "Mixer version: %s"
+msgstr ""

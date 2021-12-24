@@ -23,7 +23,7 @@ public class Mixer.MainWindow : Hdy.Window {
             border_width: 0,
             icon_name: "com.github.childishgiant.mixer",
             resizable: true,
-            title: _ ("Mixer"),
+            title: _("Mixer"),
             window_position: Gtk.WindowPosition.CENTER
         );
     }
@@ -36,7 +36,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
         var header = new Hdy.HeaderBar () {
             show_close_button = true,
-            title = _ ("Mixer")
+            title = _("Mixer")
         };
 
         unowned Gtk.StyleContext header_context = header.get_style_context ();
@@ -207,10 +207,10 @@ public class Mixer.MainWindow : Hdy.Window {
                 volume_scale.hexpand = true;
                 volume_scale.set_value (app.volume * 100);
 
-                var volume_label = new Gtk.Label (_ ("Volume:"));
+                var volume_label = new Gtk.Label (_("Volume:"));
                 volume_label.halign = Gtk.Align.START;
 
-                var balance_label = new Gtk.Label (_ ("Balance:"));
+                var balance_label = new Gtk.Label (_("Balance:"));
                 balance_label.valign = Gtk.Align.START;
                 balance_label.halign = Gtk.Align.START;
 
@@ -220,9 +220,9 @@ public class Mixer.MainWindow : Hdy.Window {
                     width_request = 150
                 };
                 balance_scale.adjustment.page_increment = 0.1;
-                balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _ ("Left"));
-                balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _ ("Centre"));
-                balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _ ("Right"));
+                balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
+                balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
+                balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
                 balance_scale.set_value (app.balance);
 
                 //  Make the volume slider function
@@ -252,7 +252,7 @@ public class Mixer.MainWindow : Hdy.Window {
                     //  Also grey out the label
                     balance_label.sensitive = false;
                     //  Give it a tooltip explaining this
-                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _ ("This app is using mono audio"));
+                    balance_scale.tooltip_markup = Granite.markup_accel_tooltip ({}, _("This app is using mono audio"));
                 } else {
                     //  If not, make the switch toggle its input
                     volume_switch.bind_property ("active", balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
@@ -264,7 +264,9 @@ public class Mixer.MainWindow : Hdy.Window {
                 }
 
                 //  Output label
-                var output_label = new Gtk.Label (_ ("Output:"));
+                var output_label = new Gtk.Label (_("Output:")) {
+                    halign = Gtk.Align.END
+                };
 
                 //  Output dropdown
                 var dropdown = new Gtk.ComboBoxText () {

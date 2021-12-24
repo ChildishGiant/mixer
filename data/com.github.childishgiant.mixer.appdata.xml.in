@@ -22,15 +22,20 @@
   <url type="help">https://github.com/childishgiant/mixer/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/childishgiant/mixer/main/docs/light.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/childishgiant/mixer/main/docs/dark.png</image>
+      <image>https://raw.githubusercontent.com/childishgiant/mixer/main/docs/light-and-dark.png</image>
     </screenshot>
   </screenshots>
-  <content_rating type="oars-1.1">
-  </content_rating>
+  <content_rating type="oars-1.1" />
   <releases>
+    <release version="1.0.0" date="2021-12-11">
+      <description>
+        <p>Nothing new!</p>
+        <ul>
+          <li>Mixer has had a complete rewrite, allowing for wider compatability and better stability (Fingers crossed!)</li>
+          <li>There's now a suggested price of $3. As with all apps on AppCenter this is split between elementary and me 30/70</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.4" date="2021-08-30">
       <description>
         <p>Features:</p>
@@ -76,8 +81,8 @@
       </description>
     </release>
   </releases>
-  <!-- <custom>
-    <value key="x-appcenter-suggested-price">1.00</value>
-    <value key="x-appcenter-stripe"></value>
-  </custom> -->
+  <custom>
+    <value key="x-appcenter-suggested-price">3.00</value>
+    <value key="x-appcenter-stripe">pk_live_51JBNqJEPbjGW3MVaBNfjsaQ28kI8YVrKWncQNvml0XlVqPJEKU26PEAGXFqsYlPS8U03fbwMlJt1nPr4UqDmLv5d00KM5ZKCDS</value>
+  </custom>
 </component>

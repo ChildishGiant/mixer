@@ -1,6 +1,6 @@
 ## Press coverage
 
-I've been lucky enough to get some coverage in several different outlets:
+I've been lucky enough to get some coverage in a few different outlets:
 
 The Linux Experiment:
 

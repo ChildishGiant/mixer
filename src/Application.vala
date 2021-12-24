@@ -5,7 +5,7 @@
 
 public class Mixer.App : Gtk.Application {
 
-    private static string version = "0.1.4";
+    private static string version = "1.0.0";
     private static bool print_version = false;
     private static string mockup = null;
     public PulseManager manager;
