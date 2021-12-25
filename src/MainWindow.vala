@@ -296,7 +296,7 @@ public class Mixer.MainWindow : Hdy.Window {
                     pulse_manager.move (app, outputs[dropdown.active]);
                 });
 
-                //             number of apps before * how many elements per row + how many seperators there will be
+                //             number of apps before * how many elements per row + how many separators there will be
                 var base_top = (i + to_update.length) * ELEMENTS_PER_ROW + (to_update.length + i - 1);
                 //  debug ("(%d + %d) * %d + (%d + %d - 1)", i, to_update.length, ELEMENTS_PER_ROW, i, to_update.length);
 
@@ -306,13 +306,13 @@ public class Mixer.MainWindow : Hdy.Window {
                 //  If this isn't the first app
                 if (i > 0 || to_update.length > 0) {
 
-                    //  Add a seperator above this app
+                    //  Add a separator above this app
                     var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
 
                     //  Add one to the number of lines this app uses
                     app_rows[app.index] = 1;
 
-                    debug ("Adding seperator at %d", base_top);
+                    debug ("Adding separator at %d", base_top);
                     grid.attach (sep, 0, base_top, 4);
 
                     //  Update the base_top so the rest of this app gets added below it
