@@ -1,0 +1,150 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-24 21:21+0000\n"
+"PO-Revision-Date: 2022-06-20 17:15+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/com.github.childishgiant.mixer.desktop.in:4
+#: data/com.github.childishgiant.mixer.appdata.xml.in:7
+msgid "Mixer"
+msgstr "Mixeur"
+
+#: data/com.github.childishgiant.mixer.desktop.in:5
+#: data/com.github.childishgiant.mixer.appdata.xml.in:8
+msgid "Change the volume of apps"
+msgstr "Modifier le volume des applications"
+
+#: data/com.github.childishgiant.mixer.desktop.in:6
+msgid "Volume mixer"
+msgstr "Mixeur de volume"
+
+#: data/com.github.childishgiant.mixer.desktop.in:8
+msgid "com.github.childishgiant.mixer"
+msgstr "com.github.childishgiant.mixer"
+
+#: data/com.github.childishgiant.mixer.desktop.in:11
+msgid "Sound;Audio"
+msgstr "Sound;Audio;son;mixeur;volume;"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:10
+msgid "A no-frills volume mixer, with simplicity and usability at its core."
+msgstr ""
+"Un mélangeur de volume sans fioritures, avec la simplicité et la facilité "
+"d'utilisation au cœur."
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:12
+msgid "Simple volume controls including balance and output selection"
+msgstr ""
+"Des commandes de volume simples, y compris la sélection de la balance et "
+"de la sortie"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:13
+msgid "Individually change each audio source's values"
+msgstr "Changez individuellement les valeurs de chaque source audio"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:19
+msgid "Allie Law"
+msgstr "Allie Law"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:32
+msgid "Nothing new!"
+msgstr "Rien de nouveau !"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:34
+msgid ""
+"Mixer has had a complete rewrite, allowing for wider compatability and "
+"better stability (Fingers crossed!)"
+msgstr ""
+"Mixeur a été complètement réécrit, permettant une compatibilité plus large "
+"et une meilleure stabilité (🤞️)"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:35
+msgid ""
+"There's now a suggested price of $3. As with all apps on AppCenter this is "
+"split between elementary and me 30/70"
+msgstr ""
+"Il y a maintenant un prix suggéré de 3 $. Comme pour toutes les "
+"applications sur AppCenter, il est partagé entre elementary et moi 30/70."
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:41
+msgid "Features:"
+msgstr "Fonctionnalités :"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:43
+msgid "Spanish translation"
+msgstr "Traductions espagnole"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:44
+msgid "Ruissian translation"
+msgstr "Traduction russe"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:45
+msgid "Also grey out the slider label if not in use"
+msgstr ""
+"L’étiquette du curseur est également grisée si elle n'est pas utilisée."
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:46
+msgid "Handle long apps more gracefully"
+msgstr "Applications longues gérées avec plus d'élégance"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:47
+msgid "Scroll window if not all apps fit"
+msgstr ""
+"Faire défiler la fenêtre si toutes les applications ne s'adaptent pas"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:49
+msgid "Bug fixes:"
+msgstr "Corrections de bogues"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:51
+msgid "Fix for running on German systems"
+msgstr "Correction pour l’exécution sur des systèmes allemands"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:52
+msgid "Fix for app names with non-alpha characters not capturing"
+msgstr ""
+"Correction pour les noms d’applications avec des caractères non-"
+"alphabétiques"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:58
+msgid "Updated AppCenter metadata"
+msgstr "Métadonnées de l’AppCenter mises à jour"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:63
+#: data/com.github.childishgiant.mixer.appdata.xml.in:72
+msgid "Added features:"
+msgstr "Fonctionnalités ajoutées :"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:65
+msgid "Added support for Odin's dark style"
+msgstr "Ajout du support pour le style sombre Odin"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:66
+msgid "Changed some backend things to be more in-line with stock apps"
+msgstr ""
+"Modification de certains éléments du backend pour qu'ils soient plus "
+"conformes aux applications de base."
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:74
+msgid "Added a dropdown for changing which output an app uses"
+msgstr ""
+"Ajout d'un menu déroulant pour changer la sortie utilisée par une "
+"application"
+
+#: data/com.github.childishgiant.mixer.appdata.xml.in:80
+msgid "Initial Release"
+msgstr "Version initiale"
