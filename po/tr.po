@@ -1,0 +1,70 @@
+# Turkish translation of com.github.childishgiant.mixer.
+#
+# Copyright (C) 2022 com.github.childishgiant.mixer's COPYRIGHT HOLDER
+# This file is distributed under the same licence as the com.github.childishgiant.mixer package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.childishgiant.mixer master\n"
+"Report-Msgid-Bugs-To: https://github.com/ChildishGiant/mixer/issues\n"
+"POT-Creation-Date: 2021-12-24 21:21+0000\n"
+"PO-Revision-Date: 2022-08-10 19:54+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"Language-Team: Turkish <gnome-turk@gnome.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/MainWindow.vala:26 src/MainWindow.vala:39
+msgid "Mixer"
+msgstr "Karıştırıcı"
+
+#: src/MainWindow.vala:210
+msgid "Volume:"
+msgstr "Ses:"
+
+#: src/MainWindow.vala:213
+msgid "Balance:"
+msgstr "Denge:"
+
+#: src/MainWindow.vala:223
+msgid "Left"
+msgstr "Sol"
+
+#: src/MainWindow.vala:224
+msgid "Centre"
+msgstr "Merkez"
+
+#: src/MainWindow.vala:225
+msgid "Right"
+msgstr "Sağ"
+
+#. Make the switch disable the sliders
+#. If the app's in mono
+#. Disable inputs on balance slider
+#. Also grey out the label
+#. Give it a tooltip explaining this
+#: src/MainWindow.vala:255
+msgid "This app is using mono audio"
+msgstr "Bu uygulama mono ses kullanıyor"
+
+#. Output label
+#: src/MainWindow.vala:267
+msgid "Output:"
+msgstr "Çıktı:"
+
+#: src/AlertView.vala:16
+msgid "No Apps"
+msgstr "Uygulama Yok"
+
+#: src/AlertView.vala:22
+msgid "There are no apps making any noise."
+msgstr "Ses çıkaran hiçbir uygulama yok."
+
+#: src/Application.vala:37
+#, c-format
+msgid "Mixer version: %s"
+msgstr "Karıştırıcı sürümü: %s"
