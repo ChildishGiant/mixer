@@ -86,6 +86,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://dribbble.com/Suzie97"><img src="https://avatars.githubusercontent.com/u/68198116?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rajdeep Singha</b></sub></a><br /><a href="https://github.com/ChildishGiant/mixer/commits?author=Suzie97" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/asdffdsdaf"><img src="https://avatars.githubusercontent.com/u/87440869?v=4?s=100" width="100px;" alt=""/><br /><sub><b>asdf</b></sub></a><br /><a href="#translation-asdffdsdaf" title="Translation">🌍</a></td>
     <td align="center"><a href="https://nathanbonnemains.squill.fr"><img src="https://avatars.githubusercontent.com/u/45366162?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nathan Bonnemains</b></sub></a><br /><a href="#translation-NathanBnm" title="Translation">🌍</a></td>
+    <td align="center"><a href="http://www.yakusha.net"><img src="https://avatars.githubusercontent.com/u/6218679?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sabri Ünal</b></sub></a><br /><a href="#translation-libreajans" title="Translation">🌍</a></td>
   </tr>
 </table>
 
