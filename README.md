@@ -88,6 +88,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://nathanbonnemains.squill.fr"><img src="https://avatars.githubusercontent.com/u/45366162?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nathan Bonnemains</b></sub></a><br /><a href="#translation-NathanBnm" title="Translation">🌍</a></td>
     <td align="center"><a href="http://www.yakusha.net"><img src="https://avatars.githubusercontent.com/u/6218679?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sabri Ünal</b></sub></a><br /><a href="#translation-libreajans" title="Translation">🌍</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/rene-coty"><img src="https://avatars.githubusercontent.com/u/95506494?v=4?s=100" width="100px;" alt=""/><br /><sub><b>rene-coty</b></sub></a><br /><a href="#translation-rene-coty" title="Translation">🌍</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
