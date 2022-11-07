@@ -92,7 +92,7 @@ msgstr "Затемнение метки ползунка, если он не и�
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:46
 msgid "Handle long apps more gracefully"
-msgstr ""
+msgstr "Улучшена обработка длинных названий приложений"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:47
 msgid "Scroll window if not all apps fit"
