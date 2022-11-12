@@ -45,17 +45,17 @@ Ensure you have these dependencies installed
 # Install requirements on ubuntu-based distros
 sudo apt install meson ninja-build libpulse-dev valac libgtk-4-dev libgee-0.8-dev libgranite-7-dev
 
+# Install flatpak runtime and sdk
+flatpak remote-add --if-not-exists --system appcenter https://flatpak.elementary.io/repo.flatpakrepo
+flatpak install -y appcenter io.elementary.Platform io.elementary.Sdk
+
 # clone repository
 git clone https://github.com/ChildishGiant/mixer mixer
 # cd to dir
 cd mixer
-# run meson
-meson build --prefix=/usr
-# cd to build, install and run
-cd build
-sudo ninja install && com.github.childishgiant.mixer
-# For debugging use
-sudo ninja install && G_MESSAGES_DEBUG=all com.github.childishgiant.mixer
+
+# Build and install
+./install.sh
 ```
 
 ### Generating translation files

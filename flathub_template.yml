@@ -6,7 +6,7 @@ app-id: com.github.childishgiant.mixer
 # using the runtime and SDK provided by elementary.
 sdk: org.freedesktop.Sdk
 runtime: io.elementary.Platform
-runtime-version: '6'
+runtime-version: '7'
 base: io.elementary.BaseApp
 base-version: juno-20.08
 
@@ -27,18 +27,6 @@ finish-args:
 # If we had external dependencies that weren't included in our SDK, we would list
 # them here.
 modules:
-  - name: libhandy
-    buildsystem: meson
-    sources:
-      - type: git
-        url: https://gitlab.gnome.org/GNOME/libhandy.git
-        tag: 1.5.0
-        commit: 8fa8306a79215fc6ebf2483145da98bf9b2495ab
-    config-opts:
-      - -Dglade_catalog=disabled
-      - -Dvapi=true
-      - -Dtests=false
-      - -Dexamples=false
   - name: mixer
     buildsystem: meson
     sources:
