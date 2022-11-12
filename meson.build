@@ -23,11 +23,11 @@ add_project_arguments(
 # Listing dependencies
 dependencies = [
     dependency ('glib-2.0'),
-    dependency ('gtk+-3.0'),
-    dependency ('granite'),
-    dependency('libhandy-1', version: '>=1.0.0'),
-    dependency('libpulse'),
-    dependency('libpulse-mainloop-glib'),
+    dependency ('gee-0.8'),
+    dependency ('gtk4'),
+    dependency ('granite-7'),
+    dependency ('libpulse'),
+    dependency ('libpulse-mainloop-glib'),
 ]
 
 subdir ('src')
