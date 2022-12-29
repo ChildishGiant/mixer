@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-24 21:21+0000\n"
+"POT-Creation-Date: 2022-11-02 20:49+0900\n"
 "PO-Revision-Date: 2022-06-20 17:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -32,10 +32,6 @@ msgstr "Modifier le volume des applications"
 msgid "Volume mixer"
 msgstr "Mixeur de volume"
 
-#: data/com.github.childishgiant.mixer.desktop.in:8
-msgid "com.github.childishgiant.mixer"
-msgstr "com.github.childishgiant.mixer"
-
 #: data/com.github.childishgiant.mixer.desktop.in:11
 msgid "Sound;Audio"
 msgstr "Sound;Audio;son;mixeur;volume;"
@@ -49,8 +45,8 @@ msgstr ""
 #: data/com.github.childishgiant.mixer.appdata.xml.in:12
 msgid "Simple volume controls including balance and output selection"
 msgstr ""
-"Des commandes de volume simples, y compris la sélection de la balance et "
-"de la sortie"
+"Des commandes de volume simples, y compris la sélection de la balance et de "
+"la sortie"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:13
 msgid "Individually change each audio source's values"
@@ -77,8 +73,8 @@ msgid ""
 "There's now a suggested price of $3. As with all apps on AppCenter this is "
 "split between elementary and me 30/70"
 msgstr ""
-"Il y a maintenant un prix suggéré de 3 $. Comme pour toutes les "
-"applications sur AppCenter, il est partagé entre elementary et moi 30/70."
+"Il y a maintenant un prix suggéré de 3 $. Comme pour toutes les applications "
+"sur AppCenter, il est partagé entre elementary et moi 30/70."
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:41
 msgid "Features:"
@@ -103,8 +99,7 @@ msgstr "Applications longues gérées avec plus d'élégance"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:47
 msgid "Scroll window if not all apps fit"
-msgstr ""
-"Faire défiler la fenêtre si toutes les applications ne s'adaptent pas"
+msgstr "Faire défiler la fenêtre si toutes les applications ne s'adaptent pas"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:49
 msgid "Bug fixes:"
@@ -117,8 +112,7 @@ msgstr "Correction pour l’exécution sur des systèmes allemands"
 #: data/com.github.childishgiant.mixer.appdata.xml.in:52
 msgid "Fix for app names with non-alpha characters not capturing"
 msgstr ""
-"Correction pour les noms d’applications avec des caractères non-"
-"alphabétiques"
+"Correction pour les noms d’applications avec des caractères non-alphabétiques"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:58
 msgid "Updated AppCenter metadata"
@@ -142,8 +136,7 @@ msgstr ""
 #: data/com.github.childishgiant.mixer.appdata.xml.in:74
 msgid "Added a dropdown for changing which output an app uses"
 msgstr ""
-"Ajout d'un menu déroulant pour changer la sortie utilisée par une "
-"application"
+"Ajout d'un menu déroulant pour changer la sortie utilisée par une application"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:80
 msgid "Initial Release"
