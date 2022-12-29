@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/ChildishGiant/mixer/compare/1.0.0...1.1.0) (2022-12-29)
+
+* Fixed a long-standing issue on Fedora (and probably other distros) ([#26](https://github.com/ChildishGiant/mixer/issues/26))
+* French translation thanks to @rene-coty
+* Turkish translation thanks to @sabriunal
+
 ## [0.1.4](https://github.com/ChildishGiant/mixer/compare/v0.1.3...v0.1.4) (2021-09-30)
 
 

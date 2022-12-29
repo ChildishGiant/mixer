@@ -27,6 +27,16 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="1.1.0" date="2022-12-29">
+      <description>
+        <p>Fixed a long-standing issue on Fedora (and probably other distros)</p>
+        <p>Some lovely contributors have translated mixer!</p>
+        <ul>
+          <li>French thanks to @rene-coty</li>
+          <li>Turkish thanks to Sabri Ünal</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2021-12-11">
       <description>
         <p>Nothing new!</p>
