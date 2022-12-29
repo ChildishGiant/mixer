@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ghcr.io/elementary/flatpak-platform/runtime:6.1
+      image: elementary/docker:next-unstable
       options: --privileged
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build
         uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3

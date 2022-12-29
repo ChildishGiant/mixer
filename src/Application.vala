@@ -65,7 +65,6 @@ public class Mixer.App : Gtk.Application {
 
         if (mockup != null) {
             app_window.populate (mockup);
-            app_window.show_all ();
             return;
         }
 
@@ -86,14 +85,12 @@ public class Mixer.App : Gtk.Application {
             responses = _apps;
             if (sinks != null) {
                 app_window.populate ("", responses, sinks);
-                app_window.show_all ();
             }
         });
 
         quit_action.activate.connect (() => {
             if (app_window != null) {
                 app_window.destroy ();
-                app_window.show_all ();
             }
         });
 

@@ -10,7 +10,7 @@ public class AlertView : Gtk.Grid {
         row_spacing = 12;
         halign = Gtk.Align.CENTER;
         valign = Gtk.Align.CENTER;
-        margin = 24;
+        //  margin = 24;
         vexpand = true;
 
         var title_label = new Gtk.Label (_("No Apps")) {
@@ -25,7 +25,7 @@ public class AlertView : Gtk.Grid {
             valign = Gtk.Align.START
         };
 
-        var image = new Gtk.Image.from_icon_name ("preferences-desktop-sound", Gtk.IconSize.DIALOG) {
+        var image = new Gtk.Image.from_icon_name ("preferences-desktop-sound") {
             margin_top = 6,
             valign = Gtk.Align.START
         };

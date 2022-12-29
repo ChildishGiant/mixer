@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-public class Mixer.MainWindow : Hdy.Window {
+public class Mixer.MainWindow : Gtk.ApplicationWindow {
 
-    private Gtk.Grid window_grid;
     private Gtk.Grid grid;
     private const int ONE_APP_HEIGHT = 117;
     private const int SEPERATOR_HEIGHT = 13;
@@ -16,45 +15,33 @@ public class Mixer.MainWindow : Hdy.Window {
     private Gee.HashMap <uint32, int> app_base = new Gee.HashMap<uint32, int> ();
     // Store how many rows we have for each app
     private Gee.HashMap <uint32, int> app_rows = new Gee.HashMap<uint32, int> ();
+    private AlertView no_apps = new AlertView ();
 
     public MainWindow (Gtk.Application application) {
         Object (
             application: application,
-            border_width: 0,
+            //  border_width: 0,
             icon_name: "com.github.childishgiant.mixer",
             resizable: true,
-            title: _("Mixer"),
-            window_position: Gtk.WindowPosition.CENTER
+            title: _("Mixer")
         );
     }
 
     construct {
-        Hdy.init ();
-
-        weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_default ();
-        default_theme.add_resource_path ("/com/github/childishgiant/mixer");
-
-        var header = new Hdy.HeaderBar () {
-            show_close_button = true,
-            title = _("Mixer")
-        };
-
-        unowned Gtk.StyleContext header_context = header.get_style_context ();
-        header_context.add_class ("default-decoration");
-        header_context.add_class (Gtk.STYLE_CLASS_FLAT);
 
         grid = new Gtk.Grid () {
             column_spacing = 6,
             row_spacing = 6,
-            margin = 6,
+            margin_top = 6,
+            margin_bottom = 6,
             //  Side margins to make scrolling easier
-            margin_left = 10,
-            margin_right = 10,
+            margin_start = 10,
+            margin_end = 10,
             halign = Gtk.Align.FILL
         };
 
 
-        var scrolled = new Gtk.ScrolledWindow (null, null) {
+        var scrolled = new Gtk.ScrolledWindow () {
             //  Disabled sideways scrolling
             hscrollbar_policy = Gtk.PolicyType.NEVER,
             //  Minimum show one app
@@ -62,22 +49,14 @@ public class Mixer.MainWindow : Hdy.Window {
             propagate_natural_height = true
         };
 
-        scrolled.add (grid);
+        scrolled.set_child (grid);
 
-        window_grid = new Gtk.Grid () {
-            column_spacing = 0,
-            row_spacing = 0,
-            margin = 0,
-            halign = Gtk.Align.FILL
-        };
+        //  Allows the window to be dragged by any free space
+        var window_handle = new Gtk.WindowHandle ();
+        window_handle.set_child (scrolled);
+        set_child (window_handle);
 
-        window_grid.attach (header, 0, 0);
-        window_grid.attach (scrolled, 0, 1);
-
-        var window_handle = new Hdy.WindowHandle ();
-        window_handle.add (window_grid);
-
-        add (window_handle);
+        present();
 
     }
 
@@ -170,21 +149,26 @@ public class Mixer.MainWindow : Hdy.Window {
 
             //  If the mockup is invalid
             if (new_apps.length == 0) {
-                grid.add ( new Gtk.Label ("Unknown mockup: " + mockup) {
+                grid.attach ( new Gtk.Label ("Unknown mockup: " + mockup) {
                     vexpand = true,
                     hexpand = true
-                } );
+                }, 0, 0 );
             }
         }
 
         //  If no apps are using audio
         if (new_apps.length == 0 && mockup == "" && to_update.length == 0) {
 
-            var no_apps = new AlertView ();
-            grid.add (no_apps);
+            grid.attach (no_apps, 0, 0);
         }
 
         else {
+
+            //  Remove the no apps label
+            if (grid.get_child_at (0, 0) == no_apps) {
+                debug ("Removing no apps label");
+                grid.remove (no_apps);
+            }
 
             debug (total_apps.to_string () + " apps total");
 
@@ -192,7 +176,7 @@ public class Mixer.MainWindow : Hdy.Window {
 
                 var app = new_apps[i];
 
-                var icon = new Gtk.Image.from_icon_name (app.icon, Gtk.IconSize.DND);
+                var icon = new Gtk.Image.from_icon_name (app.icon);
                 icon.valign = Gtk.Align.START;
                 //  TODO Maybe show the ID if there are duplicate names
                 var name_label = new Gtk.Label (app.name.to_string ()) {
@@ -274,11 +258,12 @@ public class Mixer.MainWindow : Hdy.Window {
                     width_request = 75,
                 };
 
-                dropdown.cell_area.foreach ((cell_renderer) => {
-                    var text = (Gtk.CellRendererText)cell_renderer;
-                    text.ellipsize = Pango.EllipsizeMode.END;
-                    return true;
-                });
+                //  TODO Port to gtk4
+                //  dropdown.cell_area.foreach ((cell_renderer) => {
+                //      var text = (Gtk.CellRendererText)cell_renderer;
+                //      text.ellipsize = Pango.EllipsizeMode.END;
+                //      return true;
+                //  });
 
 
                 for (int j = 0; j < outputs.length; j++) {
@@ -344,8 +329,6 @@ public class Mixer.MainWindow : Hdy.Window {
         //  Update the list of current apps
         current_ids = _apps_ids;
 
-        //  Show all our hard work
-        show_all ();
     }
 
 }
