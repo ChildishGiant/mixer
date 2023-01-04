@@ -1,46 +1,47 @@
-# Project name, programming language and version
-project (
-    'com.github.childishgiant.mixer',
-    'vala', 'c',
-    version: '0.1.4'
+project('mixer', ['c', 'vala'],
+          version: '2.0.0',
+    meson_version: '>= 0.59.0',
+  default_options: [ 'warning_level=2']
 )
 
-# Translation module
-i18n = import ('i18n')
+app_id = 'com.github.childishgiant.mixer'
+resource_path = '/com/github/childishgiant/Mixer'
 
-# Project arguments
-add_project_arguments (
-    '-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name ()),
-    language: 'c'
+add_project_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language: 'c')
+
+i18n = import('i18n')
+gnome = import('gnome')
+
+# config variables
+
+config_data = configuration_data()
+
+
+# project version
+config_data.set('VERSION', meson.project_version())
+
+# application ID
+config_data.set('APP_ID', app_id)
+
+# application resource path
+config_data.set('RESOURCE_PATH', resource_path)
+
+# GNU GetText package name
+config_data.set('GETTEXT_PACKAGE', meson.project_name())
+
+# data directory paths
+config_data.set('LOCALE_DIR', join_paths(get_option('prefix'), get_option('localedir')))
+config_data.set('DATA_DIR', join_paths(get_option('prefix'), get_option('datadir'), meson.project_name()))
+
+
+
+subdir('data')
+subdir('src')
+subdir('po')
+
+
+gnome.post_install(
+  glib_compile_schemas: true,
+  gtk_update_icon_cache: true,
+  update_desktop_database: true,
 )
-
-add_project_arguments(
-    ['--vapidir', join_paths(meson.current_source_dir(), 'vapi')],
-    language: 'vala'
-)
-
-
-# Listing dependencies
-dependencies = [
-    dependency ('glib-2.0'),
-    dependency ('gee-0.8'),
-    dependency ('gtk4'),
-    dependency ('granite-7'),
-    dependency ('libpulse'),
-    dependency ('libpulse-mainloop-glib'),
-]
-
-subdir ('src')
-
-# Executable
-executable (
-    meson.project_name (),
-    sources,
-    dependencies: dependencies,
-    install: true
-)
-
-subdir ('data')
-subdir ('po')
-
-meson.add_install_script ('meson/post_install.py')

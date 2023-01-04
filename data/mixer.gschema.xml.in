@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="@GETTEXT_PACKAGE@">
+  <schema id="@APP_ID@" path="@RESOURCE_PATH@/">
+  </schema>
+</schemalist>
+

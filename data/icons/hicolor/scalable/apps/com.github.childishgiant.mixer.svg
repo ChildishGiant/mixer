@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    id="svg4434"
-   viewBox="0 0 128 128"
-   width="64"
-   height="64"
+   height="128"
+   width="128"
    version="1.1"
    sodipodi:docname="com.github.childishgiant.mixer.svg"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
@@ -576,3 +575,4 @@
     </g>
   </g>
 </svg>
+

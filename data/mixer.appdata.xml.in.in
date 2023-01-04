@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2020 Allie Law <allie@cloverleaf.app> -->
 <component type="desktop">
-  <id>com.github.childishgiant.mixer</id>
+  <id>@APP_ID@</id>
+  <launchable type="desktop-id">@APP_ID@.desktop</launchable>
+  <translation type="gettext">@GETTEXT_PACKAGE@</translation>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Mixer</name>
@@ -86,3 +88,4 @@
     <value key="x-appcenter-stripe">pk_live_51JBNqJEPbjGW3MVaBNfjsaQ28kI8YVrKWncQNvml0XlVqPJEKU26PEAGXFqsYlPS8U03fbwMlJt1nPr4UqDmLv5d00KM5ZKCDS</value>
   </custom>
 </component>
+

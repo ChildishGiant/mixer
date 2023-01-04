@@ -95,3 +95,4 @@ public static Sink[] mockup_outputs () {
 
     return {sink1, sink2};
 }
+

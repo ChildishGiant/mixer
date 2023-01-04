@@ -116,7 +116,7 @@ public class PulseManager : Object {
 
             case Context.SubscriptionEventType.SINK_INPUT:
             default:
-                //  Fallthrough because for some reason there's a lot of undefined events
+                //  Fall-through because for some reason there's a lot of undefined events
                 get_apps ();
 
                 break;
@@ -208,7 +208,13 @@ public class PulseManager : Object {
 
         return this.sinks;
     }
-
+    
+    private void success_cb (Context c, int success) {
+        if (success == 0) {
+            debug("Failed: %s", c.errno().to_string());
+        }
+    }
+    
     public void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
 
         debug ("Setting volume and balance for %s (%i)", app.name, (int)app.index);
@@ -228,17 +234,18 @@ public class PulseManager : Object {
         debug ("Balance: %s", cvol.get_balance (app.channel_map).to_string ());
 
 
-        context.set_sink_input_volume (app.index, cvol);
+        context.set_sink_input_volume (app.index, cvol, success_cb);
     }
 
     public void set_mute (Response app, bool mute) {
         debug ("%s %s", mute ? "Muting" : "Unmuting", app.name);
-        context.set_sink_input_mute (app.index, mute);
+        context.set_sink_input_mute (app.index, mute, success_cb);
     }
 
     public void move (Response app, Sink sink) {
         debug ("Moving %s to %s", app.name, sink.port_description);
-        context.move_sink_input_by_index (app.index, sink.index);
+        context.move_sink_input_by_index (app.index, sink.index, success_cb);
     }
 
 }
+

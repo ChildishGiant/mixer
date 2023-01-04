@@ -56,6 +56,14 @@ cd mixer
 
 # Build and install
 ./install.sh
+
+# Uncomment to enable debug logs
+# export G_MESSAGES_DEBUG=all
+# Uncomment to launch GTK Inspector upon app start:
+# export GTK_DEBUG=interactive
+
+# Run
+flatpak run com.github.childishgiant.mixer
 ```
 
 ### Generating translation files
