@@ -16,87 +16,89 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Mixer {
-    [GtkTemplate (ui = "/com/github/childishgiant/mixer/window.ui")]
-    public class Window : Gtk.ApplicationWindow {
-
-        private Gtk.Grid grid;
-        private const int ONE_APP_HEIGHT = 117;
-        private const int SEPERATOR_HEIGHT = 13;
-        public PulseManager pulse_manager;
-        Response[] responses;
-        Sink[] sinks;
-        private uint32[] current_ids = {};
-        private const int ELEMENTS_PER_ROW = 3;
-        //  Store where each app starts in the grid
-        private Gee.HashMap <uint32, int> app_base = new Gee.HashMap<uint32, int> ();
-        // Store how many rows we have for each app
-        private Gee.HashMap <uint32, int> app_rows = new Gee.HashMap<uint32, int> ();
-        private AlertView no_apps = new AlertView ();
-
-        public Window (Gtk.Application app) {
-            Object (
-                application: app,
-                icon_name: "com.github.childishgiant.mixer",
-                resizable: true,
-                title: _("Mixer")
-            );
-
-        }
-
-        construct {
-
-            pulse_manager = new PulseManager ();
-
-            pulse_manager.get_apps ();
-            pulse_manager.get_outputs ();
-
-            pulse_manager.sinks_updated.connect ((_sinks) => {
-                sinks = _sinks;
-                if (responses != null) {
-                    populate ("", responses, sinks);
-                }
-            });
-
-            pulse_manager.apps_updated.connect ((_apps) => {
-                responses = _apps;
-                if (sinks != null) {
-                    populate ("", responses, sinks);
-                }
-            });
-
-            grid = new Gtk.Grid () {
-                column_spacing = 6,
-                row_spacing = 6,
-                margin_top = 6,
-                margin_bottom = 6,
-                //  Side margins to make scrolling easier
-                margin_start = 10,
-                margin_end = 10,
-                halign = Gtk.Align.FILL
-            };
+[GtkTemplate (ui = "/com/github/childishgiant/mixer/appEntry.ui")]
+public class Mixer.AppEntry : Gtk.Grid {
+    [GtkChild]
+    public unowned Gtk.Label name_label;
+    [GtkChild]
+    public unowned Gtk.Label volume_label;
+    [GtkChild]
+    public unowned Gtk.Scale volume_scale;
+    [GtkChild]
+    public unowned Gtk.Switch volume_switch;
+    [GtkChild]
+    public unowned Gtk.Image icon;
+    [GtkChild]
+    public unowned Gtk.Label balance_label;
+    [GtkChild]
+    public unowned Gtk.Scale balance_scale;
+    [GtkChild]
+    public unowned Gtk.Label output_label;
+    [GtkChild]
+    public unowned Gtk.ComboBoxText dropdown;
 
 
-            var scrolled = new Gtk.ScrolledWindow () {
-                //  Disabled sideways scrolling
-                hscrollbar_policy = Gtk.PolicyType.NEVER,
-                //  Minimum show one app
-                min_content_height = ONE_APP_HEIGHT,
-                propagate_natural_height = true
-            };
+}
 
-            scrolled.set_child (grid);
 
-            //  Allows the window to be dragged by any free space
-            var window_handle = new Gtk.WindowHandle ();
-            window_handle.set_child (scrolled);
-            set_child (window_handle);
+[GtkTemplate (ui = "/com/github/childishgiant/mixer/window.ui")]
+public class Mixer.Window : Adw.ApplicationWindow {
 
-            present();
+    [GtkChild]
+    private unowned Gtk.Box apps_grid;
 
-        }
+    private const int ONE_APP_HEIGHT = 117;
+    private const int SEPERATOR_HEIGHT = 13;
+    public PulseManager pulse_manager;
+    Response[] responses;
+    Sink[] sinks;
+    private uint32[] current_ids = {};
+    private Adw.StatusPage no_apps = new Adw.StatusPage();
 
-        public void populate (string mockup = "", Response[]? _apps = null, Sink[]? _outputs = null) {
+    public Window (Gtk.Application app) {
+        Object (
+            application: app,
+            icon_name: "com.github.childishgiant.mixer",
+            resizable: true,
+            title: _("Mixer")
+        );
+
+    }
+
+    construct {
+
+        // Setup no apps widget
+        // TODO make this a blp, there were issues last time
+        no_apps.icon_name = "audio-volume-muted";
+        no_apps.title = _("No apps");
+        no_apps.description = _("There are no apps making any noise.");
+        no_apps.vexpand = true;
+        no_apps.hexpand = true;
+
+        pulse_manager = new PulseManager ();
+
+        pulse_manager.get_apps ();
+        pulse_manager.get_outputs ();
+
+        pulse_manager.sinks_updated.connect ((_sinks) => {
+            sinks = _sinks;
+            if (responses != null) {
+                populate ("", responses, sinks);
+            }
+        });
+
+        pulse_manager.apps_updated.connect ((_apps) => {
+            responses = _apps;
+            if (sinks != null) {
+                populate ("", responses, sinks);
+            }
+        });
+
+        present();
+
+    }
+
+    public void populate(string mockup = "", Response[]? _apps = null, Sink[]? _outputs = null) {
 
             debug ("Populate called");
 
@@ -106,7 +108,7 @@ namespace Mixer {
             uint32[] _apps_ids = {}; // List of IDS of all the apps in this call
 
             //  Output lists
-            uint32[] to_remove = {}; // Apps to remove from the grid
+            uint32[] to_remove = {}; // Apps to remove from the apps_grid
             Response[] new_apps = {}; // Apps that are new to the app
             uint32[] to_update = {}; // Apps that have remained
 
@@ -120,8 +122,8 @@ namespace Mixer {
                 int current_index = get_index (current_ids, (int)_apps[i].index);
                 debug ("Index in existing: " + current_index.to_string ());
                 if (current_index == -1) {
-                    debug ("App %s is not in the grid, add it", _apps[i].name);
-                    //  If it's not in the grid, add it
+                    debug ("App %s is not in the apps_grid, add it", _apps[i].name);
+                    //  If it's not in the apps_grid, add it
                     new_apps += _apps[i];
                 }
             }
@@ -152,27 +154,16 @@ namespace Mixer {
             for (int i = 0; i < to_remove.length; i++) {
                 debug ("Removing app %s", to_remove[i].to_string ());
 
-                var base_row = app_base[to_remove[i]];
-                var rows = app_rows[to_remove[i]];
+                // var base_row = app_base[to_remove[i]];
+                // var rows = app_rows[to_remove[i]];
 
                 //  Remove all rows used by that app
-                for (int j = 0; j < rows; j++) {
+                // for (int j = 0; j < rows; j++) {
                     //  Since deleting shuffles the rows about, we don't need to worry about the index
-                    grid.remove_row (base_row);
-                }
+                    // apps_grid.remove_row (base_row);
+                // }
 
-                //  Clean up the row list
-                app_base.unset (to_remove[i]);
-                app_rows.unset (to_remove[i]);
 
-                //  Re-calculate the base row for each app
-                Gee.HashMap <uint32, int> new_app_base = new Gee.HashMap<uint32, int> ();
-
-                foreach (var row in app_base) {
-                    new_app_base[row.key] = app_base[row.key] - rows;
-                }
-
-                app_base = new_app_base;
             }
 
             if (mockup != "") {
@@ -185,25 +176,26 @@ namespace Mixer {
 
                 //  If the mockup is invalid
                 if (new_apps.length == 0) {
-                    grid.attach ( new Gtk.Label ("Unknown mockup: " + mockup) {
+                    apps_grid.append ( new Gtk.Label ("Unknown mockup: " + mockup) {
                         vexpand = true,
                         hexpand = true
-                    }, 0, 0 );
+                    });
                 }
             }
 
+            apps_grid.append (no_apps);
             //  If no apps are using audio
             if (new_apps.length == 0 && mockup == "" && to_update.length == 0) {
-
-                grid.attach (no_apps, 0, 0);
+                // Add no apps message
+                apps_grid.append (no_apps);
             }
 
             else {
 
-                //  Remove the no apps label
-                if (grid.get_child_at (0, 0) == no_apps) {
+                // Remove the no apps label
+                if (current_ids.length == 0) {
                     debug ("Removing no apps label");
-                    grid.remove (no_apps);
+                    apps_grid.remove (no_apps);
                 }
 
                 debug (total_apps.to_string () + " apps total");
@@ -211,91 +203,57 @@ namespace Mixer {
                 for (int i = 0; i < new_apps.length; i++) {
 
                     var app = new_apps[i];
+                    var app_widget = new Mixer.AppEntry ();
 
-                    var icon = new Gtk.Image.from_icon_name (app.icon);
-                    icon.valign = Gtk.Align.START;
-                    //  TODO Maybe show the ID if there are duplicate names
-                    var name_label = new Gtk.Label (app.name.to_string ()) {
-                        //  If the name's longer than 32 chars use ...
-                        max_width_chars = 32,
-                        ellipsize = Pango.EllipsizeMode.END,
-                    };
+                    // TODO Maybe show the ID if there are duplicate names
+                    app_widget.name_label.label = app.name.to_string ();
 
-                    var volume_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 5);
-                    volume_scale.adjustment.page_increment = 5;
-                    volume_scale.draw_value = false;
-                    volume_scale.hexpand = true;
-                    volume_scale.set_value (app.volume * 100);
+                    //  Add marks to balance slider
+                    app_widget.balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
+                    app_widget.balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
+                    app_widget.balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
+                    //  Set balance slider to app's value
+                    app_widget.balance_scale.set_value (app.balance);
 
-                    var volume_label = new Gtk.Label (_("Volume:"));
-                    volume_label.halign = Gtk.Align.START;
+                    //  Set volume slider to app's value
+                    app.widget.volume_scale.set_value (app.balance)
 
-                    var balance_label = new Gtk.Label (_("Balance:"));
-                    balance_label.valign = Gtk.Align.START;
-                    balance_label.halign = Gtk.Align.START;
-
-                    var balance_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, -1, 1, 0.1) {
-                        draw_value = false,
-                        has_origin = false,
-                        width_request = 150
-                    };
-                    balance_scale.adjustment.page_increment = 0.1;
-                    balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
-                    balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
-                    balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
-                    balance_scale.set_value (app.balance);
-
-                    //  Make the volume slider function
-                    volume_scale.value_changed.connect (() => {
-                        pulse_manager.set_volume (app, balance_scale, volume_scale);
+                    // Make the volume slider function
+                    app_widget.volume_scale.value_changed.connect (() => {
+                        pulse_manager.set_volume (app, app_widget.balance_scale, app_widget.volume_scale);
                     });
 
-                    //  Create mute switch
-                    var volume_switch = new Gtk.Switch () {
-                        valign = Gtk.Align.CENTER,
-                        active = !app.muted
-                    };
+                    // Set mute switch
+                    app_widget.volume_switch.active = !app.muted;
 
-                    //  Make the mute switch function
-                    volume_switch.notify["active"].connect (() => {
-                        pulse_manager.set_mute (app, !volume_switch.active);
+                    // Make the mute switch function
+                    app_widget.volume_switch.notify["active"].connect (() => {
+                        pulse_manager.set_mute (app, !app_widget.volume_switch.active);
                     });
 
+                    // Make the switch disable the sliders
+                    app_widget.volume_switch.bind_property ("active", app_widget.volume_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
-                    //  Make the switch disable the sliders
-                    volume_switch.bind_property ("active", volume_scale, "sensitive", BindingFlags.SYNC_CREATE);
-
-                    //  If the app's in mono
+                    // If the app's in mono
                     if (app.is_mono) {
-                        //  Disable inputs on balance slider
-                        balance_scale.sensitive = false;
-                        //  Also grey out the label
-                        balance_label.sensitive = false;
-                        //  Give it a tooltip explaining this
-                        balance_scale.set_tooltip_text(_("This app is using mono audio"));
+                        // Disable inputs on balance slider
+                        app_widget.balance_scale.sensitive = false;
+                        // Also grey out the label
+                        app_widget.balance_label.sensitive = false;
+                        // Give it a tooltip explaining this
+                        app_widget.balance_scale.set_tooltip_text(_("This app is using mono audio"));
                     } else {
-                        //  If not, make the switch toggle its input
-                        volume_switch.bind_property ("active", balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
+                        // If not, make the switch toggle its input
+                        app_widget.volume_switch.bind_property ("active", app_widget.balance_scale, "sensitive", BindingFlags.SYNC_CREATE);
 
-                        //  Make the balance slider function
-                        balance_scale.value_changed.connect (() => {
-                            pulse_manager.set_volume (app, balance_scale, volume_scale);
+                        // Make the balance slider function
+                        app_widget.balance_scale.value_changed.connect (() => {
+                            pulse_manager.set_volume (app, app_widget.balance_scale, app_widget.volume_scale);
                         });
                     }
 
-                    //  Output label
-                    var output_label = new Gtk.Label (_("Output:")) {
-                        halign = Gtk.Align.END
-                    };
-
-                    //  Output dropdown
-                    var dropdown = new Gtk.ComboBoxText () {
-                        //  Minimum width
-                        width_request = 75,
-                    };
-
-                    //  TODO Port to gtk4
-                    //  dropdown.cell_area.foreach ((cell_renderer) => {
+                    // TODO Port to gtk4
+                    //  app_widget.dropdown.cell_area.foreach ((cell_renderer) => {
                     //      var text = (Gtk.CellRendererText)cell_renderer;
                     //      text.ellipsize = Pango.EllipsizeMode.END;
                     //      return true;
@@ -304,67 +262,40 @@ namespace Mixer {
 
                     for (int j = 0; j < outputs.length; j++) {
                         var sink = outputs[j];
-                        dropdown.append_text ("%s - %s".printf (sink.port_name, sink.port_description));
+                        app_widget.dropdown.append_text ("%s - %s".printf (sink.port_name, sink.port_description));
 
-                        //  If this is the current output
+                        // If this is the current output
                         if (app.sink == sink.index) {
-                            dropdown.set_active (j);
+                         app_widget.dropdown.set_active (j);
                         }
                     }
 
-                    //  Make the dropdown function
-                    dropdown.changed.connect (() => {
-                        pulse_manager.move (app, outputs[dropdown.active]);
+                    // Make the dropdown function
+                    app_widget.dropdown.changed.connect (() => {
+                        pulse_manager.move (app, outputs[app_widget.dropdown.active]);
                     });
 
-                    //             number of apps before * how many elements per row + how many separators there will be
-                    var base_top = (i + to_update.length) * ELEMENTS_PER_ROW + (to_update.length + i - 1);
-                    //  debug ("(%d + %d) * %d + (%d + %d - 1)", i, to_update.length, ELEMENTS_PER_ROW, i, to_update.length);
-
-                    //  Store where this app starts
-                    app_base[app.index] = base_top;
-
-                    //  If this isn't the first app
+                    // If this isn't the first app
                     if (i > 0 || to_update.length > 0) {
 
-                        //  Add a separator above this app
+                        // Add a separator above this app
                         var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-
-                        //  Add one to the number of lines this app uses
-                        app_rows[app.index] = 1;
-
-                        debug ("Adding separator at %d", base_top);
-                        grid.attach (sep, 0, base_top, 4);
-
-                        //  Update the base_top so the rest of this app gets added below it
-                        base_top += 1;
+                        // TODO give the separator an id so I can remove it
+                        debug ("Adding separator");
+                        apps_grid.append (sep);
                     }
 
-                    //  Add First row for app, volume slider and mute switch
-                    grid.attach (name_label, 0, base_top );
-                    grid.attach (volume_label, 1, base_top);
-                    grid.attach (volume_scale, 2, base_top);
-                    grid.attach (volume_switch, 3, base_top, 1, 2);
-                    //  Second row for icon and balance
-                    grid.attach (icon, 0, base_top + 1);
-                    grid.attach (balance_label, 1, base_top + 1);
-                    grid.attach (balance_scale, 2, base_top + 1);
-                    //  Third row for picking output
-                    grid.attach (output_label, 0, base_top + 2);
-                    grid.attach (dropdown, 1, base_top + 2, 3);
-
-                    //  Add our row count to the map
-                    app_rows[app.index] = app_rows[app.index] + ELEMENTS_PER_ROW; // += doesn't work for some reason
+                    // Add this to the app grid
+                    apps_grid.append(app_widget);
 
                 };
             }
 
-            var height = (_apps_ids.length * ONE_APP_HEIGHT + ((total_apps - 1) * SEPERATOR_HEIGHT) );
-            set_size_request (700, height);
+            //  var height = (_apps_ids.length * ONE_APP_HEIGHT + ((total_apps - 1) * SEPERATOR_HEIGHT) );
+            //  set_size_request (700, height);
 
             //  Update the list of current apps
             current_ids = _apps_ids;
 
         }
-    }
 }

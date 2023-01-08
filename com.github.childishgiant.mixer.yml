@@ -38,6 +38,12 @@ cleanup:
 # If we had external dependencies that weren't included in our SDK, we would list
 # them here.
 modules:
+  - name: blueprint-compiler
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/jwestman/blueprint-compiler.git
+        tag: v0.6.0
   - name: mixer
     builddir: true
     buildsystem: meson

@@ -21,6 +21,7 @@ namespace Mixer {
 
         private static bool print_version = false;
         private static string mockup = "";
+        private Adw.ApplicationWindow win;
 
         private const GLib.OptionEntry[] options = {
 
@@ -56,7 +57,7 @@ namespace Mixer {
             this.set_accels_for_action ("app.quit", {"<primary>q"});
 
 
-            //  add_main_option_entries (OPTIONS);
+             add_main_option_entries (options);
         }
 
         public override void activate () {
@@ -71,14 +72,16 @@ namespace Mixer {
             }
 
             base.activate ();
-            var win = this.active_window;
+            // win = this.active_window;
             if (win == null) {
                 win = new Mixer.Window (this);
             }
 
             //  FIXME TODO mockup not working now.
             if (mockup != null) {
-                win.populate (mockup);
+                debug("Using mockup");
+                var cast_win = (Mixer.Window) win;
+                cast_win.populate(mockup);
                 return;
             }
 

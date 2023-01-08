@@ -2,7 +2,6 @@ sources = [
   'main.vala',
   'window.vala',
   'application.vala',
-  'alertView.vala',
   'digest.vala',
   'pulseManager.vala',
   'util.vala',
@@ -11,7 +10,7 @@ sources = [
 
 dependencies = [
   dependency('libadwaita-1', version: '>= 1.0'),
-  dependency ('glib-2.0', version: '>= 2.74.4'),
+  dependency ('glib-2.0', version: '>= 2.74.1'),
   dependency ('gee-0.8'),
   dependency ('gtk4'),
   dependency ('libpulse'),
@@ -20,15 +19,41 @@ dependencies = [
 
 gnome = import('gnome')
 
-sources += gnome.compile_resources('mixer-resources',
-  'mixer.gresource.xml',
-  c_name: 'mixer'
+blueprints_src = [
+  'window.blp',
+  'appEntry.blp'
+]
+
+blueprints_ui = []
+blueprints_vala = []
+foreach b : blueprints_src
+  blueprints_ui += b.replace('.blp', '.ui')
+  blueprints_vala += b + '.vala'
+endforeach
+
+
+blueprints = custom_target('blueprints',
+  input: blueprints_src,
+  output: blueprints_ui,
+  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTDIR@', '@CURRENT_SOURCE_DIR@', '@INPUT@']
+)
+
+sources += custom_target('blueprints_hack',
+  input: blueprints,
+  output: blueprints_vala,
+  command: [find_program('touch'), '@OUTPUT@']
 )
 
 sources += configure_file(
   input: 'constants.vala.in',
   output: 'constants.vala',
   configuration: config_data
+)
+
+sources += gnome.compile_resources('mixer-resources',
+  'mixer.gresource.xml',
+  c_name: 'mixer',
+  dependencies: blueprints,
 )
 
 # Executable

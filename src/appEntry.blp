@@ -1,0 +1,101 @@
+using Gtk 4.0;
+using Adw 1;
+
+
+template MixerAppEntry : Gtk.Grid {
+
+  Gtk.Label name_label {
+    layout {
+      row: 0;
+      column: 0;
+    }
+    label: _("App Name");
+		max-width-chars: 32;
+		ellipsize: end;
+  }
+
+  Gtk.Label volume_label {
+    layout {
+      row: 0;
+      column: 1;
+    }
+    label: _("Volume:");
+		halign: start;
+  }
+
+	Gtk.Scale volume_scale {
+		layout {
+			row: 0;
+			column: 2;
+		}
+		adjustment: Gtk.Adjustment {
+			page-increment: 5;
+			upper: 100;
+			lower: 0;
+		};
+		draw-value: false;
+		hexpand: true;
+	}
+
+	Gtk.Switch volume_switch {
+		layout {
+			row: 0;
+			column: 3;
+		}
+		valign: center;
+	}
+
+	Gtk.Image icon {
+		layout {
+			row: 1;
+			column: 0;
+		}
+		icon-name: "audio-volume-high-symbolic";
+		valign: start;
+	}
+
+	Gtk.Label balance_label {
+		layout {
+			row: 1;
+			column: 1;
+		}
+		label: _("Balance:");
+		halign: start;
+		valign: start;
+	}
+
+	Gtk.Scale balance_scale {
+		layout {
+			row: 1;
+			column: 2;
+		}
+		adjustment: Gtk.Adjustment {
+			page-increment: 0.1;
+			upper: 1;
+			lower: -1;
+		};
+		draw-value: false;
+		has-origin: false;
+		width-request: 150;
+		hexpand: true;
+	}
+
+	Gtk.Label output_label {
+		layout {
+			row: 2;
+			column: 1;
+		}
+		label: _("Output:");
+		halign: end;
+	}
+
+	Gtk.ComboBoxText dropdown {
+		layout {
+			row: 2;
+			column: 2;
+		}
+		width-request: 75;
+	}
+
+}
+

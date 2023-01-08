@@ -44,6 +44,8 @@ Ensure you have these dependencies installed
 ```bash
 # Install requirements on ubuntu-based distros
 sudo apt install meson ninja-build libpulse-dev valac libgtk-4-dev libgee-0.8-dev libgranite-7-dev
+# Or on fedora
+sudo dnf install libadwaita-devel libgee-devel pulseaudio-libs-devel
 
 # Install flatpak runtime and sdk
 flatpak remote-add --if-not-exists --system appcenter https://flatpak.elementary.io/repo.flatpakrepo

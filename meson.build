@@ -5,7 +5,7 @@ project('mixer', ['c', 'vala'],
 )
 
 app_id = 'com.github.childishgiant.mixer'
-resource_path = '/com/github/childishgiant/Mixer'
+resource_path = '/com/github/childishgiant/mixer'
 
 add_project_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language: 'c')
 

@@ -1,0 +1,52 @@
+using Gtk 4.0;
+using Adw 1;
+
+template MixerWindow : Adw.ApplicationWindow {
+  title: _("Mixer");
+  default-width: 350;
+  default-height: 500;
+
+  Gtk.WindowHandle {
+    Gtk.Box {
+      orientation: vertical;
+
+      Adw.HeaderBar {
+        styles ["flat"]
+
+        [end]
+        Gtk.MenuButton menu_button {
+          icon-name: "open-menu-symbolic";
+          menu-model: main_menu;
+          can-focus: false;
+        }
+      }
+
+      Gtk.ScrolledWindow main_content {
+        hscrollbar-policy: never;
+        min-content-height: 120;
+        propagate-natural-height: true;
+
+        Gtk.Box apps_grid {
+          orientation: vertical;
+          spacing: 6;
+          margin-top: 6;
+          margin-bottom: 6;
+          // Side margins to make scrolling easier
+          margin-start: 10;
+          margin-end: 10;
+          // Spread to fit the whole window
+          halign: fill;
+        }
+      }
+    }
+  }
+}
+
+menu main_menu {
+  item (_("Preferences"), "app.preferences")
+  item (_("Keyboard Shortcuts"), "win.show-help-overlay")
+  item (_("About Mixer"), "app.about")
+  item (_("Quit"), "app.quit")
+
+
+}

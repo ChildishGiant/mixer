@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/com/github/childishgiant/mixer">
     <file>window.ui</file>
+    <file>appEntry.ui</file>
     <file>gtk/help-overlay.ui</file>
   </gresource>
 </gresources>
