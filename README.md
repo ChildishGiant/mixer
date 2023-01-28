@@ -1,5 +1,6 @@
 # Mixer
 [![All Contributors](https://img.shields.io/github/all-contributors/childishgiant/mixer)](#contributors-)
+[![AUR version](https://img.shields.io/aur/version/elementary-mixer)](https://aur.archlinux.org/packages/elementary-mixer)
 ### Change the volume of apps
 
 A no-frills volume mixer, with simplicity and usability at its core.
@@ -17,7 +18,8 @@ A no-frills volume mixer, with simplicity and usability at its core.
 # Installing
 
 <a href="https://appcenter.elementary.io/com.github.childishgiant.mixer"><img src="https://appcenter.elementary.io/badge.svg" height="75" /></a>
-<a href="https://flathub.org/apps/details/com.github.childishgiant.mixer"><img src="https://flathub.org/assets/badges/flathub-badge-en.svg" height="75" /></a>
+<a href="https://flathub.org/apps/details/com.github.childishgiant.mixer"><img src="https://flathub.org/assets/badges/flathub-badge-en.svg" height="75" />
+
 
 Releases are also always available as flatpaks on the [releases page](https://github.com/childishgiant/mixer/releases).
 
