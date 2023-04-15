@@ -19,6 +19,14 @@ add_project_arguments(
     language: 'vala'
 )
 
+config_data = configuration_data()
+config_data.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
+config_data.set_quoted('GETTEXT_PACKAGE', meson.project_name())
+config_file = configure_file(
+    input: 'src' / 'Config.vala.in',
+    output: '@BASENAME@',
+    configuration: config_data
+)
 
 # Listing dependencies
 dependencies = [
@@ -35,6 +43,7 @@ subdir ('src')
 # Executable
 executable (
     meson.project_name (),
+    config_file,
     sources,
     dependencies: dependencies,
     install: true
