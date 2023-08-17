@@ -142,7 +142,7 @@ public class PulseManager : Object {
 
 
         if (sink != null) {
-            //  debug("Sink info: %s", sink.proplist.to_string());
+            // debug("Sink info: %s", sink.proplist.to_string());
 
             var sink_response = new Sink ();
 
@@ -208,13 +208,13 @@ public class PulseManager : Object {
 
         return this.sinks;
     }
-    
+
     private void success_cb (Context c, int success) {
         if (success == 0) {
-            debug("Failed: %s", c.errno().to_string());
+            debug ("Failed: %s", c.errno(  ).to_string(  ));
         }
     }
-    
+
     public void set_volume (Response app, Gtk.Scale balance_scale, Gtk.Scale volume_scale) {
 
         debug ("Setting volume and balance for %s (%i)", app.name, (int)app.index);
@@ -225,7 +225,7 @@ public class PulseManager : Object {
 
         //  Set volume
         debug ("Volume input: %s", volume.to_string ());
-        var vol = PulseAudio.Volume.sw_from_linear (volume / 100);
+        var vol = PulseAudio.Volume.sw_from_linear (volume);
         cvol.set (app.channel_map.channels, vol);
         debug ("Volume: %s", vol.to_string ());
 
@@ -248,4 +248,3 @@ public class PulseManager : Object {
     }
 
 }
-

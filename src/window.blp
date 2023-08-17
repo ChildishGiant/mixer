@@ -26,9 +26,7 @@ template MixerWindow : Adw.ApplicationWindow {
         min-content-height: 120;
         propagate-natural-height: true;
 
-        Gtk.Box apps_grid {
-          orientation: vertical;
-          spacing: 6;
+        Adw.PreferencesGroup apps_grid {
           margin-top: 6;
           margin-bottom: 6;
           // Side margins to make scrolling easier

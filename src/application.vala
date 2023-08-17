@@ -41,7 +41,7 @@ namespace Mixer {
                 flags: ApplicationFlags.FLAGS_NONE
             );
 
-            this.add_main_option_entries(options);
+            this.add_main_option_entries (options);
         }
 
 
@@ -62,8 +62,8 @@ namespace Mixer {
 
         public override void activate () {
 
-            debug("Mockup: %s".printf (mockup));
-            debug(mockup == ""? "Mockup: %s".printf (mockup) : "No mockup");
+            debug ("Mockup: %s".printf (mockup));
+            debug (mockup == ""? "Mockup: %s".printf (mockup) : "No mockup");
 
             if (print_version) {
 
@@ -78,10 +78,11 @@ namespace Mixer {
             }
 
             //  FIXME TODO mockup not working now.
+            // Just move it to a blp
             if (mockup != null) {
-                debug("Using mockup");
+                debug ("Using mockup");
                 var cast_win = (Mixer.Window) win;
-                cast_win.populate(mockup);
+                cast_win.populate (mockup);
                 return;
             }
 

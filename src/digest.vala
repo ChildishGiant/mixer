@@ -20,7 +20,7 @@ public class Response : GLib.Object {
 
 public Response digest (PulseAudio.SinkInputInfo sink_input) {
 
-    //  debug(sink_input.proplist.to_string());
+    debug(sink_input.proplist.to_string());
 
     Response app = new Response ();
 
@@ -29,7 +29,7 @@ public Response digest (PulseAudio.SinkInputInfo sink_input) {
     debug ("Index: %d", (int)app.index);
 
     //  Set name
-    app.name = sink_input.proplist.gets ("application.name");
+    app.name = sink_input.proplist.gets ("application.name") + sink_input.proplist.gets("media.name");
     debug ("\t Name: %s", app.name);
 
     //  Set mute state
