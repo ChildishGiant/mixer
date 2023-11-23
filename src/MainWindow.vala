@@ -198,7 +198,7 @@ public class Mixer.MainWindow : Hdy.Window {
                 var name_label = new Gtk.Label (app.name.to_string ()) {
                     //  If the name's longer than 32 chars use ...
                     max_width_chars = 32,
-                    ellipsize = Pango.EllipsizeMode.END,
+                    ellipsize = Pango.EllipsizeMode.END
                 };
 
                 var volume_scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 5);
@@ -271,7 +271,7 @@ public class Mixer.MainWindow : Hdy.Window {
                 //  Output dropdown
                 var dropdown = new Gtk.ComboBoxText () {
                     //  Minimum width
-                    width_request = 75,
+                    width_request = 75
                 };
 
                 dropdown.cell_area.foreach ((cell_renderer) => {
