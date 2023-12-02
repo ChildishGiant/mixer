@@ -28,6 +28,11 @@ public class Mixer.App : Gtk.Application {
     };
 
     construct {
+        Intl.setlocale (LocaleCategory.ALL, "");
+        Intl.bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+        Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+        Intl.textdomain (GETTEXT_PACKAGE);
+
         add_main_option_entries (OPTIONS);
     }
 
