@@ -19,6 +19,8 @@
   <developer_name>Allie Law</developer_name>
   <url type="homepage">https://github.com/childishgiant/mixer</url>
   <url type="bugtracker">https://github.com/childishgiant/mixer/issues</url>
+  <url type="vcs-browser">https://github.com/childishgiant/mixer</url>
+  <url type="translate">https://github.com/ChildishGiant/mixer/tree/main/po</url>
   <url type="help">https://github.com/childishgiant/mixer/issues</url>
   <screenshots>
     <screenshot type="default">
