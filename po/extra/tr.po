@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.childishgiant.mixer master\n"
 "Report-Msgid-Bugs-To: https://github.com/ChildishGiant/mixer/issues\n"
-"POT-Creation-Date: 2021-12-24 21:21+0000\n"
+"POT-Creation-Date: 2022-11-02 20:49+0900\n"
 "PO-Revision-Date: 2022-08-10 19:54+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -31,10 +31,6 @@ msgstr "Uygulamaların sesini değiştir"
 #: data/com.github.childishgiant.mixer.desktop.in:6
 msgid "Volume mixer"
 msgstr "Ses karıştırıcı"
-
-#: data/com.github.childishgiant.mixer.desktop.in:8
-msgid "com.github.childishgiant.mixer"
-msgstr "com.github.childishgiant.mixer"
 
 #: data/com.github.childishgiant.mixer.desktop.in:11
 msgid "Sound;Audio"
@@ -65,17 +61,17 @@ msgid ""
 "Mixer has had a complete rewrite, allowing for wider compatability and "
 "better stability (Fingers crossed!)"
 msgstr ""
-"Karıştırıcı, daha geniş uyumluluk ve daha stabil çalışma sağlayacak "
-"şekilde tamamen yeniden yazıldı (Nazar değmesin!)"
+"Karıştırıcı, daha geniş uyumluluk ve daha stabil çalışma sağlayacak şekilde "
+"tamamen yeniden yazıldı (Nazar değmesin!)"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:35
 msgid ""
 "There's now a suggested price of $3. As with all apps on AppCenter this is "
 "split between elementary and me 30/70"
 msgstr ""
-"Şimdilik 3 dolarlık önerilen fiyata sahip. AppCenter'daki tüm "
-"uygulamalarda olduğu gibi, bu fiyat, elementary ve yazılım geliştiren "
-"arasında 30/70 oranında bölünmektedir"
+"Şimdilik 3 dolarlık önerilen fiyata sahip. AppCenter'daki tüm uygulamalarda "
+"olduğu gibi, bu fiyat, elementary ve yazılım geliştiren arasında 30/70 "
+"oranında bölünmektedir"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:41
 msgid "Features:"
@@ -111,8 +107,7 @@ msgstr "Alman sistemlerinde çalışma sorunu düzeltildi"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:52
 msgid "Fix for app names with non-alpha characters not capturing"
-msgstr ""
-"Alfabetik olmayan uygulama adlarının yakalanamaması sorunu düzeltildi"
+msgstr "Alfabetik olmayan uygulama adlarının yakalanamaması sorunu düzeltildi"
 
 #: data/com.github.childishgiant.mixer.appdata.xml.in:58
 msgid "Updated AppCenter metadata"
