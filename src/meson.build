@@ -4,7 +4,6 @@ sources = [
   'application.vala',
   'digest.vala',
   'pulseManager.vala',
-  'util.vala',
   'mockup.vala'
 ]
 

@@ -92,7 +92,7 @@ namespace Mixer {
         private void on_about_action () {
             string[] authors = { "Allie Law", "Subhadeep Jasu", "Rajdeep Singha" };
             //  string[] translators = { "Jeyson Flores", "Nathan Bonnemains", "Sabri Ünal", "rene-coty" };
-            
+
             Gtk.show_about_dialog (this.active_window,
                                    "program-name", "Mixer",
                                    "logo-icon-name", Constants.APP_ID,
