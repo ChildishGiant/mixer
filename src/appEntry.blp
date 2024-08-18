@@ -2,14 +2,13 @@ using Gtk 4.0;
 using Adw 1;
 
 
-template MixerAppEntry : Adw.ExpanderRow {
+template $MixerAppEntry : Adw.ExpanderRow {
   title: _("App Name");
 
   [prefix]
   Gtk.Image icon {
     icon-name: "applications-multimedia-symbolic";
   }
-
 
   [action]
   Gtk.Box {
@@ -22,15 +21,14 @@ template MixerAppEntry : Adw.ExpanderRow {
 		  draw-value: false;
 		  hexpand: true;
 
-	  }
-	  Gtk.Button mute-button {
-	    styles ["flat"]
-      valign: center;
-      icon-name: "audio-volume-high-symbolic";
-      action-name: "mute";
-
+		}
+		Gtk.ToggleButton mute_button {
+			styles ["flat"]
+			valign: center;
+			icon-name: "audio-volume-high-symbolic";
     }
 	}
+
 
   Adw.ActionRow balance_row {
 		title: _("Balance");
@@ -44,14 +42,19 @@ template MixerAppEntry : Adw.ExpanderRow {
 		  draw-value: false;
 		  has-origin: false;
 		  hexpand: true;
+		  marks [
+				mark (-1, bottom, _("Left")),
+				mark (0, bottom, _("Centre")),
+				mark (1, bottom, _("Right")),
+		  ]
 	  }
 	}
 
 
   Adw.ComboRow output_row {
     title: _("Output");
-    //model: StringList {strings [""] };
-     model: StringList { strings ["test","test2"] };
+    model: StringList {strings [] };
+    //  model: StringList { strings ["test","test2"] };
   }
 
 }

@@ -17,7 +17,7 @@
  */
 
 [GtkTemplate (ui = "/com/github/childishgiant/mixer/appEntry.ui")]
-public class Mixer.AppEntry : Adw.ExpanderRow {
+private class Mixer.AppEntry : Adw.ExpanderRow {
     [GtkChild]
     public unowned Gtk.Scale volume_scale;
     [GtkChild]
@@ -26,8 +26,10 @@ public class Mixer.AppEntry : Adw.ExpanderRow {
     public unowned Gtk.Scale balance_scale;
     [GtkChild]
     public unowned Adw.ComboRow output_row;
+    [GtkChild]
+    public unowned Gtk.ToggleButton mute_button;
 
-
+    public uint32 id { get; set; } // Id equal to index of sink-input
 }
 
 
@@ -36,13 +38,19 @@ public class Mixer.Window : Adw.ApplicationWindow {
 
     [GtkChild]
     private unowned Adw.PreferencesGroup apps_grid;
+    [GtkChild]
+    private unowned Gtk.Stack stack;
 
-    private const int ONE_APP_HEIGHT = 117;
     public PulseManager pulse_manager;
     Response[] responses;
     Sink[] sinks;
-    private uint32[] current_ids = {};
-    private Adw.StatusPage no_apps = new Adw.StatusPage ();
+    //  private uint32[] current_ids = {};
+
+    //  A hash table of sink_indexs:AppEntry
+    private GLib.HashTable<uint32, Mixer.AppEntry> current_app_rows = new GLib.HashTable<uint32, Mixer.AppEntry> (
+        GLib.direct_hash,   // Hash function for uint32 keys
+        GLib.direct_equal   // Equality function for uint32 keys
+    );
 
     public Window (Gtk.Application app) {
         Object (
@@ -55,14 +63,6 @@ public class Mixer.Window : Adw.ApplicationWindow {
     }
 
     construct {
-
-        // Setup no apps widget
-        // TODO make this a blp, there were issues last time
-        no_apps.icon_name = "audio-volume-muted";
-        no_apps.title = _("No apps");
-        no_apps.description = _("There are no apps making any noise.");
-        no_apps.vexpand = true;
-        no_apps.hexpand = true;
 
         pulse_manager = new PulseManager ();
 
@@ -93,106 +93,102 @@ public class Mixer.Window : Adw.ApplicationWindow {
 
             var outputs = _outputs;
 
-            //  Do a diff between the current list of apps and the new list of apps
-            uint32[] _apps_ids = {}; // List of IDS of all the apps in this call
+            //  Hash table of sink_index:Response
+            GLib.HashTable<uint32, Response> apps = new GLib.HashTable<uint32, Response> (
+                GLib.direct_hash,   // Hash function for uint32 keys
+                GLib.direct_equal   // Equality function for uint32 keys
+            );
 
             //  Output lists
-            uint32[] to_remove = {}; // Apps to remove from the apps_grid
             Response[] new_apps = {}; // Apps that are new to the app
-            uint32[] to_update = {}; // Apps that have remained
 
-            //  Add new ids to list
+
+            //  Iterate all over all apps now in use
             for (int i = 0; i < _apps.length; i++) {
                 debug ("Inputted app: %s (%s)", _apps[i].name, _apps[i].index.to_string ());
-                _apps_ids += _apps[i].index;
+                var sink_index = _apps[i].index;
 
-
-                //  If app isn't already present
-                int current_index = get_index (current_ids, (int)_apps[i].index);
-                debug ("Index in existing: " + current_index.to_string ());
-                if (current_index == -1) {
+                //  Add response to apps hashtable 
+                apps.insert (sink_index, _apps[i]);
+                
+                //  If not in the list of existing app rows
+                if (!current_app_rows.contains(sink_index)) {
                     debug ("App %s is not in the apps_grid, add it", _apps[i].name);
                     //  If it's not in the apps_grid, add it
                     new_apps += _apps[i];
                 }
             }
 
-            //  Iterate over existing ids
-            for (int i = 0; i < current_ids.length; i++) {
+            debug("new_apps length %d", new_apps.length);
 
-                //  Check if the app is still in the list
-                int new_index = get_index (_apps_ids, (int)current_ids[i]);
-                if (new_index == -1) {
-                    debug ("App %s not in new ids, add it to the remove list", current_ids[i].to_string ());
-                    //  If not, add it to the list to remove
-                    to_remove += current_ids[i];
+            //  Iterate over existing apps to remove/update them
+            current_app_rows.foreach_remove((sink_index, app_row) => {
+
+                //  If this existing app isn't in the new ones
+                if (!apps.contains(sink_index)) {
+                    debug ("%s not in new ids, removing", app_row.title);
+                    //  If not, remove it
+                    apps_grid.remove (app_row);
+                    //  Also remove it from the list of current apps
+                    return true;
+
                 } else {
-                    debug ("App %s is present", current_ids[i].to_string ());
-                    to_update += current_ids[i];
+                    //  If this row is still in use
+                    debug ("%s (%d) is present, updating", app_row.title, (int)sink_index);
+
+                    //  App response to avoid searching hash loads
+                    var app = apps.get(sink_index);
+
+                    //  Update title
+                    app_row.set_title(app.name);
+                    //  Update volume slider
+                    app_row.volume_scale.set_value (app.volume);
+                    //  Update balance slider
+                    app_row.balance_scale.set_value (app.balance);
+                    //  Update mute button
+                    app_row.mute_button.active = app.muted;
+
+
                 }
-            }
+                //  If we're here, we don't want to remove this item
+                return false;
+            });
 
-            var total_apps = new_apps.length + to_update.length;
+            //  if (mockup != "") {
+            //      debug ("Using mockup: %s", mockup);
 
-            debug ("New apps: %s", new_apps.length.to_string ());
-            debug ("Apps to remove: %s", to_remove.length.to_string ());
-            debug ("Apps to update: %s", to_update.length.to_string ());
-            debug ("Total apps: %s", total_apps.to_string ());
-
-            //  Remove all unused apps
-            for (int i = 0; i < to_remove.length; i++) {
-                debug ("Removing app %s", to_remove[i].to_string ());
-
-                // var base_row = app_base[to_remove[i]];
-                // var rows = app_rows[to_remove[i]];
-
-                //  Remove all rows used by that app
-                // for (int j = 0; j < rows; j++) {
-                    //  Since deleting shuffles the rows about, we don't need to worry about the index
-                    // apps_grid.remove_row (base_row);
-                // }
+            //      new_apps = mockup_apps (mockup);
+            //      outputs = mockup_outputs ();
 
 
-            }
+            //      //  If the mockup is invalid
+            //      if (new_apps.length == 0) {
+            //          apps_grid.add ( new Gtk.Label ("Unknown mockup: " + mockup) {
+            //              vexpand = true,
+            //              hexpand = true
+            //          });
+            //      }
+            //  }
 
-            if (mockup != "") {
-                debug ("Using mockup: %s", mockup);
-
-                new_apps = mockup_apps (mockup);
-                outputs = mockup_outputs ();
-
-                total_apps = new_apps.length;
-
-                //  If the mockup is invalid
-                if (new_apps.length == 0) {
-                    apps_grid.add ( new Gtk.Label ("Unknown mockup: " + mockup) {
-                        vexpand = true,
-                        hexpand = true
-                    });
-                }
-            }
-
-            apps_grid.add (no_apps);
             //  If no apps are using audio
-            if (new_apps.length == 0 && mockup == "" && to_update.length == 0) {
-                // Add no apps message
-                apps_grid.add (no_apps);
+            if (_apps.length == 0 && mockup == "") {
+                // Switch to no apps stack page
+                stack.set_visible_child_name("no-apps");
             }
 
             else {
+                // Some apps exist
+                // Make sure we're on the right stack page
+                stack.set_visible_child_name("main-content");
 
-                // Remove the no apps label
-                if (current_ids.length == 0) {
-                    debug ("Removing no apps label");
-                    apps_grid.remove (no_apps);
-                }
-
-                debug (total_apps.to_string () + " apps total");
-
+                //  Iterate over new apps
                 for (int i = 0; i < new_apps.length; i++) {
 
                     var app = new_apps[i];
                     var app_widget = new Mixer.AppEntry ();
+
+                    //  Give the ExpanderRow an id equal to the sink index so we can keep track of it
+                    app_widget.id = app.index;
 
                     // TODO Maybe show the ID if there are duplicate names
                     app_widget.set_title(app.name.to_string ());
@@ -201,10 +197,6 @@ public class Mixer.Window : Adw.ApplicationWindow {
                         app_widget.icon.icon_name = app.icon;
                     }
 
-                    //  Add marks to balance slider
-                    app_widget.balance_scale.add_mark (-1, Gtk.PositionType.BOTTOM, _("Left"));
-                    app_widget.balance_scale.add_mark (0, Gtk.PositionType.BOTTOM, _("Centre"));
-                    app_widget.balance_scale.add_mark (1, Gtk.PositionType.BOTTOM, _("Right"));
                     //  Set balance slider to app's value
                     app_widget.balance_scale.set_value (app.balance);
 
@@ -216,16 +208,21 @@ public class Mixer.Window : Adw.ApplicationWindow {
                         pulse_manager.set_volume (app, app_widget.balance_scale, app_widget.volume_scale);
                     });
 
-                    // Set mute switch
-                    //app_widget.volume_switch.active = !app.muted;
+                    //  Make the mute switch toggle icon when clicked
+                    app_widget.mute_button.toggled.connect((mute_button) => {
 
-                    // Make the mute switch function
-                    //app_widget.volume_switch.notify["active"].connect (() => {
-                    //    pulse_manager.set_mute (app, !app_widget.volume_switch.active);
-                    //});
+                        if (mute_button.active) {
+                            mute_button.icon_name = "audio-volume-muted";
+                        } else {
+                            mute_button.icon_name = "audio-volume-high-symbolic";
+                        }
 
-                    // Make the switch disable the sliders
-                    //app_widget.volume_switch.bind_property ("active", app_widget.volume_scale, "sensitive", BindingFlags.SYNC_CREATE);
+                        //  Set mute of app to match the button
+                        pulse_manager.set_mute(app, mute_button.active);
+                    });
+
+                    // Set mute switch to match the app
+                    app_widget.mute_button.set_active(app.muted);
 
                     // If the app's in mono
                     if (app.is_mono) {
@@ -266,18 +263,19 @@ public class Mixer.Window : Adw.ApplicationWindow {
                       //  pulse_manager.move (app, outputs[app_widget.dropdown.active]);
                     //});
 
+                    //  Add this to the list of rows so we can manage it later
+                    current_app_rows.insert (app.index, app_widget);
 
                     // Add this to the app grid
-                    apps_grid.add( app_widget);
+                    apps_grid.add (app_widget);
 
                 };
             }
 
-            //  var height = (_apps_ids.length * ONE_APP_HEIGHT + ((total_apps - 1) * SEPERATOR_HEIGHT) );
             //  set_size_request (700, height);
 
             //  Update the list of current apps
-            current_ids = _apps_ids;
+            //  current_ids = _apps_ids;
 
         }
 }

@@ -4,7 +4,7 @@ app-id: com.github.childishgiant.mixer
 # Instead of manually specifying a long list of build and runtime dependencies,
 # we can use a convenient pre-made runtime and SDK.
 runtime: org.gnome.Platform
-runtime-version: '43'
+runtime-version: '46'
 sdk: org.gnome.Sdk
 
 
@@ -38,12 +38,14 @@ cleanup:
 # If we had external dependencies that weren't included in our SDK, we would list
 # them here.
 modules:
+  # Blueprint for .blp to .ui 
   - name: blueprint-compiler
     buildsystem: meson
     sources:
       - type: git
         url: https://gitlab.gnome.org/jwestman/blueprint-compiler.git
-        tag: v0.6.0
+        tag: v0.12.0
+  # Mixer source
   - name: mixer
     builddir: true
     buildsystem: meson

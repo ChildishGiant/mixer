@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-template MixerWindow : Adw.ApplicationWindow {
+template $MixerWindow : Adw.ApplicationWindow {
   title: _("Mixer");
   default-width: 350;
   default-height: 500;
@@ -21,19 +21,37 @@ template MixerWindow : Adw.ApplicationWindow {
         }
       }
 
-      Gtk.ScrolledWindow main_content {
-        hscrollbar-policy: never;
-        min-content-height: 120;
-        propagate-natural-height: true;
+      Gtk.Stack stack {
+        // transition-type: ;
+        Gtk.StackPage {
+          name: "main-content";
+          child: 
+          Gtk.ScrolledWindow main_content {
+            hscrollbar-policy: never;
+            min-content-height: 120;
+            propagate-natural-height: true;
 
-        Adw.PreferencesGroup apps_grid {
-          margin-top: 6;
-          margin-bottom: 6;
-          // Side margins to make scrolling easier
-          margin-start: 10;
-          margin-end: 10;
-          // Spread to fit the whole window
-          halign: fill;
+            Adw.PreferencesGroup apps_grid {
+              margin-top: 6;
+              margin-bottom: 6;
+              // Side margins to make scrolling easier
+              margin-start: 10;
+              margin-end: 10;
+              // Spread to fit the whole window
+              halign: fill;
+            }
+          };
+        }
+        Gtk.StackPage {
+          name: "no-apps";
+          child:
+          Adw.StatusPage {
+            icon-name: "audio-volume-muted";
+            title: _("No apps");
+            description: _("There are no apps making any noise.");
+            vexpand: true;
+            hexpand: true;
+          };
         }
       }
     }
@@ -45,6 +63,4 @@ menu main_menu {
   item (_("Keyboard Shortcuts"), "win.show-help-overlay")
   item (_("About Mixer"), "app.about")
   item (_("Quit"), "app.quit")
-
-
 }

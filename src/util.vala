@@ -1,4 +1,4 @@
-
+//  Get the index of an int in an array of ints
 int get_index (uint32[] arr, int val) {
 
     for (int i = 0; i < arr.length; i++) {

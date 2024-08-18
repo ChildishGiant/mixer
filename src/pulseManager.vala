@@ -237,11 +237,13 @@ public class PulseManager : Object {
         context.set_sink_input_volume (app.index, cvol, success_cb);
     }
 
+    //  Mute or unmute a sink (app)
     public void set_mute (Response app, bool mute) {
         debug ("%s %s", mute ? "Muting" : "Unmuting", app.name);
         context.set_sink_input_mute (app.index, mute, success_cb);
     }
 
+    //  Change the output of a sink-input (app) to another sink (output)
     public void move (Response app, Sink sink) {
         debug ("Moving %s to %s", app.name, sink.port_description);
         context.move_sink_input_by_index (app.index, sink.index, success_cb);

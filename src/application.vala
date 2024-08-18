@@ -79,21 +79,26 @@ namespace Mixer {
 
             //  FIXME TODO mockup not working now.
             // Just move it to a blp
-            if (mockup != null) {
-                debug ("Using mockup");
-                var cast_win = (Mixer.Window) win;
-                cast_win.populate (mockup);
-                return;
-            }
+            //  if (mockup != null) {
+            //      debug ("Using mockup");
+            //      var cast_win = (Mixer.Window) win;
+            //      cast_win.populate (mockup);
+            //      return;
+            //  }
 
             win.present ();
         }
 
         private void on_about_action () {
-            string[] authors = { "Allie Law" };
+            string[] authors = { "Allie Law", "Subhadeep Jasu", "Rajdeep Singha" };
+            //  string[] translators = { "Jeyson Flores", "Nathan Bonnemains", "Sabri Ünal", "rene-coty" };
+            
             Gtk.show_about_dialog (this.active_window,
-                                   "program-name", "mixer",
+                                   "program-name", "Mixer",
+                                   "logo-icon-name", Constants.APP_ID,
                                    "authors", authors,
+                                   "translator-credits", _("translator-credits"),
+                                   "license-type", Gtk.License.GPL_3_0,
                                    "version", Constants.VERSION);
         }
 
