@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: elementary/docker:next-unstable
+      image: bilelmoussaoui/flatpak-github-actions:gnome-46
       options: --privileged
 
     steps:
@@ -30,13 +30,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
+        uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
         with:
           bundle: Mixer.flatpak
           manifest-path: com.github.childishgiant.mixer.yml
           run-tests: true
-          repository-name: appcenter
-          repository-url: https://flatpak.elementary.io/repo.flatpakrepo
           cache-key: "flatpak-builder-${{ github.sha }}"
 
   lint:
