@@ -110,22 +110,22 @@ public class Mixer.Window : Adw.ApplicationWindow {
 
                 //  Add response to apps hashtable 
                 apps.insert (sink_index, _apps[i]);
-                
+
                 //  If not in the list of existing app rows
-                if (!current_app_rows.contains(sink_index)) {
+                if (!current_app_rows.contains (sink_index)) {
                     debug ("App %s is not in the apps_grid, add it", _apps[i].name);
                     //  If it's not in the apps_grid, add it
                     new_apps += _apps[i];
                 }
             }
 
-            debug("new_apps length %d", new_apps.length);
+            debug ("new_apps length %d", new_apps.length);
 
             //  Iterate over existing apps to remove/update them
-            current_app_rows.foreach_remove((sink_index, app_row) => {
+            current_app_rows.foreach_remove ((sink_index, app_row) => {
 
                 //  If this existing app isn't in the new ones
-                if (!apps.contains(sink_index)) {
+                if (!apps.contains (sink_index)) {
                     debug ("%s not in new ids, removing", app_row.title);
                     //  If not, remove it
                     apps_grid.remove (app_row);
@@ -137,10 +137,10 @@ public class Mixer.Window : Adw.ApplicationWindow {
                     debug ("%s (%d) is present, updating", app_row.title, (int)sink_index);
 
                     //  App response to avoid searching hash loads
-                    var app = apps.get(sink_index);
+                    var app = apps.get (sink_index);
 
                     //  Update title
-                    app_row.set_title(app.name);
+                    app_row.set_title (app.name);
                     //  Update volume slider
                     app_row.volume_scale.set_value (app.volume);
                     //  Update balance slider
@@ -173,13 +173,13 @@ public class Mixer.Window : Adw.ApplicationWindow {
             //  If no apps are using audio
             if (_apps.length == 0 && mockup == "") {
                 // Switch to no apps stack page
-                stack.set_visible_child_name("no-apps");
+                stack.set_visible_child_name ("no-apps");
             }
 
             else {
                 // Some apps exist
                 // Make sure we're on the right stack page
-                stack.set_visible_child_name("main-content");
+                stack.set_visible_child_name ("main-content");
 
                 //  Iterate over new apps
                 for (int i = 0; i < new_apps.length; i++) {
@@ -191,7 +191,7 @@ public class Mixer.Window : Adw.ApplicationWindow {
                     app_widget.id = app.index;
 
                     // TODO Maybe show the ID if there are duplicate names
-                    app_widget.set_title(app.name.to_string ());
+                    app_widget.set_title (app.name.to_string ());
 
                     if (app.icon != "application-default-icon") {
                         app_widget.icon.icon_name = app.icon;
@@ -209,7 +209,7 @@ public class Mixer.Window : Adw.ApplicationWindow {
                     });
 
                     //  Make the mute switch toggle icon when clicked
-                    app_widget.mute_button.toggled.connect((mute_button) => {
+                    app_widget.mute_button.toggled.connect ((mute_button) => {
 
                         if (mute_button.active) {
                             mute_button.icon_name = "audio-volume-muted";
@@ -218,18 +218,18 @@ public class Mixer.Window : Adw.ApplicationWindow {
                         }
 
                         //  Set mute of app to match the button
-                        pulse_manager.set_mute(app, mute_button.active);
+                        pulse_manager.set_mute (app, mute_button.active);
                     });
 
                     // Set mute switch to match the app
-                    app_widget.mute_button.set_active(app.muted);
+                    app_widget.mute_button.set_active (app.muted);
 
                     // If the app's in mono
                     if (app.is_mono) {
                         // Disable inputs on balance slider
                         app_widget.balance_scale.sensitive = false;
                         // Give it a tooltip explaining this
-                        app_widget.balance_scale.set_tooltip_text( _("This app is using mono audio"));
+                        app_widget.balance_scale.set_tooltip_text ( _("This app is using mono audio"));
                     } else {
                         // If not, make the switch toggle its input
                         //app_widget.volume_switch.bind_property ("active", app_widget.balance_scale, "sensitive", BindingFlags.SYNC_CREATE);

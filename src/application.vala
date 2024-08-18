@@ -23,7 +23,7 @@ namespace Mixer {
         private static string mockup = "";
         private Adw.ApplicationWindow win;
 
-        private const GLib.OptionEntry[] options = {
+        private const GLib.OptionEntry[] OPTIONS = {
 
             { "version", '\0', OptionFlags.NONE, OptionArg.NONE, ref print_version,
             "Display version number", null },
@@ -41,7 +41,7 @@ namespace Mixer {
                 flags: ApplicationFlags.FLAGS_NONE
             );
 
-            this.add_main_option_entries (options);
+            this.add_main_option_entries (OPTIONS);
         }
 
 
@@ -57,7 +57,7 @@ namespace Mixer {
             this.set_accels_for_action ("app.quit", {"<primary>q"});
 
 
-             add_main_option_entries (options);
+             add_main_option_entries (OPTIONS);
         }
 
         public override void activate () {

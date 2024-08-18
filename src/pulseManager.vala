@@ -211,7 +211,7 @@ public class PulseManager : Object {
 
     private void success_cb (Context c, int success) {
         if (success == 0) {
-            debug ("Failed: %s", c.errno(  ).to_string(  ));
+            debug ("Failed: %s", c.errno ( ).to_string ( ));
         }
     }
 
