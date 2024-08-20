@@ -13,6 +13,14 @@ template $MixerWindow : Adw.ApplicationWindow {
       Adw.HeaderBar {
         styles ["flat"]
 
+        // Manually define the title so we can disable ellipsizing
+        [title]
+        Gtk.Label {
+          styles ["title"]
+          label: _("Mixer");
+          ellipsize: none;
+        }
+
         [end]
         Gtk.MenuButton menu_button {
           icon-name: "open-menu-symbolic";
@@ -22,7 +30,10 @@ template $MixerWindow : Adw.ApplicationWindow {
       }
 
       Gtk.Stack stack {
-        // transition-type: ;
+        // So that the no-apps view doesn't go off-screen
+        width-request: 300;
+        height-request: 310;
+
         Gtk.StackPage {
           name: "main-content";
           child: 
@@ -47,7 +58,6 @@ template $MixerWindow : Adw.ApplicationWindow {
           child:
           Adw.StatusPage {
             icon-name: "audio-volume-muted";
-            title: _("No apps");
             description: _("There are no apps making any noise.");
             vexpand: true;
             hexpand: true;
