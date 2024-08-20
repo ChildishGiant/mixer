@@ -41,10 +41,10 @@ public class Mixer.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Stack stack;
 
+    //  private GLib.Settings settings;
     public PulseManager pulse_manager;
     Response[] responses;
     Sink[] sinks;
-    //  private uint32[] current_ids = {};
 
     //  A hash table of sink_indexs:AppEntry
     private GLib.HashTable<uint32, Mixer.AppEntry> current_app_rows = new GLib.HashTable<uint32, Mixer.AppEntry> (
@@ -55,7 +55,7 @@ public class Mixer.Window : Adw.ApplicationWindow {
     public Window (Gtk.Application app) {
         Object (
             application: app,
-            icon_name: "com.github.childishgiant.mixer",
+            icon_name: Constants.APP_ID,
             resizable: true,
             title: _("Mixer")
         );
@@ -63,6 +63,8 @@ public class Mixer.Window : Adw.ApplicationWindow {
     }
 
     construct {
+
+        //  settings = new Settings (Constants.APP_ID);
 
         pulse_manager = new PulseManager ();
 
@@ -82,6 +84,10 @@ public class Mixer.Window : Adw.ApplicationWindow {
                 populate ("", responses, sinks);
             }
         });
+
+        //  Restore previously saved size and panels positions.
+        //  set_position (settings.pos_x, settings.pos_y);
+        //  set_default_size (settings.get_int("window_width"), settings.get_int("window_height"));
 
         present ();
 

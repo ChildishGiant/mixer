@@ -32,9 +32,6 @@ namespace Mixer {
             { null }
         };
 
-        private Settings settings = new Settings (Constants.APP_ID);
-
-
         public Application () {
             Object (
                 application_id: Constants.APP_ID,

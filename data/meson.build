@@ -16,8 +16,8 @@ endif
 
 appstream_file = i18n.merge_file(
   input: configure_file(
-    input: '@0@.appdata.xml.in'.format(meson.project_name()),
-    output: '@0@.appdata.xml'.format(app_id),
+    input: '@0@.appdata.xml.in.in'.format(meson.project_name()),
+    output: '@0@.appdata.xml.in'.format(app_id),
     configuration: config_data
   ),
   output: '@0@.appdata.xml'.format(app_id),
