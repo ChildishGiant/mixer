@@ -30,6 +30,7 @@ public Response digest (PulseAudio.SinkInputInfo sink_input) {
 
     //  Set name
     app.name = sink_input.proplist.gets ("application.name") + " - " + sink_input.proplist.gets ("media.name");
+    app.name = app.name.replace ("&", "&amp;");
     debug ("\t Name: %s", app.name);
 
     //  Set mute state
