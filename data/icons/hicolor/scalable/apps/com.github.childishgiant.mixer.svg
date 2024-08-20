@@ -23,9 +23,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      showgrid="true"
-     inkscape:zoom="4"
-     inkscape:cx="46.625"
-     inkscape:cy="28"
+     inkscape:zoom="5.6568542"
+     inkscape:cx="66.733202"
+     inkscape:cy="66.998368"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="0"
@@ -325,42 +325,6 @@
     <g
        id="g7727"
        transform="translate(1.992048)">
-      <g
-         id="g1203"
-         inkscape:label="Shadow">
-        <path
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.2;fill:url(#radialGradient4432);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;enable-background:accumulate"
-           id="path3041"
-           d="M 114.9971,54.001717 C 115,57 94.387686,60.001244 64.015911,60.001244 33.644136,60.001244 9.0317991,57 9.0159119,54.002332 9,51 33.636365,48.00125 64.015911,48.00125 c 30.379546,0 50.981189,5.997097 50.981189,6.000467 z"
-           sodipodi:nodetypes="sssss" />
-        <g
-           style="opacity:0.4"
-           id="g3712"
-           transform="matrix(2.8421052,0,0,0.71428566,-4.2105333,23.430384)">
-          <rect
-             style="fill:url(#radialGradient4093);fill-opacity:1;stroke:none"
-             id="rect2801"
-             y="40"
-             x="38"
-             height="6.9974661"
-             width="3.9444478" />
-          <rect
-             style="fill:url(#radialGradient4095);fill-opacity:1;stroke:none"
-             id="rect3696"
-             transform="scale(-1)"
-             y="-47"
-             x="-10"
-             height="7"
-             width="5" />
-          <rect
-             style="fill:url(#linearGradient4097);fill-opacity:1;stroke:none"
-             id="rect3700"
-             y="40"
-             x="10"
-             height="7.0000005"
-             width="28" />
-        </g>
-      </g>
       <g
          id="g1467"
          inkscape:label="Back"
