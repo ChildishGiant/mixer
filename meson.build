@@ -34,7 +34,6 @@ config_data.set('LOCALE_DIR', join_paths(get_option('prefix'), get_option('local
 config_data.set('DATA_DIR', join_paths(get_option('prefix'), get_option('datadir'), meson.project_name()))
 
 
-
 subdir('data')
 subdir('src')
 subdir('po')

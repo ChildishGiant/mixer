@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.childishgiant.mixer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-24 21:21+0000\n"
+"POT-Creation-Date: 2024-08-20 12:32+0100\n"
 "PO-Revision-Date: 2022-06-20 17:07+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,53 +18,77 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: src/MainWindow.vala:26 src/MainWindow.vala:39
+#: src/window.vala:60 src/window.blp:5 src/window.blp:20
 msgid "Mixer"
 msgstr "Mixeur"
 
-#: src/MainWindow.vala:210
-msgid "Volume:"
-msgstr "Volume :"
-
-#: src/MainWindow.vala:213
-msgid "Balance:"
-msgstr "Balance :"
-
-#: src/MainWindow.vala:223
-msgid "Left"
-msgstr "Gauche"
-
-#: src/MainWindow.vala:224
-msgid "Centre"
-msgstr "Centre"
-
-#: src/MainWindow.vala:225
-msgid "Right"
-msgstr "Droite"
-
-#. Make the switch disable the sliders
+#. Set mute switch to match the app
 #. If the app's in mono
 #. Disable inputs on balance slider
-#. Also grey out the label
 #. Give it a tooltip explaining this
-#: src/MainWindow.vala:255
+#: src/window.vala:232
 msgid "This app is using mono audio"
 msgstr "Cette application utilise un son mono"
 
-#. Output label
-#: src/MainWindow.vala:267
-msgid "Output:"
-msgstr "Sortie :"
-
-#: src/AlertView.vala:16
-msgid "No Apps"
-msgstr "Pas d’applications"
-
-#: src/AlertView.vala:22
-msgid "There are no apps making any noise."
-msgstr "Il n’y a pas d’applications émettant un son"
-
-#: src/Application.vala:37
+#: src/application.vala:75
 #, c-format
 msgid "Mixer version: %s"
 msgstr "Version de Mixeur : %s"
+
+#. Add your name to this msgstr if you helped translate for this language
+#: src/application.vala:106
+msgid "translator-credits"
+msgstr "rene-coty"
+
+#: src/appEntry.blp:6
+msgid "App Name"
+msgstr ""
+
+#: src/appEntry.blp:34
+#, fuzzy
+msgid "Balance"
+msgstr "Balance :"
+
+#: src/appEntry.blp:46
+msgid "Left"
+msgstr "Gauche"
+
+#: src/appEntry.blp:47
+msgid "Centre"
+msgstr "Centre"
+
+#: src/appEntry.blp:48
+msgid "Right"
+msgstr "Droite"
+
+#: src/appEntry.blp:55
+#, fuzzy
+msgid "Output"
+msgstr "Sortie :"
+
+#: src/window.blp:61
+msgid "There are no apps making any noise."
+msgstr "Il n’y a pas d’applications émettant un son"
+
+#: src/window.blp:72
+msgid "Preferences"
+msgstr ""
+
+#: src/window.blp:73
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: src/window.blp:74
+#, fuzzy
+msgid "About Mixer"
+msgstr "Mixeur"
+
+#: src/window.blp:75
+msgid "Quit"
+msgstr ""
+
+#~ msgid "Volume:"
+#~ msgstr "Volume :"
+
+#~ msgid "No Apps"
+#~ msgstr "Pas d’applications"

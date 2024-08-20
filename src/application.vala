@@ -47,6 +47,11 @@ namespace Mixer {
 
         construct {
 
+            //  Show the app in the users's prefered language
+            Intl.setlocale (LocaleCategory.ALL, "");
+            Intl.bindtextdomain (Constants.GETTEXT_PACKAGE, Constants.LOCALE_DIR);
+            Intl.bind_textdomain_codeset (Constants.GETTEXT_PACKAGE, "UTF-8");
+            Intl.textdomain (Constants.GETTEXT_PACKAGE);
 
             ActionEntry[] action_entries = {
                 { "about", this.on_about_action },
@@ -97,6 +102,7 @@ namespace Mixer {
                                    "program-name", "Mixer",
                                    "logo-icon-name", Constants.APP_ID,
                                    "authors", authors,
+                                    // Add your name to this msgstr if you helped translate for this language
                                    "translator-credits", _("translator-credits"),
                                    "license-type", Gtk.License.GPL_3_0,
                                    "version", Constants.VERSION);

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.childishgiant.mixer master\n"
-"Report-Msgid-Bugs-To: https://github.com/ChildishGiant/mixer/issues\n"
-"POT-Creation-Date: 2021-12-24 21:21+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-20 12:45+0100\n"
 "PO-Revision-Date: 2022-08-10 19:54+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -18,126 +18,121 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.1.1\n"
 
-#: data/com.github.childishgiant.mixer.desktop.in:4
-#: data/com.github.childishgiant.mixer.appdata.xml.in:7
+#: data/mixer.desktop.in:4 data/mixer.appdata.xml.in:9
 msgid "Mixer"
 msgstr "Karıştırıcı"
 
-#: data/com.github.childishgiant.mixer.desktop.in:5
-#: data/com.github.childishgiant.mixer.appdata.xml.in:8
+#: data/mixer.desktop.in:5 data/mixer.appdata.xml.in:10
 msgid "Change the volume of apps"
 msgstr "Uygulamaların sesini değiştir"
 
-#: data/com.github.childishgiant.mixer.desktop.in:6
+#: data/mixer.desktop.in:6
 msgid "Volume mixer"
 msgstr "Ses karıştırıcı"
 
-#: data/com.github.childishgiant.mixer.desktop.in:8
-msgid "com.github.childishgiant.mixer"
-msgstr "com.github.childishgiant.mixer"
-
-#: data/com.github.childishgiant.mixer.desktop.in:11
+#: data/mixer.desktop.in:11
 msgid "Sound;Audio"
 msgstr "Ses;Gürültü;Ses Ayarlayıcı;Ses Karıştırıcı;Mixer"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:10
+#: data/mixer.appdata.xml.in:12
 msgid "A no-frills volume mixer, with simplicity and usability at its core."
 msgstr "Sade ve kullanılabilirliği hedefleyen basit bir ses karıştırıcı."
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:12
+#: data/mixer.appdata.xml.in:14
 msgid "Simple volume controls including balance and output selection"
 msgstr "Denge ve çıktı seçimi dahil basit ses denetimleri"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:13
+#: data/mixer.appdata.xml.in:15
 msgid "Individually change each audio source's values"
 msgstr "Her ses kaynağının sesini ayrı ayrı değiştir"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:19
+#: data/mixer.appdata.xml.in:21
 msgid "Allie Law"
 msgstr "Allie Law"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:32
+#: data/mixer.appdata.xml.in:34
 msgid "Nothing new!"
 msgstr "Yeni bir şey yok!"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:34
+#: data/mixer.appdata.xml.in:36
 msgid ""
 "Mixer has had a complete rewrite, allowing for wider compatability and "
 "better stability (Fingers crossed!)"
 msgstr ""
-"Karıştırıcı, daha geniş uyumluluk ve daha stabil çalışma sağlayacak "
-"şekilde tamamen yeniden yazıldı (Nazar değmesin!)"
+"Karıştırıcı, daha geniş uyumluluk ve daha stabil çalışma sağlayacak şekilde "
+"tamamen yeniden yazıldı (Nazar değmesin!)"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:35
+#: data/mixer.appdata.xml.in:37
 msgid ""
 "There's now a suggested price of $3. As with all apps on AppCenter this is "
 "split between elementary and me 30/70"
 msgstr ""
-"Şimdilik 3 dolarlık önerilen fiyata sahip. AppCenter'daki tüm "
-"uygulamalarda olduğu gibi, bu fiyat, elementary ve yazılım geliştiren "
-"arasında 30/70 oranında bölünmektedir"
+"Şimdilik 3 dolarlık önerilen fiyata sahip. AppCenter'daki tüm uygulamalarda "
+"olduğu gibi, bu fiyat, elementary ve yazılım geliştiren arasında 30/70 "
+"oranında bölünmektedir"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:41
+#: data/mixer.appdata.xml.in:43
 msgid "Features:"
 msgstr "Özellikler:"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:43
+#: data/mixer.appdata.xml.in:45
 msgid "Spanish translation"
 msgstr "İspanyolca çeviri"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:44
+#: data/mixer.appdata.xml.in:46
 msgid "Ruissian translation"
 msgstr "Rusça çeviri"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:45
+#: data/mixer.appdata.xml.in:47
 msgid "Also grey out the slider label if not in use"
 msgstr "Ayrıca, kullanılmıyorsa kaydırıcı etiketi grileştiriliyor"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:46
+#: data/mixer.appdata.xml.in:48
 msgid "Handle long apps more gracefully"
 msgstr "Uzun uygulamalar daha düzgün yönetiliyor"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:47
+#: data/mixer.appdata.xml.in:49
 msgid "Scroll window if not all apps fit"
 msgstr "Tüm uygulamalar sığmıyorsa pencere kaydırılıyor"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:49
+#: data/mixer.appdata.xml.in:51
 msgid "Bug fixes:"
 msgstr "Hata düzeltmeler:"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:51
+#: data/mixer.appdata.xml.in:53
 msgid "Fix for running on German systems"
 msgstr "Alman sistemlerinde çalışma sorunu düzeltildi"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:52
+#: data/mixer.appdata.xml.in:54
 msgid "Fix for app names with non-alpha characters not capturing"
-msgstr ""
-"Alfabetik olmayan uygulama adlarının yakalanamaması sorunu düzeltildi"
+msgstr "Alfabetik olmayan uygulama adlarının yakalanamaması sorunu düzeltildi"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:58
+#: data/mixer.appdata.xml.in:60
 msgid "Updated AppCenter metadata"
 msgstr "AppCenter üst verisi güncellendi"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:63
-#: data/com.github.childishgiant.mixer.appdata.xml.in:72
+#: data/mixer.appdata.xml.in:65 data/mixer.appdata.xml.in:74
 msgid "Added features:"
 msgstr "Eklenen özellikler:"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:65
+#: data/mixer.appdata.xml.in:67
 msgid "Added support for Odin's dark style"
 msgstr "Odin'in koyu biçimi eklendi"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:66
+#: data/mixer.appdata.xml.in:68
 msgid "Changed some backend things to be more in-line with stock apps"
 msgstr ""
 "Stok uygulamalarla daha uyumlu olacak şekilde bazı arka uç şeyleri "
 "değiştirildi"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:74
+#: data/mixer.appdata.xml.in:76
 msgid "Added a dropdown for changing which output an app uses"
 msgstr ""
 "Uygulamanın hangi çıktıyı kullandığını değiştirmek için açılır menü eklendi"
 
-#: data/com.github.childishgiant.mixer.appdata.xml.in:80
+#: data/mixer.appdata.xml.in:82
 msgid "Initial Release"
 msgstr "İlk Sürüm"
+
+#~ msgid "com.github.childishgiant.mixer"
+#~ msgstr "com.github.childishgiant.mixer"

@@ -1,3 +1,7 @@
-src/MainWindow.vala
-src/AlertView.vala
-src/Application.vala
+# Source files
+src/window.vala
+src/application.vala
+# UI files
+src/appEntry.blp
+src/window.blp
+
