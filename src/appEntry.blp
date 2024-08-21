@@ -26,9 +26,8 @@ template $MixerAppEntry : Adw.ExpanderRow {
 			styles ["flat"]
 			valign: center;
 			icon-name: "audio-volume-high-symbolic";
-    }
+    	}
 	}
-
 
   Adw.ActionRow balance_row {
 		title: _("Balance");
@@ -50,11 +49,8 @@ template $MixerAppEntry : Adw.ExpanderRow {
 	  }
 	}
 
-
   Adw.ComboRow output_row {
     title: _("Output");
     model: StringList {strings [] };
-    //  model: StringList { strings ["test","test2"] };
   }
-
 }

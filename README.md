@@ -75,11 +75,11 @@ flatpak run com.github.childishgiant.mixer
 cd build
 
 # generates pot file
-ninja com.github.childishgiant.mixer-pot
+ninja mixer-pot
 ninja extra-pot
 
 # to regenerate and propagate changes to every po file
-ninja com.github.childishgiant.mixer-update-po
+ninja mixer-update-po
 ninja extra-update-po
 ```
 
