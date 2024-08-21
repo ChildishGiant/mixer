@@ -45,8 +45,13 @@ public class Mixer.Window : Adw.ApplicationWindow {
     public PulseManager pulse_manager;
     Response[] responses;
     Sink[] sinks;
+    //  A hash table of sink_titles:sinks
+    private GLib.HashTable<string, Sink> sinks_by_title = new GLib.HashTable<string, Sink> (
+        GLib.str_hash,   // Hash function for string keys
+        GLib.str_equal   // Equality function for string keys
+    );
 
-    //  A hash table of sink_indexs:AppEntry
+    //  A hash table of sink_input_indexs:AppEntry
     private GLib.HashTable<uint32, Mixer.AppEntry> current_app_rows = new GLib.HashTable<uint32, Mixer.AppEntry> (
         GLib.direct_hash,   // Hash function for uint32 keys
         GLib.direct_equal   // Equality function for uint32 keys
@@ -99,7 +104,7 @@ public class Mixer.Window : Adw.ApplicationWindow {
 
             var outputs = _outputs;
 
-            //  Hash table of sink_index:Response
+            //  Hash table of sink_input_index:Response
             GLib.HashTable<uint32, Response> apps = new GLib.HashTable<uint32, Response> (
                 GLib.direct_hash,   // Hash function for uint32 keys
                 GLib.direct_equal   // Equality function for uint32 keys
@@ -186,6 +191,17 @@ public class Mixer.Window : Adw.ApplicationWindow {
                 // Some apps exist
                 // Make sure we're on the right stack page
                 stack.set_visible_child_name ("main-content");
+                
+                //  Make a string list of outputs for the dropdowns to use
+                var outputs_string_list = new Gtk.StringList (null);
+
+                //  Iterate over the sinks, making the string list and hash table
+                for (int j = 0; j < outputs.length; j++) {
+                    var sink = outputs[j];
+                    var sink_title = "%s - %s".printf (sink.port_name, sink.port_description);
+                    outputs_string_list.append (sink_title);
+                    sinks_by_title.insert (sink_title, sink);
+                }
 
                 //  Iterate over new apps
                 for (int i = 0; i < new_apps.length; i++) {
@@ -197,7 +213,7 @@ public class Mixer.Window : Adw.ApplicationWindow {
                     app_widget.id = app.index;
 
                     // TODO Maybe show the ID if there are duplicate names
-                    app_widget.set_title (app.name.to_string ());
+                    app_widget.set_title (app.name);
 
                     if (app.icon != "application-default-icon") {
                         app_widget.icon.icon_name = app.icon;
@@ -246,28 +262,31 @@ public class Mixer.Window : Adw.ApplicationWindow {
                         });
                     }
 
-                    // TODO Port to gtk4
-                    //  app_widget.dropdown.cell_area.foreach ((cell_renderer) => {
-                    //      var text = (Gtk.CellRendererText)cell_renderer;
-                    //      text.ellipsize = Pango.EllipsizeMode.END;
-                    //      return true;
-                    //  });
-
+                    //  Set output options to the string list we made
+                    app_widget.output_row.model = outputs_string_list;
 
                     for (int j = 0; j < outputs.length; j++) {
                         var sink = outputs[j];
-                        // app_widget.dropdown.append_text ("%s - %s".printf (sink.port_name, sink.port_description));
 
                         // If this is the current output
                         if (app.sink == sink.index) {
-                         // app_widget.dropdown.set_active (j);
+                            debug ("Setting sink for %s to %s", app.name, sink.port_name + " - " + sink.port_description);
+                            app_widget.output_row.set_selected (j);
                         }
                     }
 
                     // Make the dropdown function
-                    //app_widget.dropdown.changed.connect (() => {
-                      //  pulse_manager.move (app, outputs[app_widget.dropdown.active]);
-                    //});
+                    app_widget.output_row.notify["selected"].connect (() => {
+                        
+                        //  Get the position of the selected option
+                        var selected_index = app_widget.output_row.get_selected ();
+                        //  Use that to get the title of the output selected
+                        var selected_title = outputs_string_list.get_string (selected_index);
+                        //  Use that title to get the index of the selected output (sink)
+                        var selected_sink = sinks_by_title.get (selected_title);
+                        //  Move the app to that sink
+                        pulse_manager.move (app, selected_sink);
+                    });
 
                     //  Add this to the list of rows so we can manage it later
                     current_app_rows.insert (app.index, app_widget);
